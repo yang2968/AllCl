@@ -4,9 +4,9 @@ import {
      } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/dist/FontAwesome5';
-import Page1 from '../Views/TabFiles/page1';
-import Page2 from '../Views/TabFiles/page2';
-import Page3 from '../Views/TabFiles/page3';
+import Page1 from '../Views/TabFiles/home';
+import Page2 from '../Views/TabFiles/map';
+import Page3 from '../Views/TabFiles/board';
 import Page4 from '../Views/TabFiles/page4';
 
 const Tab = createBottomTabNavigator();

@@ -2,7 +2,7 @@ import { StyleSheet, StatusBar } from "react-native";
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 const StatusBarHeight =
-Platform.OS === 'ios' ? getStatusBarHeight(true) + 10 : 10;
+    Platform.OS === 'ios' ? getStatusBarHeight(true) + 10 : 10;
 
 const styles = StyleSheet.create({
     touchableWithoutFeedback: {
@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
         paddingBottom: "3%",
         paddingLeft: "5%",
         paddingRight: "5%"
-    
+
     },
-    page1Header: {
+    homeHeader: {
         backgroundColor: "white",
         width: "100%",
         height: 50,
@@ -29,12 +29,12 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginBottom: "5%"
     },
-    page1AllClimb: {
+    homeAllClimb: {
         color: "black",
         fontWeight: "bold",
         fontSize: 30
     },
-    page1Search: {
+    homeSearch: {
         backgroundColor: "#94B381",
         width: "15%",
         height: 50,
@@ -43,21 +43,21 @@ const styles = StyleSheet.create({
         justifyContent: "center"
 
     },
-    page1ContentMargin: {
+    homeContentMargin: {
         marginTop: "8%",
         marginBottom: "3%"
     },
-    page1ContentTitle: {
+    homeContentTitle: {
         color: "black",
         fontWeight: "bold",
         fontSize: 18
     },
-    page1Recommend: {
+    homeRecommend: {
         flexDirection: "row",
         marginBottom: "5%"
-       
+
     },
-    page1Board: {
+    homeBoard: {
         borderColor: "black",
         borderWidth: 1,
         width: "100%",
@@ -66,13 +66,34 @@ const styles = StyleSheet.create({
     //
     // page3
     //
-    page3Plus: {
+    boardPlus: {
         width: "15%",
         height: 50,
         borderRadius: 25,
         alignItems: "center",
         justifyContent: "center"
 
+    },
+
+    //
+    // RCW
+    //
+    RCWScrollView: {
+        backgroundColor: "black",
+        width: "100%",
+        height: "60%",
+        position: "absolute",
+        bottom: 0,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25
+    },
+    RCWScrollViewView: {
+        padding: "5%"
+    },
+    RCWTitleText: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20
     },
 });
 

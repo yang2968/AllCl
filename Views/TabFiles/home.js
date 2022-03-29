@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
-  StatusBar,
-  Platform,
   View,
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
   Keyboard,
-  Image,
-  ImageBackground
+  ImageBackground,
 } from "react-native";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import styles from "../../styles/style";
@@ -28,10 +25,10 @@ export default ({ navigation }) => {
       <View style={styles.page}>
 
         {/* 헤더  */}
-        <View style={styles.page1Header}>
-          <Text style={styles.page1AllClimb}>All Climb</Text>
+        <View style={styles.homeHeader}>
+          <Text style={styles.homeAllClimb}>All Climb</Text>
 
-          <View style={styles.page1Search}>
+          <View style={styles.homeSearch}>
             <Icon
               name={"search"}
               size={20}
@@ -41,14 +38,16 @@ export default ({ navigation }) => {
         {/*  */}
 
         {/* 추천 암벽장  */}
-        <View style={styles.page1ContentMargin}>
-          <Text style={styles.page1ContentTitle}>추천 암벽장</Text>
+        <View style={styles.homeContentMargin}>
+          <Text style={styles.homeContentTitle}>추천 암벽장</Text>
         </View>
 
-        <View style={styles.page1Recommend}>
+        <View style={styles.homeRecommend}>
 
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>{
+            navigation.navigate("RCW");
+          }}>
             <ImageBackground
               imageStyle={{ borderWidth: 1, borderRadius: 30 }}
               style={{ width: 150, height: 200, borderColor: "white", marginRight: 20 }}
@@ -68,6 +67,7 @@ export default ({ navigation }) => {
               style={{ width: 150, height: 200, borderColor: "white", marginRight: 20 }}
               source={Climb2}
               resizeMode="cover">
+                
 
               <View style={{ position: "absolute", left: 14, bottom: 25, marginRight: 20, width: "100%", height: 20, alignItems: "flex-start" }}>
                 <Text style={{ fontSize: 17, color: "white", fontWeight: "bold" }}>천등산</Text>
@@ -80,11 +80,11 @@ export default ({ navigation }) => {
         {/*  */}
 
         {/* 게시판  */}
-        <View style={styles.page1ContentMargin}>
-          <Text style={styles.page1ContentTitle}>게시판</Text>
+        <View style={styles.homeContentMargin}>
+          <Text style={styles.homeContentTitle}>게시판</Text>
         </View>
 
-        <View style={styles.page1Board}>
+        <View style={styles.homeBoard}>
 
         </View>
         {/*  */}

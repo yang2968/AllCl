@@ -3,6 +3,7 @@ import { Alert, TouchableOpacity, Text, StyleSheet, View, BackHandler } from "re
 import Icon from 'react-native-vector-icons/dist/Ionicons';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Tab from './Tab';
+import RecommendClimbingWall from "../Views/StackFiles/recommendClimbingWall";
 
 const Stack = createNativeStackNavigator();
 // 헤더 이름
@@ -113,6 +114,7 @@ export default () => {
             })}>
 
             <Stack.Screen name="Tab" component={Tab} options={{ headerShown: false }} />
+            <Stack.Screen name="RCW" component={RecommendClimbingWall} options={{ headerShown: false }} />
             
         </Stack.Navigator>
     )
