@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/dist/Ionicons';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Tab from './Tab';
 import RecommendClimbingWall from "../Views/StackFiles/recommendClimbingWall";
+import Login from "../Views/StackFiles/Login";
 
 const Stack = createNativeStackNavigator();
 // 헤더 이름
@@ -69,7 +70,7 @@ export default () => {
 
     return (
         <Stack.Navigator
-            initialRouteName={"Tab"}
+            initialRouteName={"Login"}
             screenOptions={({ navigation, route }) => ({
                 // headerTitle: props => <LogoTitle {...props} />,
                 // 뒤로가기 버튼에 전 스택스크린이름표시여부
@@ -113,6 +114,7 @@ export default () => {
                 }
             })}>
 
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
             <Stack.Screen name="Tab" component={Tab} options={{ headerShown: false }} />
             <Stack.Screen name="RCW" component={RecommendClimbingWall} options={{ headerShown: false }} />
             

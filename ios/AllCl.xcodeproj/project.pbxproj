@@ -13,6 +13,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1E06028027EAE5E4003A8D5F /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E06027F27EAE5E4003A8D5F /* File.swift */; };
+		1E90648827F41B540054038F /* climb.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1E90648727F41B540054038F /* climb.jpeg */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		D0495BF3653B614DFCD9495C /* libPods-AllCl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF5082CA6DE0F2B57B2D242 /* libPods-AllCl.a */; };
 /* End PBXBuildFile section */
@@ -57,6 +58,7 @@
 		1E06028F27EAE690003A8D5F /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		1E06029027EAE690003A8D5F /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		1E06029127EAE690003A8D5F /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
+		1E90648727F41B540054038F /* climb.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = climb.jpeg; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AllCl/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AB650D14C73632B15FD08677 /* Pods-AllCl-AllClTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AllCl-AllClTests.release.xcconfig"; path = "Target Support Files/Pods-AllCl-AllClTests/Pods-AllCl-AllClTests.release.xcconfig"; sourceTree = "<group>"; };
 		C2257EC831DA5313F61BB097 /* Pods-AllCl-AllClTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AllCl-AllClTests.debug.xcconfig"; path = "Target Support Files/Pods-AllCl-AllClTests/Pods-AllCl-AllClTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				1E90648727F41B540054038F /* climb.jpeg */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -287,6 +290,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E90648827F41B540054038F /* climb.jpeg in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);

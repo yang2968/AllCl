@@ -4,12 +4,15 @@ import {
   Text,
   TouchableWithoutFeedback,
   Keyboard,
+  TextInput,
+  TouchableOpacity
 } from "react-native";
+import Color from "../../styles/Color"
 
 export default ({ navigation }) => {
 
   useEffect(() => {
-   
+
   }, [])
 
   return (
@@ -17,9 +20,9 @@ export default ({ navigation }) => {
       style={{ flex: 1 }}
       onPress={Keyboard.dismiss}>
 
-      <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
-          <Text>4</Text>
-        
+      <View style={{ flex: 1, backgroundColor: Color.loginBackground }}>
+        <Text>All Climb</Text>
+
       </View>
 
     </TouchableWithoutFeedback>
