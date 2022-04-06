@@ -8,23 +8,30 @@ import {
   TouchableOpacity
 } from "react-native";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import Icon2 from 'react-native-vector-icons/dist/Ionicons';
 import Color from "../../styles/Color";
 import styles from "../../styles/style";
 
 export default ({ navigation }) => {
-
-  
+  // 날짜순
+  const dateStyle = useCallback(() => {
+    likeButton.current.setNativeProps({ backgroundColor: "white" });
+    commentButton.current.setNativeProps({ backgroundColor: "white" });
+  }, []);
+  const dateTextStyle = useCallback(() => {
+    likeButtonText.current.setNativeProps({ style: { color: "black" } });
+    commentButtonText.current.setNativeProps({ style: { color: "black" } });
+  }, []);
   // 인기순
   const likeButton = useRef();
   const likeStyle = useCallback(() => {
     likeButton.current.setNativeProps({ backgroundColor: Color.likeButtonColor });
     commentButton.current.setNativeProps({ backgroundColor: "white" });
   }, []);
-
   const likeButtonText = useRef();
   const likeTextStyle = useCallback(() => {
-    likeButtonText.current.setNativeProps({ style:{ color: "white" }});
-    commentButtonText.current.setNativeProps({ style:{ color: "black" }});
+    likeButtonText.current.setNativeProps({ style: { color: "white" } });
+    commentButtonText.current.setNativeProps({ style: { color: "black" } });
   }, []);
 
   // 댓글순
@@ -36,18 +43,18 @@ export default ({ navigation }) => {
 
   const commentButtonText = useRef();
   const commentTextStyle = useCallback(() => {
-    commentButtonText.current.setNativeProps({ style:{ color: "white" }});
-    likeButtonText.current.setNativeProps({ style:{ color: "black" }});
+    commentButtonText.current.setNativeProps({ style: { color: "white" } });
+    likeButtonText.current.setNativeProps({ style: { color: "black" } });
   }, []);
 
   const [sortData, setSortData] = useState(0);
   const [data, setData] = useState(testData);
-// post_date로 게시물 생성 날짜 
-  
+  // post_date로 게시물 생성 날짜 
+
   var testData = [
     {
       index: 0,
-      post_date: "2022-01-01",
+      post_date: "2022-01-19",
       title: '클라이밍이란?',
       content: '산을 타고 넘고 올라가자',
       like: 9,
@@ -63,7 +70,7 @@ export default ({ navigation }) => {
     },
     {
       index: 2,
-      post_date: "2022-01-03",
+      post_date: "2022-01-15",
       title: '장비 추천욤',
       content: 'ㅈㄱㄴ',
       like: 7,
@@ -71,8 +78,8 @@ export default ({ navigation }) => {
     },
     {
       index: 3,
-      post_date: "2022-01-04",
-      title: '아롯 구독과 종아요 부탁드립니다.',
+      post_date: "2022-01-10",
+      title: '아롯 구독과 좋아요 부탁드립니다.',
       content: '아롯 구독과 종아요 부탁드립니다.',
       like: 6,
       comment: 4,
@@ -80,8 +87,8 @@ export default ({ navigation }) => {
     {
       index: 4,
       post_date: "2022-01-05",
-      title: '여기는 게시판 언제까지 어깨 춤을',
-      content: '할말이 이렇게 없나',
+      title: '여기는 게시판 언제까지 어깨 춤을 가나다 라마 바사',
+      content: '할말이 이렇게 없나 가나다 라 바사가 나다 라마바 \n사가 나다라마바 사가나 다라 마바사 가나 다라마 바사 가나다 라마 바사아',
       like: 5,
       comment: 5,
     },
@@ -103,7 +110,7 @@ export default ({ navigation }) => {
     },
     {
       index: 7,
-      post_date: "2022-01-08",
+      post_date: "2022-01-30",
       title: '심심한데 만날 사람',
       content: '지금 드라이브 갈 사람 있나?',
       like: 2,
@@ -111,7 +118,7 @@ export default ({ navigation }) => {
     },
     {
       index: 8,
-      post_date: "2022-01-09",
+      post_date: "2022-01-22",
       title: '중간고사 언제부터죠??',
       content: 'ㅈㄱㄴ',
       like: 1,
@@ -120,23 +127,35 @@ export default ({ navigation }) => {
   ];
 
   useEffect(() => {
-    if(sortData == 0) {
-      console.log("인기");
+    if (sortData == 0) {
+
+      var newDateData = [...testData];
+      newDateData.sort((a, b) => {
+        return a.post_date > b.post_date ? -1 : a.post_date > b.post_date ? 1 : 0;
+      })
+      setData(newDateData);
+      //console.log("날짜순");
+
+    } else if (sortData == 1) {
+
       var newLikeData = [...testData];
       newLikeData.sort((a, b) => {
         return a.like > b.like ? -1 : a.like > b.like ? 1 : 0;
       })
       setData(newLikeData);
-      console.log("000", newLikeData);
+      //console.log("인기순");
 
-    } else {
-      console.log("댓글");
+    } else if (sortData == 2) {
+
       var newCommentData = [...testData];
       newCommentData.sort((a, b) => {
         return a.comment > b.comment ? -1 : a.comment > b.comment ? 1 : 0;
       })
       setData(newCommentData);
-      console.log("111", newCommentData);
+      //console.log("댓글순");
+
+    } else {
+      setData(testData);
     }
 
   }, [sortData]);
@@ -144,14 +163,20 @@ export default ({ navigation }) => {
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
-        style={{ justifyContent: 'center', width: '100%', borderColor: "#a8a8a8", borderBottomWidth: 1, padding: "4%" }}
+        style={{ justifyContent: 'center', width: '100%', borderColor: "#a8a8a8", borderBottomWidth: 1, paddingLeft: "5%", paddingRight: "5%", paddingTop: "6%", paddingBottom: "6%" }}
         onPress={() => {
+          navigation.navigate("자유 게시판", { title: item.title, content: item.content, like: item.like, comment: item.comment });
         }}>
 
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           {/* 제목 */}
-          <Text style={{ color: 'black', fontSize: 15, fontWeight: "bold", textAlign: 'left', marginBottom: 10 }}>{item.title}</Text>
-          <View style={{ flexDirection: "row" }}>
+       
+          <Text style={{ color: 'black', fontSize: 18, fontWeight: "bold", textAlign: 'left', width: "75%", marginBottom: 10 }}
+            numberOfLines={1}
+            ellipsizeMode="tail">{item.title}</Text>
+         
+          
+          <View style={{ flexDirection: "row", }}>
             <Icon
               name={"heart"}
               size={15}
@@ -169,7 +194,9 @@ export default ({ navigation }) => {
 
         </View>
         {/* 내용 */}
-        <Text style={{ color: 'gray', fontSize: 10, textAlign: 'left', marginLeft: 10 }}>{item.content}</Text>
+        <Text style={{ color: 'gray', fontSize: 12, textAlign: 'left', marginLeft: 10 }}
+          numberOfLines={1}
+          ellipsizeMode="tail">{item.content}</Text>
       </TouchableOpacity>
 
     );
@@ -192,9 +219,12 @@ export default ({ navigation }) => {
                 color={"white"} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={{ marginLeft: 20, marginRight: 10 }}>
-              <Icon
-                name={"ellipsis-h"}
+            <TouchableOpacity style={{ marginLeft: 20, marginRight: 5 }}
+              onPress={() => {
+                navigation.navigate("게시글 작성");
+              }}>
+              <Icon2
+                name={"ellipsis-horizontal-sharp"}
                 size={20}
                 color={"black"} />
             </TouchableOpacity>
@@ -206,9 +236,9 @@ export default ({ navigation }) => {
         {/* 공지  */}
         <TouchableOpacity style={{ borderColor: "gray", borderWidth: 1, paddingTop: "5%", paddingBottom: "5%", paddingLeft: "3%", marginBottom: "3%", flexDirection: "row", justifyContent: "center" }}>
 
-          <Text style={{ position: "absolute", left: 10, top: "100%", bottom: 0, color: "black", fontWeight: "bold" }}>공지</Text>
+          <Text style={{ position: "absolute", left: 10, top: 18, bottom: 0, color: "black", fontSize: 16, fontWeight: "bold" }}>공지</Text>
 
-          <Text style={{ textAlign: "center", color: "gray", fontSize: 15 }}>게시판 운영 관련 안내</Text>
+          <Text style={{ textAlign: "center", color: "black", fontSize: 15 }}>게시판 운영 관련 안내</Text>
 
         </TouchableOpacity>
         {/*  */}
@@ -216,27 +246,42 @@ export default ({ navigation }) => {
 
         {/* 인기순, 댓글순  */}
         <View style={{ width: "100%", flexDirection: "row", marginBottom: "5%" }}>
-        <TouchableOpacity style={{ backgroundColor: Color.likeButtonColor, justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15, borderWidth: 1, borderColor: Color.likeButtonColor }}
-        ref={likeButton}
-        onPress={() => {
-          likeStyle();
-          likeTextStyle();
-          setSortData(0);
-        }}>
-          <Text style={{ color: "white", fontSize: 15, fontWeight: "bold", textAlign: "center" }}
-          ref={likeButtonText}>인기순</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15, borderWidth: 1, borderColor: Color.likeButtonColor }}
+            ref={likeButton}
+            onPress={() => {
+              if (sortData == 1) {
+                dateStyle();
+                dateTextStyle();
+                setSortData(0);
 
-        <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15, borderWidth: 1, borderColor: Color.loginButtonBackground }}
-        ref={commentButton}
-        onPress={() => {
-          commentStyle();
-          commentTextStyle();
-          setSortData(1);
-        }}>
-          <Text style={{ color: "black", fontSize: 15, fontWeight: "bold", textAlign: "center" }}
-          ref={commentButtonText}>댓글순</Text>
-        </TouchableOpacity>
+              } else {
+                likeStyle();
+                likeTextStyle();
+                setSortData(1);
+              }
+
+            }}>
+            <Text style={{ color: "black", fontSize: 15, fontWeight: "bold", textAlign: "center" }}
+              ref={likeButtonText}>인기순</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15, borderWidth: 1, borderColor: Color.loginButtonBackground }}
+            ref={commentButton}
+            onPress={() => {
+              if (sortData == 2) {
+                dateStyle();
+                dateTextStyle();
+                setSortData(0);
+              } else {
+                commentStyle();
+                commentTextStyle();
+                setSortData(2);
+              }
+
+            }}>
+            <Text style={{ color: "black", fontSize: 15, fontWeight: "bold", textAlign: "center" }}
+              ref={commentButtonText}>댓글순</Text>
+          </TouchableOpacity>
         </View>
         {/*  */}
 
@@ -244,7 +289,8 @@ export default ({ navigation }) => {
           data={data}
           renderItem={renderItem}
           keyExtractor={item => item.index}
-          disableVirtualization={true} />
+          disableVirtualization={true}
+          showsVerticalScrollIndicator={false} />
 
 
       </View>

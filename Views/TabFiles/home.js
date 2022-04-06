@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
+  ScrollView,
+  FlatList,
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
@@ -18,22 +20,84 @@ export default ({ navigation }) => {
 
   }, [])
 
+  const testData = [
+    {
+      index: 0,
+      title: '연경 도약대',
+      content: '대구광역시 북구 연경동819',
+      image: Climb
+    },
+    {
+      index: 1,
+      title: '천등산',
+      content: '전라북도 연주군',
+      image: Climb2
+    },
+    {
+      index: 2,
+      title: '연경 도약대',
+      content: '대구광역시 북구 연경동819',
+      image: Climb
+    },
+    {
+      index: 3,
+      title: '천등산',
+      content: '전라북도 연주군',
+      image: Climb2
+    },
+    {
+      index: 4,
+      title: '연경 도약대',
+      content: '대구광역시 북구 연경동819',
+      image: Climb
+    },
+    {
+      index: 5,
+      title: '천등산',
+      content: '전라북도 연주군',
+      image: Climb2
+    },
+  ];
+
+  const renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={{}}
+        onPress={() => {
+          navigation.navigate("RCW");
+        }}>
+
+        <ImageBackground
+          imageStyle={{ borderRadius: 30 }}
+          style={{ width: 200, height: 300, borderColor: "white", marginRight: 20 }}
+          source={item.image}
+          resizeMode="cover">
+
+          <View style={{ position: "absolute", left: 14, bottom: 25, marginRight: 20, width: "100%", height: 20, alignItems: "flex-start" }}>
+            <Text style={{ fontSize: 17, color: "white", fontWeight: "bold" }}>{item.title}</Text>
+            <Text style={{ fontSize: 10, color: "white", fontWeight: "bold" }} ellipsizeMode="tail">{item.content}</Text>
+          </View>
+        </ImageBackground>
+      </TouchableOpacity>
+
+    );
+  };
+
   return (
-    <TouchableWithoutFeedback
-      style={styles.touchableWithoutFeedback}
-      onPress={Keyboard.dismiss}>
+    <ScrollView style={{ flex: 1, backgroundColor: "white" }}
+    showsVerticalScrollIndicator={false}>
       <View style={styles.page}>
 
         {/* 헤더  */}
         <View style={styles.homeHeader}>
           <Text style={styles.homeAllClimb}>All Climb</Text>
 
-          <View style={styles.homeSearch}>
+          <TouchableOpacity style={styles.homeSearch}>
             <Icon
               name={"search"}
               size={20}
               color={"white"} />
-          </View>
+          </TouchableOpacity>
         </View>
         {/*  */}
 
@@ -42,54 +106,112 @@ export default ({ navigation }) => {
           <Text style={styles.homeContentTitle}>추천 암벽장</Text>
         </View>
 
+
         <View style={styles.homeRecommend}>
 
+          <FlatList
+            data={testData}
+            renderItem={renderItem}
+            horizontal={true}
+            keyExtractor={item => item.index}
+            showsHorizontalScrollIndicator={false}
+            disableVirtualization={true} />
 
-          <TouchableOpacity onPress={()=>{
-            navigation.navigate("RCW");
-          }}>
-            <ImageBackground
-              imageStyle={{ borderWidth: 1, borderRadius: 30 }}
-              style={{ width: 150, height: 200, borderColor: "white", marginRight: 20 }}
-              source={Climb}
-              resizeMode="cover">
+        </View>
+        {/*  */}
 
-              <View style={{ position: "absolute", left: 14, bottom: 25, marginRight: 20, width: "100%", height: 20, alignItems: "flex-start" }}>
-                <Text style={{ fontSize: 17, color: "white", fontWeight: "bold" }}>연경 도약대</Text>
-                <Text style={{ fontSize: 10, color: "white", fontWeight: "bold" }} ellipsizeMode="tail">대구광역시 북구 연경동819</Text>
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
 
-          <TouchableOpacity>
-            <ImageBackground
-              imageStyle={{ borderWidth: 1, borderRadius: 30 }}
-              style={{ width: 150, height: 200, borderColor: "white", marginRight: 20 }}
-              source={Climb2}
-              resizeMode="cover">
-                
 
-              <View style={{ position: "absolute", left: 14, bottom: 25, marginRight: 20, width: "100%", height: 20, alignItems: "flex-start" }}>
-                <Text style={{ fontSize: 17, color: "white", fontWeight: "bold" }}>천등산</Text>
-                <Text style={{ fontSize: 10, color: "white", fontWeight: "bold" }}>전라북도 연주군</Text>
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
 
+        {/* 인기   게시판  */}
+        <View style={styles.homeContentMargin}>
+          <Text style={styles.homeContentTitle}>인기 게시판</Text>
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <Text style={{ color: "black", fontWeight: "bold" }}>클라이밍이란?</Text>
+          <Text>산을 타고 넘고 올라가자</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Icon
+              name={"heart"}
+              size={15}
+              color={"#B33938"} />
+            <Text style={{ marginLeft: 7 }}>20</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <Text style={{ color: "black", fontWeight: "bold" }}>어떻게 잘올라감?</Text>
+          <Text>이렇게 해도 저렇게 해도 못 올</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Icon
+              name={"heart"}
+              size={15}
+              color={"#B33938"} />
+            <Text style={{ marginLeft: 7 }}>15</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <Text style={{ color: "black", fontWeight: "bold" }}>장비 추천욤</Text>
+          <Text>ㅈㄱㄴ</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Icon
+              name={"heart"}
+              size={15}
+              color={"#B33938"} />
+            <Text style={{ marginLeft: 7 }}>17</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <Text style={{ color: "black", fontWeight: "bold" }}>여기는 게시판</Text>
+          <Text>할말이 이렇게 없나</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Icon
+              name={"heart"}
+              size={15}
+              color={"#B33938"} />
+            <Text style={{ marginLeft: 7 }}>20</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <Text style={{ color: "black", fontWeight: "bold" }}>장비 추천욤</Text>
+          <Text>ㅈㄱㄴ</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Icon
+              name={"heart"}
+              size={15}
+              color={"#B33938"} />
+            <Text style={{ marginLeft: 7 }}>17</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <Text style={{ color: "black", fontWeight: "bold" }}>여기는 게시판?</Text>
+          <Text>할말이 이렇게 없나</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Icon
+              name={"heart"}
+              size={15}
+              color={"#B33938"} />
+            <Text style={{ marginLeft: 7 }}>20</Text>
+          </View>
         </View>
         {/*  */}
 
         {/* 게시판  */}
         <View style={styles.homeContentMargin}>
-          <Text style={styles.homeContentTitle}>게시판</Text>
+          <Text style={styles.homeContentTitle}>미완등 루트</Text>
         </View>
 
         <View style={styles.homeBoard}>
 
         </View>
-        {/*  */}
+
 
       </View>
-    </TouchableWithoutFeedback>
+    </ScrollView>
   )
 };

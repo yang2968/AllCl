@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     //
-    // Login
+    // login
     //
     loginSection1: {
         width: "100%",
@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
     loginETCButtonText: {
         color: "white", fontSize: 20, fontWeight: "bold", textAlign: "center"
     },
-    
     //
     // home
     //
@@ -108,13 +107,13 @@ const styles = StyleSheet.create({
 
     },
     homeContentMargin: {
-        marginTop: "8%",
+        marginTop: "6%",
         marginBottom: "3%"
     },
     homeContentTitle: {
         color: "black",
         fontWeight: "bold",
-        fontSize: 18
+        fontSize: 20
     },
     homeRecommend: {
         flexDirection: "row",
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
         borderColor: "black",
         borderWidth: 1,
         width: "100%",
-        height: "30%"
+        height: 250
     },
     //
     // board
@@ -145,20 +144,49 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         alignItems: "center",
         justifyContent: "center"
-
     },
-
+    //
+    // posting
+    //
+    postingView: {
+        flex: 1,
+        backgroundColor: "white",
+        alignItems: "center"
+    },
+    postingTitle: {
+        width: "100%",
+        // borderBottomWidth: 1,
+        // borderColor: "#848484",
+        color: "black",
+        fontSize: 20,
+    },
+    postingScrollContents: {
+        width: "88%",
+        height: "92%",
+        backgroundColor: "white"
+    },
+    postingContent: {
+        flex: 1,
+        fontSize: 15,
+        backgroundColor: "white",
+        color: "black"
+    },
+    postingBottomView: {
+        alignSelf: "flex-start",
+        width: "100%",
+        height: "10%",
+        backgroundColor: "white",
+        paddingLeft: 15
+    },
     //
     // Recommend Climb Wall
     //
     RCWScrollView: {
         backgroundColor: "black",
-        width: "100%",
-        height: "60%",
-        position: "absolute",
-        bottom: 0,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25
+       
+       
+        // borderTopLeftRadius: 25,
+        // borderTopRightRadius: 25
     },
     RCWScrollViewView: {
         padding: "5%"
@@ -166,7 +194,25 @@ const styles = StyleSheet.create({
     RCWTitleText: {
         color: "white",
         fontWeight: "bold",
-        fontSize: 20
+        fontSize: 20,
+        marginBottom: "3%"
+    },
+    RCWTitleText2: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 18,
+        marginBottom: "3%"
+    },
+    RCWContentText: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 16,
+        marginBottom: "3%"
+    },
+    RCWContentText2: {
+        color: "white",
+        fontSize: 15,
+        marginBottom: "5%"
     },
 });
 
