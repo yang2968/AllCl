@@ -5,6 +5,8 @@ import Color from "./Color";
 const StatusBarHeight =
     Platform.OS === 'ios' ? getStatusBarHeight(true) + 10 : 10;
 
+const searchViewMargin = Platform.OS === "ios" ? "10%" : "5%";
+
 const styles = StyleSheet.create({
     touchableWithoutFeedback: {
         flex: 1
@@ -125,6 +127,37 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         width: "100%",
         height: 250
+    },
+    //
+    // map
+    //
+    mapSearchView: {
+        position: "absolute",
+        width: "90%",
+        backgroundColor: "white",
+        marginTop: searchViewMargin,
+        borderRadius: 10,
+        flexDirection: "row",
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: "space-between"
+    },
+    mapSearchTextInput: {
+        flex: 1,
+        paddingLeft: 15,
+        color: "black",
+        fontSize: 20
+    },
+    mapSearch: {
+        backgroundColor: Color.loginBackground,
+        width: 40,
+        height: 40,
+        marginVertical: 5,
+        marginHorizontal: 10,
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "center"
+
     },
     //
     // board

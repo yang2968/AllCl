@@ -66,5 +66,7 @@
 	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string>AllCl Group</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location</string>
 </dict>
 </plist>

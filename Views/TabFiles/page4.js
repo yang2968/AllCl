@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
+  SafeAreaView,
   Text,
   TouchableWithoutFeedback,
   Keyboard,
@@ -20,10 +21,10 @@ export default ({ navigation }) => {
       style={{ flex: 1 }}
       onPress={Keyboard.dismiss}>
 
-      <View style={{ flex: 1, backgroundColor: Color.loginBackground }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Color.loginBackground }}>
         <Text>All Climb</Text>
 
-      </View>
+      </SafeAreaView>
 
     </TouchableWithoutFeedback>
   )

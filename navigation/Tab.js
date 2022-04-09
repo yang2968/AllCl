@@ -4,6 +4,7 @@ import {
      } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/dist/FontAwesome5';
+import Color from '../styles/Color';
 import Page1 from '../Views/TabFiles/home';
 import Page2 from '../Views/TabFiles/map';
 import Page3 from '../Views/TabFiles/board';
@@ -19,11 +20,16 @@ export default ({ route }) => {
       resetOnBlur={true}
       detachInactiveScreens={true}
       screenOptions={({ route }) => ({
-        tabBarActiveTintColor: "black", //탭의 text color변경 
+        tabBarActiveTintColor: Color.loginButtonBackground, //탭의 text color변경 
         tabBarInactiveTintColor: "white",
+        tabBarActiveBackgroundColor: Color.loginBackground,
+        tabBarItemStyle: {
+          borderRadius: 30,
+          marginHorizontal: 12,
+        },
         tabBarLabelStyle: {
             fontWeight: 'bold',// text 의 굵기 지정
-            fontSize: 10 //text 사이즈 
+            fontSize: 11 //text 사이즈 
         },
         tabBarStyle: {
             backgroundColor: "white",
@@ -51,7 +57,7 @@ export default ({ route }) => {
               <Icon
               name={iconName} 
               size={20}
-              color={focused ? "black" : "grey"} />
+              color={focused ? Color.loginButtonBackground : "grey"} />
             )
           }
           else{
@@ -59,7 +65,7 @@ export default ({ route }) => {
               <Icon
                 name={iconName} //이게 아이콘 마다 이름을 불오는 거좌나? 그럼 저 listalit만 따로 뺴서 크기 지정 할수 있지 않을까?
                 size={25}
-                color={focused ? "black" : "grey"} />
+                color={focused ? Color.loginButtonBackground : "grey"} />
             )
 
           }    
