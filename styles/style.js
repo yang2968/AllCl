@@ -214,15 +214,8 @@ const styles = StyleSheet.create({
     //
     // Recommend Climb Wall
     //
-    RCWScrollView: {
+    RCWView: {
         backgroundColor: "black",
-       
-       
-        // borderTopLeftRadius: 25,
-        // borderTopRightRadius: 25
-    },
-    RCWScrollViewView: {
-        padding: "5%"
     },
     RCWTitleText: {
         color: "white",
@@ -246,6 +239,17 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 15,
         marginBottom: "5%"
+    },
+    RCWSearchView: {
+       
+        width: "100%",
+        backgroundColor: "white",
+        marginVertical: "7%",
+        borderRadius: 10,
+        flexDirection: "row",
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: "space-between"
     },
 });
 

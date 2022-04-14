@@ -11,6 +11,8 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/Ionicons';
 import Color from "../../styles/Color";
 import styles from "../../styles/style";
+import API from "../../API/API";
+import moment from "moment";
 
 export default ({ navigation }) => {
   // 날짜순
@@ -48,7 +50,7 @@ export default ({ navigation }) => {
   }, []);
 
   const [sortData, setSortData] = useState(0);
-  const [data, setData] = useState(testData);
+  const [data, setData] = useState([]);
   // post_date로 게시물 생성 날짜 
 
   var testData = [
@@ -88,7 +90,7 @@ export default ({ navigation }) => {
       index: 4,
       post_date: "2022-01-05",
       title: '여기는 게시판 언제까지 어깨 춤을 가나다 라마 바사',
-      content: '할말이 이렇게 없나 가나다 라 바사가 나다 라마바 \n사가 나다라마바 사가나 다라 마바사 가나 다라마 바사 가나다 라마 바사아',
+      content: '할말이 이렇게 없나 가나다 라 바사가 나다 라마바사가 나다라마바 사가나 다라 마바사 가나 다라마 바사 가나다 라마 바사아',
       like: 5,
       comment: 5,
     },
@@ -118,18 +120,39 @@ export default ({ navigation }) => {
     },
     {
       index: 8,
-      post_date: "2022-01-22",
+      post_date: "2022-04-11 11:37:58",
       title: '중간고사 언제부터죠??',
       content: 'ㅈㄱㄴ',
       like: 1,
       comment: 9,
     },
   ];
-
+  // 게시물 리스트 데이터 받아오기
+  useEffect(() => {
+    async function getData() {
+      const postingListData = await API.getPostingList();
+      //console.log("00", postingListData);
+      // 날짜순 정렬
+      postingListData.sort((a, b) => {
+        return a.post_date > b.post_date ? -1 : a.post_date > b.post_date ? 1 : 0;
+      })
+      setData(postingListData);
+    }
+    getData();
+  }, []);
+  // 게시물 리스트 정렬
   useEffect(() => {
     if (sortData == 0) {
 
-      var newDateData = [...testData];
+      console.log("0");
+      var newDateData = [...data];
+      console.log("00", newDateData);
+      // console.log("11");
+      // console.log("22", data[2].post_date);
+      //var test = moment(newDateData[2].post_date).format("YYYYMMDDHHmmss");
+      //console.log("33", test);
+
+
       newDateData.sort((a, b) => {
         return a.post_date > b.post_date ? -1 : a.post_date > b.post_date ? 1 : 0;
       })
@@ -137,25 +160,25 @@ export default ({ navigation }) => {
       //console.log("날짜순");
 
     } else if (sortData == 1) {
-
-      var newLikeData = [...testData];
+      console.log("1");
+      var newLikeData = [...data];
       newLikeData.sort((a, b) => {
-        return a.like > b.like ? -1 : a.like > b.like ? 1 : 0;
+        return a.like_count > b.like_count ? -1 : a.like_count > b.like_count ? 1 : 0;
       })
       setData(newLikeData);
       //console.log("인기순");
 
     } else if (sortData == 2) {
-
-      var newCommentData = [...testData];
+      console.log("2");
+      var newCommentData = [...data];
       newCommentData.sort((a, b) => {
-        return a.comment > b.comment ? -1 : a.comment > b.comment ? 1 : 0;
+        return a.comment_count > b.comment_count ? -1 : a.comment_count > b.comment_count ? 1 : 0;
       })
       setData(newCommentData);
       //console.log("댓글순");
 
     } else {
-      setData(testData);
+      setData(data);
     }
 
   }, [sortData]);
@@ -170,33 +193,33 @@ export default ({ navigation }) => {
 
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           {/* 제목 */}
-       
+
           <Text style={{ color: 'black', fontSize: 18, fontWeight: "bold", textAlign: 'left', width: "75%", marginBottom: 10 }}
             numberOfLines={1}
-            ellipsizeMode="tail">{item.title}</Text>
-         
-          
+            ellipsizeMode="tail">{item.header}</Text>
+
+
           <View style={{ flexDirection: "row", }}>
             <Icon
               name={"heart"}
               size={15}
               color={"#B33938"} />
             {/* 좋아요  */}
-            <Text style={{ color: "black", fontSize: 10, marginLeft: 5, marginRight: 10 }}>{item.like}</Text>
+            <Text style={{ color: "black", fontSize: 10, marginLeft: 5, marginRight: 10 }}>{item.like_count}</Text>
 
             <Icon
               name={"comment-o"}
               size={15}
               color={"black"} />
             {/* 댓글 */}
-            <Text style={{ color: "black", fontSize: 10, marginLeft: 5 }}>{item.comment}</Text>
+            <Text style={{ color: "black", fontSize: 10, marginLeft: 5 }}>{item.comment_count}</Text>
           </View>
 
         </View>
         {/* 내용 */}
         <Text style={{ color: 'gray', fontSize: 12, textAlign: 'left', marginLeft: 10 }}
           numberOfLines={1}
-          ellipsizeMode="tail">{item.content}</Text>
+          ellipsizeMode="tail">{item.post_date}</Text>
       </TouchableOpacity>
 
     );
@@ -288,7 +311,7 @@ export default ({ navigation }) => {
         <FlatList
           data={data}
           renderItem={renderItem}
-          keyExtractor={item => item.index}
+          keyExtractor={item => item.post_index}
           disableVirtualization={true}
           showsVerticalScrollIndicator={false} />
 

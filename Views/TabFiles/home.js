@@ -11,13 +11,16 @@ import {
 } from "react-native";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import styles from "../../styles/style";
+import API from "../../API/API";
 import Climb from "../../images/climb.jpeg";
 import Climb2 from "../../images/climb2.jpeg";
 
 export default ({ navigation }) => {
 
-  useEffect(() => {
+  const [data, setData] = useState(testData);
 
+  useEffect(() => {
+    
   }, [])
 
   const testData = [

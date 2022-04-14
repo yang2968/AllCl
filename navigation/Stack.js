@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Alert, TouchableOpacity, Text, StyleSheet, View, BackHandler } from "react-native";
 import Icon from 'react-native-vector-icons/dist/Ionicons';
 import Icon2 from 'react-native-vector-icons/dist/FontAwesome';
@@ -13,26 +13,41 @@ import WatchPost from "../Views/StackFiles/watchPost";
 const Stack = createNativeStackNavigator();
 
 export default () => {
+   
+
 
     useEffect(() => {
-        const backAction = () => {
-            Alert.alert("알림", "앱을 종료하시겠습니까?", [
-                {
-                    text: "취소",
-                    onPress: () => null,
-                },
-                { text: "확인", onPress: () => BackHandler.exitApp() }
-            ]);
-            return true;
-        };
+        
+       
+        // const backAction = () => {
+        //     Alert.alert("알림", "앱을 종료하시겠습니까?", [
+        //         {
+        //             text: "취소",
+        //             onPress: () => null,
+        //         },
+        //         { text: "확인", onPress: () => BackHandler.exitApp() }
+        //     ]);
+        //     return true;
+        // };
 
-        const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
-        );
+        // const backHandler = BackHandler.addEventListener(
+        //     "hardwareBackPress",
+        //     backAction
+        // );
 
-        return () => backHandler.remove();
+        // return () => backHandler.remove();
     }, []);
+
+    const backAction = () => {
+        Alert.alert("알림", "앱을 종료하시겠습니까?", [
+            {
+                text: "취소",
+                onPress: () => null,
+            },
+            { text: "확인", onPress: () => BackHandler.exitApp() }
+        ]);
+        return true;
+    };
 
     return (
         <Stack.Navigator
@@ -52,6 +67,19 @@ export default () => {
                 },
                 headerTitleAlign: "center",
                 headerLeft: () => {
+                    if(route.name == "Tab") {
+                       
+    
+                        // const backHandler = BackHandler.addEventListener(
+                        //     "hardwareBackPress",
+                        //     backAction
+                        // );
+    
+                        // return () => backHandler.remove();
+    
+                    }
+                  
+
                     let iconName = Platform.OS === "ios" ? "ios-" : "md-";
                     if (route.name == "게시글 작성") {
                         iconName += "arrow-back";

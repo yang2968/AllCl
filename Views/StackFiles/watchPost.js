@@ -20,8 +20,7 @@ import styles from "../../styles/style";
 export default ({ navigation, route }) => {
     // 게시물 정보 추출
     const data = route.params;
-    //console.log(data);
-    const textInputPadding = Platform.OS === "ios" ? 15 : 10;
+
 
     const keyboardHeight = useKeyboardHeight();
     console.log(keyboardHeight);
@@ -30,7 +29,7 @@ export default ({ navigation, route }) => {
     const [title, setTitle] = useState("");
 
     var testWidth = Dimensions.get("window").width;
-    //console.log("ttt", testWidth);
+
 
     var testData = [
         {
