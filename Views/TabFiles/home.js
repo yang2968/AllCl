@@ -14,13 +14,14 @@ import styles from "../../styles/style";
 import API from "../../API/API";
 import Climb from "../../images/climb.jpeg";
 import Climb2 from "../../images/climb2.jpeg";
+import Color from "../../styles/Color";
 
 export default ({ navigation }) => {
 
   const [data, setData] = useState(testData);
 
   useEffect(() => {
-    
+
   }, [])
 
   const testData = [
@@ -88,7 +89,7 @@ export default ({ navigation }) => {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "white" }}
-    showsVerticalScrollIndicator={false}>
+      showsVerticalScrollIndicator={false}>
       <View style={styles.page}>
 
         {/* 헤더  */}
@@ -126,92 +127,81 @@ export default ({ navigation }) => {
 
 
 
-        {/* 인기   게시판  */}
+        {/* 인기 게시판  */}
         <View style={styles.homeContentMargin}>
           <Text style={styles.homeContentTitle}>인기 게시판</Text>
         </View>
 
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-          <Text style={{ color: "black", fontWeight: "bold" }}>클라이밍이란?</Text>
-          <Text>산을 타고 넘고 올라가자</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Icon
-              name={"heart"}
-              size={15}
-              color={"#B33938"} />
-            <Text style={{ marginLeft: 7 }}>20</Text>
-          </View>
-        </View>
+        <View style={styles.homeBoard}>
 
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-          <Text style={{ color: "black", fontWeight: "bold" }}>어떻게 잘올라감?</Text>
-          <Text>이렇게 해도 저렇게 해도 못 올</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Icon
-              name={"heart"}
-              size={15}
-              color={"#B33938"} />
-            <Text style={{ marginLeft: 7 }}>15</Text>
+          <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <Text style={{ color: "black", fontWeight: "bold" }}>클라이밍이란?</Text>
+            <Text style={{ color: "black", fontWeight: "bold" }}>산을 타고 넘고 올라가자</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Icon
+                name={"heart"}
+                size={15}
+                color={"#B33938"} />
+              <Text style={{ marginLeft: 7 }}>20</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-          <Text style={{ color: "black", fontWeight: "bold" }}>장비 추천욤</Text>
-          <Text>ㅈㄱㄴ</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Icon
-              name={"heart"}
-              size={15}
-              color={"#B33938"} />
-            <Text style={{ marginLeft: 7 }}>17</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <Text style={{ color: "black", fontWeight: "bold" }}>어떻게 잘올라감?</Text>
+            <Text style={{ color: "black", fontWeight: "bold" }}  ellipsizeMode="tail">이렇게 해도 저렇게 해도 못 올</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Icon
+                name={"heart"}
+                size={15}
+                color={"#B33938"} />
+              <Text style={{ marginLeft: 7 }}>15</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-          <Text style={{ color: "black", fontWeight: "bold" }}>여기는 게시판</Text>
-          <Text>할말이 이렇게 없나</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Icon
-              name={"heart"}
-              size={15}
-              color={"#B33938"} />
-            <Text style={{ marginLeft: 7 }}>20</Text>
+          <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <Text style={{ color: "black", fontWeight: "bold" }}>장비 추천욤</Text>
+            <Text style={{ color: "black", fontWeight: "bold" }}>ㅈㄱㄴ</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Icon
+                name={"heart"}
+                size={15}
+                color={"#B33938"} />
+              <Text style={{ marginLeft: 7 }}>17</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-          <Text style={{ color: "black", fontWeight: "bold" }}>장비 추천욤</Text>
-          <Text>ㅈㄱㄴ</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Icon
-              name={"heart"}
-              size={15}
-              color={"#B33938"} />
-            <Text style={{ marginLeft: 7 }}>17</Text>
+          <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <Text style={{ color: "black", fontWeight: "bold" }}>여기는 게시판</Text>
+            <Text style={{ color: "black", fontWeight: "bold" }}>할말이 이렇게 없나</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Icon
+                name={"heart"}
+                size={15}
+                color={"#B33938"} />
+              <Text style={{ marginLeft: 7 }}>20</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-          <Text style={{ color: "black", fontWeight: "bold" }}>여기는 게시판?</Text>
-          <Text>할말이 이렇게 없나</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Icon
-              name={"heart"}
-              size={15}
-              color={"#B33938"} />
-            <Text style={{ marginLeft: 7 }}>20</Text>
-          </View>
         </View>
         {/*  */}
 
-        {/* 게시판  */}
+        {/* 요약 */}
         <View style={styles.homeContentMargin}>
-          <Text style={styles.homeContentTitle}>미완등 루트</Text>
+          <Text style={styles.homeContentTitle}>요약</Text>
         </View>
 
-        <View style={styles.homeBoard}>
+        <TouchableOpacity style={styles.homeBoard2}
+        onPress={()=>{
 
-        </View>
+        }}>
+           <Icon
+                name={"plus"}
+                size={50}
+                color={Color.loginBackground} />
+          <Text style={{ color: Color.loginBackground, fontSize: 15, fontWeight: "bold", textAlign: "center" }}>
+            {"요약할 정보가 없습니다." + "\n" + "Clear루트를 설정해주세요!"}
+          </Text>
+        </TouchableOpacity>
 
 
       </View>

@@ -123,10 +123,20 @@ const styles = StyleSheet.create({
 
     },
     homeBoard: {
-        borderColor: "black",
-        borderWidth: 1,
         width: "100%",
-        height: 250
+        height: 200,
+        backgroundColor: "#F1F1F1",
+        paddingVertical: "5%",
+        paddingHorizontal: "5%",
+        borderRadius: 25,
+    },
+    homeBoard2: {
+        width: "100%",
+        height: 200,
+        backgroundColor: "#D2D2D2",
+        borderRadius: 25,
+       alignItems: "center",
+       justifyContent: "center"
     },
     //
     // map

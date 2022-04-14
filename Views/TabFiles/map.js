@@ -93,16 +93,6 @@ export default ({ navigation }) => {
           <Callout
             style={{ width: 100 }}
             onPress={() => {
-              // Alert.alert("알림", item.title + " 이동하시겠습니까?", [
-              //   {
-              //     text: "취소"
-              //   },
-              //   {
-              //     text: "확인",
-              //     onPress: () => { setModalVisible(true) }
-              //   }
-              // ])
-
               setModalVisible(true)
             }}>
             <Text style={{ textAlign: 'center', color: "black", fontWeight: 'bold', fontSize: 12 }}>{item.title}</Text>
@@ -131,7 +121,10 @@ export default ({ navigation }) => {
           style={{ flex: 1, alignItems: "center" }}
           region={region}
           onMapReady={() => setRegion(region)}
-        >
+          onRegionChangeComplete={(region)=> {
+            setRegion(region);
+          }}
+          >
           {setMarkers()}
         </MapView>
 

@@ -12,10 +12,12 @@ import {
     ImageBackground,
     ScrollView,
     Dimensions,
-    FlatList
+    FlatList,
+    Modal
 } from "react-native";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/Ionicons';
+import StarRating from 'react-native-star-rating';
 import styles from "../../styles/style";
 import Color from "../../styles/Color";
 import Climb from "../../images/climb.jpeg";
@@ -26,6 +28,14 @@ export default ({ navigation }) => {
 
 
     const [data, setData] = useState(testData);
+    // 장치 목록 모달 표시 여부 변수
+    const [modalVisible, setModalVisible] = useState(false);
+    const [starCount, setStarCount] = useState(1.5);
+
+    function onStarRatingPress(rating) {
+        console.log(rating);
+        setStarCount(rating);
+    }
 
     var imageHeight = Dimensions.get("window").height;
 
@@ -150,7 +160,10 @@ export default ({ navigation }) => {
                             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                 <Text style={styles.RCWTitleText}>연경 도약대</Text>
 
-                                <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginRight: 25 }}>
+                                <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginRight: 25 }}
+                                    onPress={() => {
+                                        setModalVisible(true);
+                                    }}>
                                     <Icon
                                         name={"star"}
                                         size={20}
@@ -229,6 +242,63 @@ export default ({ navigation }) => {
                     </View>
 
                 } />
+
+
+
+
+
+            {/* 별점 페이지 */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+                onBackdropPress={() => {
+                    setModalVisible(false);
+                }}>
+                <View style={{ flex: 1, width: "100%", alignSelf: "center", alignItems: "center", justifyContent: "center" }}>
+                    <View style={{ width: "100%", backgroundColor: Color.loginBackground, alignItems: "center", justifyContent: "center", paddingVertical: "5%", borderRadius: 25 }}>
+                        <Text style={{ color: "white", fontSize: 20, fontWeight: "bold", marginBottom: 20 }}>별점 주기</Text>
+
+                        <StarRating
+                            disabled={false}
+                            activeOpacity={0.2}
+                            rating={starCount}
+                            halfStarEnabled={true}
+                            iconSet={'FontAwesome'}
+                            emptyStar={'star'}
+                            fullStar={'star'}
+                            halfStar={'star-half-full'}
+                            starSize={25}
+
+                            fullStarColor={"#F0CF54"}
+                            halfStarColor={"#F0CF54"}
+                            emptyStarColor={"#CCCCCC"}
+                            maxStars={5}
+                            selectedStar={(rating) => onStarRatingPress(rating)}
+                            starStyle={{ marginHorizontal: 10 }} />
+
+                        <TouchableOpacity style={{ backgroundColor: Color.loginButtonBackground, alignItems: "center", justifyContent: "center", marginTop: 20, width: "65%", padding: "2.5%", borderRadius: 12 }}
+                            onPress={() => {
+                                setModalVisible(false);
+                            }}>
+                            <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>완료</Text>
+                        </TouchableOpacity>
+
+
+
+
+
+                    </View>
+                </View>
+
+
+            </Modal>
+
+
+
         </View>
     )
 };
