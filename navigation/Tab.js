@@ -12,7 +12,7 @@ import Color from '../styles/Color';
 import Page1 from '../Views/TabFiles/home';
 import Page2 from '../Views/TabFiles/map';
 import Page3 from '../Views/TabFiles/board';
-import Page4 from '../Views/TabFiles/page4';
+import Page4 from '../Views/TabFiles/myPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -71,7 +71,7 @@ export default ({ route }) => {
             iconName = "mountain"
           } else if (route.name == "게시판") {
             iconName = "list-alt"
-          } else if (route.name == "페이지4") {
+          } else if (route.name == "Me") {
             iconName = "user"
           }
 
@@ -102,7 +102,7 @@ export default ({ route }) => {
       <Tab.Screen name="홈" component={Page1} options={{ headerShown: false }} />
       <Tab.Screen name="지도" component={Page2} options={{ headerShown: false }} />
       <Tab.Screen name="게시판" component={Page3} options={{ headerShown: false }} />
-      <Tab.Screen name="페이지4" component={Page4} options={{ headerShown: false }} />
+      <Tab.Screen name="Me" component={Page4} options={{ headerShown: false }} />
 
     </Tab.Navigator>
 

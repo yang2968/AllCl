@@ -30,12 +30,7 @@ export default ({ navigation }) => {
     const [data, setData] = useState(testData);
     // 장치 목록 모달 표시 여부 변수
     const [modalVisible, setModalVisible] = useState(false);
-    const [starCount, setStarCount] = useState(1.5);
-
-    function onStarRatingPress(rating) {
-        console.log(rating);
-        setStarCount(rating);
-    }
+    const [starCount, setStarCount] = useState(0);
 
     var imageHeight = Dimensions.get("window").height;
 
@@ -169,7 +164,7 @@ export default ({ navigation }) => {
                                         size={20}
                                         color={"#F0CF54"} />
 
-                                    <Text style={{ color: "#F0CF54", fontSize: 20, fontWeight: "bold", marginLeft: 10 }}>8.4</Text>
+                                    <Text style={{ color: "#F0CF54", fontSize: 20, fontWeight: "bold", marginLeft: 10 }}>{starCount}</Text>
                                 </TouchableOpacity>
 
 
@@ -258,7 +253,7 @@ export default ({ navigation }) => {
                 onBackdropPress={() => {
                     setModalVisible(false);
                 }}>
-                <View style={{ flex: 1, width: "100%", alignSelf: "center", alignItems: "center", justifyContent: "center" }}>
+                <View style={{ flex: 1, width: "90%", alignSelf: "center", alignItems: "center", justifyContent: "center" }}>
                     <View style={{ width: "100%", backgroundColor: Color.loginBackground, alignItems: "center", justifyContent: "center", paddingVertical: "5%", borderRadius: 25 }}>
                         <Text style={{ color: "white", fontSize: 20, fontWeight: "bold", marginBottom: 20 }}>별점 주기</Text>
 
@@ -271,13 +266,13 @@ export default ({ navigation }) => {
                             emptyStar={'star'}
                             fullStar={'star'}
                             halfStar={'star-half-full'}
-                            starSize={25}
-
+                            starSize={30}
                             fullStarColor={"#F0CF54"}
                             halfStarColor={"#F0CF54"}
                             emptyStarColor={"#CCCCCC"}
                             maxStars={5}
-                            selectedStar={(rating) => onStarRatingPress(rating)}
+                            
+                            selectedStar={(rating) => setStarCount(rating)}
                             starStyle={{ marginHorizontal: 10 }} />
 
                         <TouchableOpacity style={{ backgroundColor: Color.loginButtonBackground, alignItems: "center", justifyContent: "center", marginTop: 20, width: "65%", padding: "2.5%", borderRadius: 12 }}

@@ -3,6 +3,7 @@ import {
     View,
     ScrollView,
     Text,
+    ActionSheetIOS,
     FlatList,
     TouchableWithoutFeedback,
     Keyboard,
@@ -52,7 +53,26 @@ export default ({ navigation }) => {
                 </ScrollView>
 
                 <View style={styles.postingBottomView}>
-                <TouchableOpacity style={{ padding: 10 }}>
+                <TouchableOpacity style={{ padding: 10 }}
+                onPress={() =>{
+                    ActionSheetIOS.showActionSheetWithOptions(
+                        { 
+                          title: "게시판 메뉴",
+                          options: ["취소", "촬영", "앨범"],
+                          cancelButtonIndex: 0,
+                          userInterfaceStyle: 'dark'
+                        },
+                        buttonIndex => {
+                          if (buttonIndex === 0) {
+                            // 취소
+                          } else if (buttonIndex === 1) {
+                            // 카메라
+                          } else if (buttonIndex === 2) {
+                           // 앨범
+                          }
+                        }
+                      );
+                }}>
                     <Icon
                         name={"camera-outline"}
                         size={40}

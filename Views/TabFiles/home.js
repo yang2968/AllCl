@@ -20,6 +20,8 @@ export default ({ navigation }) => {
 
   const [data, setData] = useState(testData);
 
+  const [summary, setSummary] = useState(1);
+
   useEffect(() => {
 
   }, [])
@@ -148,7 +150,7 @@ export default ({ navigation }) => {
 
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <Text style={{ color: "black", fontWeight: "bold" }}>어떻게 잘올라감?</Text>
-            <Text style={{ color: "black", fontWeight: "bold" }}  ellipsizeMode="tail">이렇게 해도 저렇게 해도 못 올</Text>
+            <Text style={{ color: "black", fontWeight: "bold" }} ellipsizeMode="tail">이렇게 해도 저렇게 해도 못 올</Text>
             <View style={{ flexDirection: "row" }}>
               <Icon
                 name={"heart"}
@@ -170,7 +172,7 @@ export default ({ navigation }) => {
             </View>
           </View>
 
-          <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
             <Text style={{ color: "black", fontWeight: "bold" }}>여기는 게시판</Text>
             <Text style={{ color: "black", fontWeight: "bold" }}>할말이 이렇게 없나</Text>
             <View style={{ flexDirection: "row" }}>
@@ -190,18 +192,82 @@ export default ({ navigation }) => {
           <Text style={styles.homeContentTitle}>요약</Text>
         </View>
 
-        <TouchableOpacity style={styles.homeBoard2}
-        onPress={()=>{
+        {
+          summary === 0 ?
+          // 요약 정보 X
+            <TouchableOpacity style={styles.homeBoard2}
+              onPress={() => {
 
-        }}>
-           <Icon
+              }}>
+              <Icon
                 name={"plus"}
                 size={50}
-                color={Color.loginBackground} />
-          <Text style={{ color: Color.loginBackground, fontSize: 15, fontWeight: "bold", textAlign: "center" }}>
-            {"요약할 정보가 없습니다." + "\n" + "Clear루트를 설정해주세요!"}
-          </Text>
-        </TouchableOpacity>
+                color={"white"} />
+              <Text style={{ color: "white", fontSize: 15, fontWeight: "bold", textAlign: "center" }}>
+                {"요약할 정보가 없습니다." + "\n" + "Clear루트를 설정해주세요!"}
+              </Text>
+            </TouchableOpacity>
+            :
+            // 요약 정보 O
+            <TouchableOpacity style={styles.homeBoard3}
+              onPress={() => {
+
+              }}>
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 17, marginBottom: 20 }}>평균 Clear 난이도</Text>
+
+                <View style={{ borderColor: "white", borderWidth: 3, borderRadius: 120 / 2, width: 120, height: 120, marginBottom: 20, alignItems: "center", justifyContent: "center" }}>
+                  <Text style={{ color: "white", fontWeight: "bold", fontSize: 17 }}>약 5.9b</Text>
+                </View>
+
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15, textAlign: "center" }}>{"총 Clear 루트" + "\n" + "50"}</Text>
+
+              </View>
+
+              <View style={{ flex: 1, height: "100%", }}>
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 17, textAlign: "left" }}>{"암벽장별 Clear"}</Text>
+
+                <View style={{ flex: 1, width: "100%", justifyContent: "center", marginBottom: 20, marginRight: 5 }}>
+
+
+                  <View style={{ flexDirection: "row", marginBottom: 20, alignItems: "center", justifyContent: "flex-end" }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "left" }}>연경도약대</Text>
+                    </View>
+                    <View style={{ backgroundColor: "#BBBBBB", width: 60, height: 5, flexDirection: "row", flex: 1 }}>
+                      <View style={{ backgroundColor: "white", width: 33 }}></View>
+                    </View>
+                    <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "center", marginLeft: 5, marginRight: 10 }}>25/50</Text>
+                  </View>
+
+                  <View style={{ flexDirection: "row", marginBottom: 20, alignItems: "center", justifyContent: "flex-end" }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "left" }}>천등산</Text>
+                    </View>
+                    <View style={{ backgroundColor: "#BBBBBB", width: 60, height: 5, flexDirection: "row", flex: 1 }}>
+                      <View style={{ backgroundColor: "white", width: 22 }}></View>
+                    </View>
+                    <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "center", marginLeft: 5, marginRight: 10 }}>10/30</Text>
+                  </View>
+
+                  <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "left" }}>대구가톨릭대</Text>
+                    </View>
+                    <View style={{ backgroundColor: "#BBBBBB", width: 60, height: 5, flexDirection: "row", flex: 1 }}>
+                      <View style={{ backgroundColor: "white", width: 45 }}></View>
+                    </View>
+                    <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "center", marginLeft: 5, marginRight: 10 }}>15/20</Text>
+                  </View>
+
+                </View>
+              </View>
+            </TouchableOpacity>
+        }
+
+
+
+
 
 
       </View>

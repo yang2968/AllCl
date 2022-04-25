@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-   
+
     loginHeaderText: {
         color: "white",
         fontSize: 40,
@@ -65,13 +65,13 @@ const styles = StyleSheet.create({
         width: "100%",
         flexDirection: "row",
         justifyContent: "space-around",
-        marginTop: "9%"
+        marginTop: "9%",
     },
     loginETCButton: {
-        backgroundColor: Color.loginButtonBackground, width: "35%", paddingTop: 7, paddingBottom: 7, borderRadius: 25
+        backgroundColor: Color.loginButtonBackground, width: "45%", paddingVertical: 8, borderRadius: 25
     },
     loginETCButtonText: {
-        color: "white", fontSize: 20, fontWeight: "bold", textAlign: "center"
+        color: "white", fontSize: 18, fontWeight: "bold", textAlign: "center"
     },
     //
     // home
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     },
     homeBoard: {
         width: "100%",
-        height: 200,
         backgroundColor: "#F1F1F1",
         paddingVertical: "5%",
         paddingHorizontal: "5%",
@@ -132,11 +131,20 @@ const styles = StyleSheet.create({
     },
     homeBoard2: {
         width: "100%",
-        height: 200,
-        backgroundColor: "#D2D2D2",
+        backgroundColor: Color.loginBackground,
         borderRadius: 25,
-       alignItems: "center",
-       justifyContent: "center"
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: "20%"
+    },
+    homeBoard3: {
+        width: "100%",
+        backgroundColor: Color.loginBackground,
+        flexDirection: "row",
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingVertical: "5%"
     },
     //
     // map
@@ -188,6 +196,33 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center"
     },
+    boardSearchView2: {
+        flexDirection: "row",
+        width: "80%",
+        backgroundColor: "white",
+        borderWidth: 1,
+        borderColor: "#BEB8DF",
+        borderRadius: 10,
+        margin: 5,
+        alignItems: "center",
+        justifyContent: "space-between"
+    },
+    boardSearchTextInput2: {
+        flex: 1,
+        paddingLeft: 5,
+        color: "black",
+        fontSize: 15
+    },
+    boardSearch2: {
+        backgroundColor: "white",
+        width: 40,
+        height: 40,
+       
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "center"
+
+    },
     //
     // posting
     //
@@ -222,6 +257,20 @@ const styles = StyleSheet.create({
         paddingLeft: 15
     },
     //
+    // myPage
+    //
+    myPageScrollView: {
+        flex: 1,
+        backgroundColor: "white",
+        paddingTop: "5%",
+        paddingHorizontal: "5%"
+    },
+    myPageContainerView: {
+        flex: 1, backgroundColor: "white"
+    },
+
+
+    //
     // Recommend Climb Wall
     //
     RCWView: {
@@ -251,7 +300,7 @@ const styles = StyleSheet.create({
         marginBottom: "5%"
     },
     RCWSearchView: {
-       
+
         width: "100%",
         backgroundColor: "white",
         marginVertical: "7%",
@@ -261,6 +310,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between"
     },
+    //
+
+    container: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+      },
+      rectangle: {
+        width: 200,
+        height: 200,
+      },
+      spacer: {
+        height: 16,
+      }
 });
 
 export default styles;

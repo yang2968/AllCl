@@ -59,24 +59,25 @@ export default ({ navigation }) => {
     async function getPermission() {
       if (Platform.OS === 'ios') {
         Geolocation.requestAuthorization('always');
-      }
+      } else if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+          {
+            title: "Location Permission",
+            message:
+              "This App needs access to your Location ",
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonPositive: "OK"
+          }
+        );
 
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-        {
-          title: "Location Permission",
-          message:
-            "This App needs access to your Location ",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK"
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          //console.log("You can use the Location");
+        } else {
+          //console.log("Location permission denied");
         }
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        //console.log("You can use the Location");
-      } else {
-        //console.log("Location permission denied");
       }
     }
     getPermission();
@@ -121,10 +122,10 @@ export default ({ navigation }) => {
           style={{ flex: 1, alignItems: "center" }}
           region={region}
           onMapReady={() => setRegion(region)}
-          onRegionChangeComplete={(region)=> {
+          onRegionChangeComplete={(region) => {
             setRegion(region);
           }}
-          >
+        >
           {setMarkers()}
         </MapView>
 
@@ -184,8 +185,8 @@ export default ({ navigation }) => {
                     setRegion({
                       latitude: position.coords.latitude,
                       longitude: position.coords.longitude,
-                      latitudeDelta: 4.0,
-                      longitudeDelta: 4.0,
+                      latitudeDelta: 1.0,
+                      longitudeDelta: 1.0,
                     });
                   },
                   (error) => {
@@ -239,7 +240,7 @@ export default ({ navigation }) => {
                           color={"#F0CF54"} />
 
                         <Text style={{ color: "#F0CF54", fontSize: 20, fontWeight: "bold", marginLeft: 10 }}>8.4</Text>
-                      </View> 
+                      </View>
                     </View>
                     <Text style={styles.RCWTitleText2}>대구광역시 북구 연경동819</Text>
                     <Text style={styles.RCWContentText}>Information</Text>

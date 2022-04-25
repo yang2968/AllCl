@@ -9,6 +9,8 @@ import RecommendClimbingWall from "../Views/StackFiles/recommendClimbingWall";
 import Login from "../Views/StackFiles/login";
 import Posting from "../Views/StackFiles/posting";
 import WatchPost from "../Views/StackFiles/watchPost";
+import BoardSearch from "../Views/StackFiles/boardSearch";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -146,6 +148,7 @@ export default () => {
             <Stack.Screen name="RCW" component={RecommendClimbingWall} options={{ headerShown: false }} />
             <Stack.Screen name="게시글 작성" component={Posting} options={{ headerShown: true }} />
             <Stack.Screen name="자유 게시판" component={WatchPost} options={{ headerShown: true }} />
+            <Stack.Screen name="BoardSearch" component={BoardSearch} options={{ headerShown: false }} />
 
         </Stack.Navigator>
     )

@@ -8,7 +8,7 @@ import {
     TouchableOpacity
 } from "react-native";
 import styles from "../../styles/style";
-import Color from "../../styles/Color"
+import Color from "../../styles/Color";
 
 
 export default ({ navigation }) => {
@@ -63,7 +63,7 @@ export default ({ navigation }) => {
                     <TouchableOpacity
                         style={styles.loginETCButton}
                         onPress={() => { navigation.navigate("Tab") }}>
-                        <Text style={styles.loginETCButtonText}>SNS 로그인</Text>
+                        <Text style={styles.loginETCButtonText}>아이디/비밀번호 찾기</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
