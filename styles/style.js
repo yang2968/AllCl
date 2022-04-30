@@ -149,6 +149,9 @@ const styles = StyleSheet.create({
     //
     // map
     //
+    mapMarkerText: {
+        textAlign: 'center', color: "black", fontWeight: 'bold', fontSize: 12
+    },
     mapSearchView: {
         position: "absolute",
         width: "90%",
@@ -177,6 +180,58 @@ const styles = StyleSheet.create({
         justifyContent: "center"
 
     },
+    mapCurrentLocationView: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        height: 100,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-end"
+    },
+    mapCurrentLocationTouchableOpacity: {
+        width: 40,
+        height: 40,
+        backgroundColor: "white",
+        marginRight: 20,
+        marginBottom: 20,
+        borderRadius: 10,
+        flexDirection: "row",
+        alignSelf: "flex-end",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    mapModalView: {
+        flex: 1, alignItems: 'center', justifyContent: 'flex-end'
+    },
+    mapModalView2: {
+        width: '100%', height: '70%', backgroundColor: 'black', borderTopLeftRadius: 25, borderTopRightRadius: 25
+    },
+    mapModalImageView: {
+        width: "100%", height: "100%", justifyContent: 'flex-end'
+    },
+    mapModalInfo: {
+        backgroundColor: 'black', height: "45%", padding: "5%", borderTopLeftRadius: 25, borderTopRightRadius: 25
+    },
+    mapModalStarView: {
+        flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginRight: 25
+    },
+    mapModalStarText: {
+        color: "#F0CF54", fontSize: 20, fontWeight: "bold", marginLeft: 10
+    },
+    mapModalDetailInfoView: {
+        position: "absolute", bottom: 0, width: "100%", paddingVertical: "2.5%", paddingHorizontal: "4%"
+    },
+    mapModalDetailInfoTouchableOpacity: {
+        backgroundColor: "#314D2C", width: "100%", borderRadius: 10, activeOpacity: 0.1 
+    },
+    mapModalDetailInfoText: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20,
+        textAlign: "center",
+        marginVertical: "5%"
+    },
     //
     // board
     //
@@ -198,12 +253,13 @@ const styles = StyleSheet.create({
     },
     boardSearchView2: {
         flexDirection: "row",
-        width: "80%",
+        flex: 1,
+         height: 50,
         backgroundColor: "white",
         borderWidth: 1,
         borderColor: "#BEB8DF",
         borderRadius: 10,
-        margin: 5,
+        marginRight: 10,
         alignItems: "center",
         justifyContent: "space-between"
     },
@@ -271,7 +327,7 @@ const styles = StyleSheet.create({
 
 
     //
-    // Recommend Climb Wall
+    // ClimbingWallInfo
     //
     RCWView: {
         backgroundColor: "black",

@@ -7,6 +7,7 @@ import {
     TextInput,
     TouchableOpacity
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from "../../styles/style";
 import Color from "../../styles/Color";
 
@@ -55,7 +56,13 @@ export default ({ navigation }) => {
                 <View style={styles.loginSection3}>
                     <TouchableOpacity
                         style={styles.loginLoginButton}
-                        onPress={() => { navigation.navigate("Tab") }}>
+                        onPress={() => {
+                            AsyncStorage.setItem('userInfo', JSON.stringify({
+                                'nickname': "밥셔틀웅이",
+                            }));
+                            navigation.navigate("Tab");
+                            
+                            }}>
                         <Text style={styles.loginLoginButtonText}>로그인</Text>
                     </TouchableOpacity>
 

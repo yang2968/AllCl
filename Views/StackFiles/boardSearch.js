@@ -11,8 +11,10 @@ import {
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/Ionicons';
 import Icon3 from 'react-native-vector-icons/dist/SimpleLineIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from "../../styles/style";
 import Color from "../../styles/Color";
+import API from "../../API/API";
 
 export default ({ navigation }) => {
     // 
@@ -21,18 +23,25 @@ export default ({ navigation }) => {
     //s
     const [searchMode, setSearchMode] = useState(0);
 
+    
+    
     useEffect(() => {
-
+        async function getId () {
+            const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
+            const userInfo = JSON.parse(getData);
+            console.log(userInfo.nickname);
+        }
+        getId();
     }, [])
 
     return (
-        // <TouchableWithoutFeedback
-        //     style={{ flex: 1 }}
-        //     onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback
+            style={{ flex: 1 }}
+            onPress={Keyboard.dismiss}>
 
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
 
-            <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "center" }}>
+            <View style={{ flexDirection: "row", width: "90%", alignItems: "center", justifyContent: "center", marginHorizontal: "5%",  marginTop: 10, }}>
 
                 <SafeAreaView style={styles.boardSearchView2}>
                     {/* Search Text */}
@@ -60,7 +69,7 @@ export default ({ navigation }) => {
                         }
                         // 엔터키 입력
                         onSubmitEditing={()=>{
-                            console.log("엔터키 입력");
+                            console.log("searchMode", searchMode);
                         }}/>
                 </SafeAreaView>
 
@@ -87,8 +96,10 @@ export default ({ navigation }) => {
                     </View>
 
                     :
+                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
 
-                    <TouchableOpacity style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+                
+                    <TouchableOpacity style={{ alignItems: "center", justifyContent: "center" }}
                         onPress={() => {
                             switch (searchMode) {
                                 case 0:
@@ -114,6 +125,7 @@ export default ({ navigation }) => {
 
 
                     </TouchableOpacity>
+                    </View>
             }
 
 
@@ -126,6 +138,6 @@ export default ({ navigation }) => {
 
         </SafeAreaView>
 
-        // </TouchableWithoutFeedback>
+     </TouchableWithoutFeedback>
     )
 };

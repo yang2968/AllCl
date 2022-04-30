@@ -20,11 +20,13 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/MaterialIcons';
 import styles from "../../styles/style";
 import Color from "../../styles/Color";
+import API from "../../API/API";
 import Climb from "../../images/climb.jpeg";
 
 export default ({ navigation }) => {
+  const mainURL = "http://13.209.75.70:8080";
   // 검색
-  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
 
   // 장치 목록 모달 표시 여부 변수
   const [modalVisible, setModalVisible] = useState(false);
@@ -35,10 +37,8 @@ export default ({ navigation }) => {
     latitudeDelta: 4.0,
     longitudeDelta: 4.0,
   });
-  // const [latitude, setLatitude] = useState(36.4971639);
-  // const [longitude, setLongitude] = useState(127.5931635);
   // 마커
-  const [place, setPlace] = useState([
+  const [locations, setLocations] = useState([
     {
       index: 0,
       latitude: 35.9442388,
@@ -54,6 +54,21 @@ export default ({ navigation }) => {
       content: '전라북도 연주군',
     },
   ]);
+
+  const [locationInfo, setLocationInfo] = useState([
+    {
+      name: "",
+      address_province: "",
+      address_city: "",
+      address_detail: "",
+      description: "",
+      score: "",
+      image_path: "",
+    }
+  ]);
+
+  const [imageStatus, setImageStatus] = useState(false);
+
 
   useEffect(() => {
     async function getPermission() {
@@ -80,24 +95,40 @@ export default ({ navigation }) => {
         }
       }
     }
+    async function getLocations() {
+      const locations2 = await API.getLocations();
+      setLocations(locations2);
+    }
+    getLocations();
     getPermission();
   }, []);
 
+  useEffect(() => {
+    async function getImageStatus() {
+      var imageStatus = await API.checkImageURL(mainURL + locationInfo[0].image_path);
+      setImageStatus(imageStatus);
+    }
+    getImageStatus();
+  }, [locationInfo])
+
   const setMarkers = () => {
     return (
-      place.map((item, index) => (
+      locations.map((item, location_index) => (
         <Marker
-          coordinate={{ latitude: item.latitude, longitude: item.longitude }}
-          key={index}
-          title={item.title}
-          description={item.content}>
+          coordinate={{ latitude: Number(item.latitude), longitude: Number(item.longitude) }}
+          key={location_index}
+          title={item.name}
+          description={item.name}>
           <Callout
             style={{ width: 100 }}
-            onPress={() => {
-              setModalVisible(true)
+            onPress={async () => {
+              const locationInfo2 = await API.getLocationInfo(item.location_index);
+              console.log(locationInfo2);
+              setLocationInfo(locationInfo2);
+              setModalVisible(true);
             }}>
-            <Text style={{ textAlign: 'center', color: "black", fontWeight: 'bold', fontSize: 12 }}>{item.title}</Text>
-            <Text style={{ textAlign: 'center', color: "black", fontSize: 12 }}>{item.content}</Text>
+            <Text style={styles.mapMarkerText}>{item.name}</Text>
+            {/* <Text style={{ textAlign: 'center', color: "black", fontSize: 12 }}>{item.name}</Text> */}
           </Callout>
         </Marker>
 
@@ -107,8 +138,6 @@ export default ({ navigation }) => {
 
   // 지도 페이지에 오면 현재 위치 받아 지도에 표시 검색 창에 현재 위치 출력 
   return (
-
-
     <TouchableWithoutFeedback onPress={() => {
       Keyboard.dismiss();
       setModalVisible(false);
@@ -134,17 +163,19 @@ export default ({ navigation }) => {
             placeholder="현재 위치 송출"
             placeholderTextColor="#9D9D9D"
             onChangeText={
-              title => setTitle(title)
+              text => setText(text)
             } />
           {/* Search Location */}
           <TouchableOpacity style={styles.mapSearch}
             onPress={() => {
-              setRegion({
-                latitude: 35.8386644,
-                longitude: 128.7318221,
-                latitudeDelta: 0.00099,
-                longitudeDelta: 0.00099,
-              })
+              // need function
+
+              // setRegion({
+              //   latitude: 35.8386644,
+              //   longitude: 128.7318221,
+              //   latitudeDelta: 0.00099,
+              //   longitudeDelta: 0.00099,
+              // })
             }}>
             <Icon
               name={"search"}
@@ -153,29 +184,9 @@ export default ({ navigation }) => {
           </TouchableOpacity>
         </SafeAreaView>
 
-        <View style={{
-          position: "absolute",
-          bottom: 0,
-          width: "100%",
-          height: 100,
+        <View style={styles.mapCurrentLocationView}>
 
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "flex-end"
-        }}>
-
-          <TouchableOpacity style={{
-            width: 40,
-            height: 40,
-            backgroundColor: "white",
-            marginRight: 20,
-            marginBottom: 20,
-            borderRadius: 10,
-            flexDirection: "row",
-            alignSelf: "flex-end",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
+          <TouchableOpacity style={styles.mapCurrentLocationTouchableOpacity}
             onPress={() => {
 
               try {
@@ -221,47 +232,67 @@ export default ({ navigation }) => {
             Keyboard.dismiss();
             setModalVisible(false);
           }}>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
-              <View style={{ width: '100%', height: '70%', backgroundColor: 'black', borderTopLeftRadius: 25, borderTopRightRadius: 25 }}>
-                <ImageBackground
-                  imageStyle={{ borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
-                  style={{ width: "100%", height: "100%", justifyContent: 'flex-end' }}
-                  source={Climb}
-                  resizeMode="cover">
+            <View style={styles.mapModalView}>
+              <View style={styles.mapModalView2}>
+                {
+                  imageStatus == true ?
+                    <ImageBackground
+                      imageStyle={{ borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
+                      style={styles.mapModalImageView}
+                      source={{ uri: mainURL + locationInfo[0].image_path }}
+                      resizeMode="cover">
 
-                  <View style={{ backgroundColor: 'black', height: "45%", padding: "5%", borderTopLeftRadius: 25, borderTopRightRadius: 25 }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                      <Text style={styles.RCWTitleText}>연경 도약대</Text>
+                      <View style={styles.mapModalInfo}>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                          <Text style={styles.RCWTitleText}>{locationInfo[0].name}</Text>
 
-                      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginRight: 25 }}>
-                        <Icon
-                          name={"star"}
-                          size={20}
-                          color={"#F0CF54"} />
+                          <View style={styles.mapModalStarView}>
+                            <Icon
+                              name={"star"}
+                              size={20}
+                              color={"#F0CF54"} />
 
-                        <Text style={{ color: "#F0CF54", fontSize: 20, fontWeight: "bold", marginLeft: 10 }}>8.4</Text>
+                            <Text style={styles.mapModalStarText}>{locationInfo[0].score}</Text>
+                          </View>
+                        </View>
+                        <Text style={styles.RCWTitleText2}>{locationInfo[0].address_province + " " + locationInfo[0].address_city + " " + locationInfo[0].address_detail}</Text>
+                        <Text style={styles.RCWContentText}>Information</Text>
+                        <Text style={styles.RCWContentText2}>{locationInfo[0].description}</Text>
+                      </View>
+
+                    </ImageBackground>
+                    :
+                    <View style={styles.mapModalImageView}>
+                      <View style={{ width: "100%", height: "55%", alignItems: "center", justifyContent: "center" }}>
+                        <Text style={{ color: "white", fontWeight: "bold", fontSize: 20 }}>이미지를 불러오지 못했습니다.</Text>
+                      </View>
+                      <View style={styles.mapModalInfo}>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                          <Text style={styles.RCWTitleText}>{locationInfo[0].name}</Text>
+
+                          <View style={styles.mapModalStarView}>
+                            <Icon
+                              name={"star"}
+                              size={20}
+                              color={"#F0CF54"} />
+
+                            <Text style={styles.mapModalStarText}>{locationInfo[0].score}</Text>
+                          </View>
+                        </View>
+                        <Text style={styles.RCWTitleText2}>{locationInfo[0].address_province + " " + locationInfo[0].address_city + " " + locationInfo[0].address_detail}</Text>
+                        <Text style={styles.RCWContentText}>Information</Text>
+                        <Text style={styles.RCWContentText2}>{locationInfo[0].description}</Text>
                       </View>
                     </View>
-                    <Text style={styles.RCWTitleText2}>대구광역시 북구 연경동819</Text>
-                    <Text style={styles.RCWContentText}>Information</Text>
-                    <Text style={styles.RCWContentText2}>1990년대 초반 대구지역에 자유등반 붐이 일면서 암장이 정리되고 루트가 개척이 시작되어, 총 50개의 루트가 개척된 암장이다. 암석은 역암으로 되어있으며, 암장의 크기는 안쪽 바위가 높이 약 10m, 폭 약 10m 경사 100도 정도이다. 편리한 접근성과 적당한 난이도로 인기가 많은 자연 암벽장이다. 암장의 크기는 안쪽 바위가 높이 약 10m, 폭 약 10m 경사 100도 정도이다. 편리한 접근성과 적당한 난이도로 인기가 많은 자연 암벽장이다. 대구지역에 자유등반 붐이 일면서 암장이 정리되고 루트가 개척이 시작되어, 총 50개의 루트가 개척된 암장이다. 대구지역에 자유등반 붐이 일면서 암장이 정리되고 루트가 개척이 시작되어, 총 50개의 루트가 개척된 암장이다.</Text>
-                  </View>
+                }
 
-                </ImageBackground>
-
-                <View style={{ position: "absolute", bottom: 0, width: "100%", paddingVertical: "2.5%", paddingHorizontal: "4%" }}>
-                  <TouchableOpacity style={{ backgroundColor: "#314D2C", width: "100%", borderRadius: 10, activeOpacity: 0.1 }}
+                <View style={styles.mapModalDetailInfoView}>
+                  <TouchableOpacity style={styles.mapModalDetailInfoTouchableOpacity}
                     onPress={() => {
-                      navigation.navigate("RCW");
+                      navigation.navigate("ClimbingWallInfo", { location_index: locationInfo[0].location_index });
                       setModalVisible(false);
                     }}>
-                    <Text style={{
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: 20,
-                      textAlign: "center",
-                      marginVertical: "5%"
-                    }}>상세보기</Text>
+                    <Text style={styles.mapModalDetailInfoText}>상세보기</Text>
                   </TouchableOpacity>
                 </View>
               </View>

@@ -43,6 +43,7 @@ export default ({ route }) => {
       resetOnBlur={true}
       detachInactiveScreens={true}
       screenOptions={({ route }) => ({
+        unmountOnBlur: true,
         tabBarActiveTintColor: Color.loginButtonBackground, //탭의 text color변경 
         tabBarInactiveTintColor: "white",
         tabBarActiveBackgroundColor: Color.loginBackground,
@@ -101,7 +102,7 @@ export default ({ route }) => {
 
       <Tab.Screen name="홈" component={Page1} options={{ headerShown: false }} />
       <Tab.Screen name="지도" component={Page2} options={{ headerShown: false }} />
-      <Tab.Screen name="게시판" component={Page3} options={{ headerShown: false }} />
+      <Tab.Screen name="게시판" component={Page3} options={{ headerShown: false,  }} />
       <Tab.Screen name="Me" component={Page4} options={{ headerShown: false }} />
 
     </Tab.Navigator>

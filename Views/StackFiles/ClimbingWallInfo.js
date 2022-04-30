@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
     StatusBar,
+    Alert,
     SafeAreaView,
     View,
     Text,
@@ -20,22 +21,61 @@ import Icon2 from 'react-native-vector-icons/dist/Ionicons';
 import StarRating from 'react-native-star-rating';
 import styles from "../../styles/style";
 import Color from "../../styles/Color";
+import API from "../../API/API";
 import Climb from "../../images/climb.jpeg";
 import Climb2 from "../../images/climb2.jpeg";
 import Route from "../../images/route.jpeg";
 
-export default ({ navigation }) => {
+export default ({ navigation, route }) => {
+    const data = route.params;
+    console.log(data);
 
-
-    const [data, setData] = useState(testData);
+    //const [locationInfo, setLocationInfo] = useState(testData);
+    const [locationInfo, setLocationInfo] = useState([
+        {
+          name: "",
+          address_province: "",
+          address_city: "",
+          address_detail: "",
+          description: "",
+          score: 0,
+          image_path: "",
+        }
+      ]);
+      //
+      const [routeInfo, setRouteInfo] = useState([
+        {
+            location_index: "",
+            route_index: 0,
+            route_name: "",
+            difficulty: "",
+            bolt_count: "",
+            like_count: "",
+            image_path: "",
+        }
+      ]);
     // 장치 목록 모달 표시 여부 변수
     const [modalVisible, setModalVisible] = useState(false);
-    const [starCount, setStarCount] = useState(0);
+    const [starCount, setStarCount] = useState(locationInfo[0].score);
 
     var imageHeight = Dimensions.get("window").height;
 
     useEffect(() => {
-
+        async function getLocations() {
+            const locationInfo2 = await API.getLocationInfo(data.location_index);
+           // const routeInfo2 = await API.getRouteInfo(data.location_index);
+            const routeInfo2 = await API.getRouteInfo(1);
+            setRouteInfo(routeInfo2);
+            console.log(routeInfo2);
+        if(locationInfo2 != 0) {
+             setLocationInfo(locationInfo2);
+             setStarCount(locationInfo[0].score);
+        } else {
+            Alert.alert("알림", "정보를 불러오지 못했습니다.");
+        }
+          }
+          getLocations();
+       
     }, [])
 
     var testData = [
@@ -73,20 +113,18 @@ export default ({ navigation }) => {
                     //navigation.navigate("자유 게시판", { title: item.title, content: item.content, like: item.like, comment: item.comment });
                 }}>
 
-                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{(item.index + 1) + ". " + item.title}</Text>
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{item.route_index + ". " + item.route_name}</Text>
 
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
 
-
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between', marginRight: 10 }}>
-
 
                         <Icon
                             name={"check"}
                             size={19}
                             color={"#96B684"} />
 
-                        <Text style={{ color: "white", fontWeight: "bold", fontSize: 15, marginLeft: 5, marginRight: 10 }}>{item.level}</Text>
+                        <Text style={{ color: "white", fontWeight: "bold", fontSize: 15, marginLeft: 5, marginRight: 10 }}>{item.difficulty}</Text>
                     </View>
 
                     <Icon
@@ -94,9 +132,7 @@ export default ({ navigation }) => {
                         size={15}
                         color={"#B33938"} />
 
-                    <Text style={{ color: "white", fontWeight: "bold", fontSize: 15, marginLeft: 5, marginRight: 10 }}>{item.like}</Text>
-
-
+                    <Text style={{ color: "white", fontWeight: "bold", fontSize: 15, marginLeft: 5, marginRight: 10 }}>{item.like_count}</Text>
 
                     <View style={{ marginLeft: 10, transform: [{ rotateZ: "180deg" }] }}>
                         <Icon2
@@ -106,30 +142,18 @@ export default ({ navigation }) => {
                     </View>
 
                 </View>
-
-
-
             </TouchableOpacity>
 
         );
     };
 
     return (
-        // <ScrollView style={styles.RCWScrollView}
-        //     showsVerticalScrollIndicator={false}
-        //     stickyHeaderIndices={1}
-        //     StickyHeaderComponent={
-        //         <View style={{ backgroundColor: "#a8a8a8", height: 30 }}>
-        //             <Text style={{ color: "white", fontSize: 40 }}>1231231321</Text>
-        //         </View>
-        //     }>
         <View style={styles.RCWView}>
 
             <FlatList
-                data={testData}
-
+                data={routeInfo}
                 renderItem={renderItem}
-                keyExtractor={item => item.index}
+                keyExtractor={item => item.route_index}
                 disableVirtualization={true}
                 showsVerticalScrollIndicator={false}
                 stickyHeaderIndices={[1]}
@@ -153,7 +177,7 @@ export default ({ navigation }) => {
 
                         <View style={{ backgroundColor: 'black', paddingHorizontal: "5%", borderTopLeftRadius: 24, borderTopRightRadius: 45 }}>
                             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                <Text style={styles.RCWTitleText}>연경 도약대</Text>
+                                <Text style={styles.RCWTitleText}>{locationInfo[0].name}</Text>
 
                                 <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginRight: 25 }}
                                     onPress={() => {
@@ -169,10 +193,11 @@ export default ({ navigation }) => {
 
 
                             </View>
-                            <Text style={styles.RCWTitleText2}>대구광역시 북구 연경동819</Text>
+                            <Text style={styles.RCWTitleText2}>{locationInfo[0].address_province + " " + locationInfo[0].address_city + " " + locationInfo[0].address_detail}</Text>
                             <Text style={styles.RCWContentText}>Information</Text>
-                            <Text style={styles.RCWContentText2}>1990년대 초반 대구지역에 자유등반 붐이 일면서 암장이 정리되고 루트가 개척이 시작되어, 총 50개의 루트가 개척된 암장이다. 암석은 역암으로 되어있으며, 암장의 크기는 안쪽 바위가 높이 약 10m, 폭 약 10m 경사 100도 정도이다. 편리한 접근성과 적당한 난이도로 인기가 많은 자연 암벽장이다. 암장의 크기는 안쪽 바위가 높이 약 10m, 폭 약 10m 경사 100도 정도이다. 편리한 접근성과 적당한 난이도로 인기가 많은 자연 암벽장이다. 대구지역에 자유등반 붐이 일면서 암장이 정리되고 루트가 개척이 시작되어, 총 50개의 루트가 개척된 암장이다. 대구지역에 자유등반 붐이 일면서 암장이 정리되고 루트가 개척이 시작되어, 총 50개의 루트가 개척된 암장이다.</Text>
+                            <Text style={styles.RCWContentText2}>{locationInfo[0].description}</Text>
 
+                            {/* Route Info */}
                             <Text style={styles.RCWTitleText2}>루트 안내</Text>
                             <Image
                                 style={{ width: "100%", height: 300, borderRadius: 20 }}

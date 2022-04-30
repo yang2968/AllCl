@@ -70,7 +70,7 @@ export default ({ navigation }) => {
       <TouchableOpacity
         style={{}}
         onPress={() => {
-          navigation.navigate("RCW");
+          navigation.navigate("ClimbingWallInfo");
         }}>
 
         <ImageBackground

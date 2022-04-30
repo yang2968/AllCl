@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
     View,
     ScrollView,
@@ -11,13 +11,14 @@ import {
     TouchableOpacity
 } from "react-native";
 import Icon from 'react-native-vector-icons/dist/Ionicons';
+import AppContext from "../../AppContext";
 import styles from "../../styles/style";
 import Color from "../../styles/Color";
 
+
 export default ({ navigation }) => {
 
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
+    const globalVariables = useContext(AppContext);
 
     useEffect(() => {
 
@@ -34,7 +35,7 @@ export default ({ navigation }) => {
                     placeholder="제목"
                     placeholderTextColor="#9D9D9D"
                     onChangeText={
-                        title => setTitle(title)
+                        header => globalVariables.requestHeader(header)
                     } />
                 </View>
                 
@@ -48,7 +49,7 @@ export default ({ navigation }) => {
                         textAlignVertical={"top"}
                         autoFocus={true}
                         onChangeText={
-                            content => setContent(content)
+                            body => globalVariables.requestBody(body)
                         } />
                 </ScrollView>
 
