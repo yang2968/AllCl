@@ -5840,6 +5840,11 @@
     "react-freeze" "^1.0.0"
     "warn-once" "^0.1.0"
 
+"react-native-simple-popup-menu@^1.0.3":
+  "integrity" "sha512-RqrfzF+tJo+tQqfxhOHNZcJ3D7nC1YQAJv4qjVAtdEnJfas1CcArkw9qo5SSRBSNGlDbs8eeAq7+ffeJhT0nVQ=="
+  "resolved" "https://registry.npmjs.org/react-native-simple-popup-menu/-/react-native-simple-popup-menu-1.0.3.tgz"
+  "version" "1.0.3"
+
 "react-native-splash-screen@^3.3.0":
   "integrity" "sha512-rGjt6HkoSXxMqH4SQUJ1gnPQlPJV8+J47+4yhgTIan4bVvAwJhEeJH7wWt9hXSdH4+VfwTS0GTaflj1Tw83IhA=="
   "resolved" "https://registry.npmjs.org/react-native-splash-screen/-/react-native-splash-screen-3.3.0.tgz"

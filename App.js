@@ -15,6 +15,7 @@ const App = () => {
 
   const [header, setHeader] = useState("");
   const [body, setBody] = useState("");
+  const [routeName, setRouteName] = useState("111");
 
   const requestHeader = (header) => {
     setHeader(header);
@@ -26,8 +27,10 @@ const App = () => {
   const globalVariables = {
     header: header,
     body: body,
+    routeName: routeName,
     requestHeader,
-    requestBody
+    requestBody,
+    setRouteName
   }
 
   useEffect(() => {

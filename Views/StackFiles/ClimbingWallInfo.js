@@ -28,9 +28,6 @@ import Route from "../../images/route.jpeg";
 
 export default ({ navigation, route }) => {
     const data = route.params;
-    console.log(data);
-
-    //const [locationInfo, setLocationInfo] = useState(testData);
     const [locationInfo, setLocationInfo] = useState([
         {
           name: "",
@@ -63,13 +60,14 @@ export default ({ navigation, route }) => {
     useEffect(() => {
         async function getLocations() {
             const locationInfo2 = await API.getLocationInfo(data.location_index);
-           // const routeInfo2 = await API.getRouteInfo(data.location_index);
-            const routeInfo2 = await API.getRouteInfo(1);
-            setRouteInfo(routeInfo2);
+            const routeInfo2 = await API.getRouteInfo(data.location_index);
+            
+            console.log(locationInfo2);
             console.log(routeInfo2);
-        if(locationInfo2 != 0) {
+        if(locationInfo2 != 0 && routeInfo2 != 0) {
              setLocationInfo(locationInfo2);
-             setStarCount(locationInfo[0].score);
+             setRouteInfo(routeInfo2);
+             setStarCount(Number(locationInfo2[0].score));
         } else {
             Alert.alert("알림", "정보를 불러오지 못했습니다.");
         }
@@ -104,13 +102,13 @@ export default ({ navigation, route }) => {
             like: 3,
         },
     ];
-
+    // Route
     const renderItem = ({ item }) => {
         return (
             <TouchableOpacity
                 style={{ flexDirection: "row", alignSelf: "center", justifyContent: 'space-between', width: '90%', borderColor: "#a8a8a8", borderBottomWidth: 1, paddingTop: "6%", paddingBottom: "6%" }}
                 onPress={() => {
-                    //navigation.navigate("자유 게시판", { title: item.title, content: item.content, like: item.like, comment: item.comment });
+                    navigation.navigate("RouteInfo", { location_name: locationInfo[0].name, route_name: item.route_name, location_index: item.location_index, route_index: item.route_index, difficulty: item.difficulty, like_count: item.like_count, image_path: item.image_path });
                 }}>
 
                 <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{item.route_index + ". " + item.route_name}</Text>
@@ -118,7 +116,6 @@ export default ({ navigation, route }) => {
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
 
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between', marginRight: 10 }}>
-
                         <Icon
                             name={"check"}
                             size={19}
@@ -149,7 +146,7 @@ export default ({ navigation, route }) => {
 
     return (
         <View style={styles.RCWView}>
-
+            
             <FlatList
                 data={routeInfo}
                 renderItem={renderItem}

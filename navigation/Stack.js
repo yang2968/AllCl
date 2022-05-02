@@ -2,12 +2,13 @@ import React, { useEffect, useState, useContext } from "react";
 import { Alert, TouchableOpacity, Text, StyleSheet, View, BackHandler } from "react-native";
 import Icon from 'react-native-vector-icons/dist/Ionicons';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StackActions, TabActions } from "@react-navigation/native";
+import { useRoute, StackActions, TabActions } from "@react-navigation/native";
 import Color from "../styles/Color";
 import AppContext from "../AppContext";
 import API from "../API/API";
 import Tab from './Tab';
 import ClimbingWallInfo from "../Views/StackFiles/ClimbingWallInfo";
+import RouteInfo from "../Views/StackFiles/RouteInfo";
 import Login from "../Views/StackFiles/login";
 import Posting from "../Views/StackFiles/posting";
 import WatchPost from "../Views/StackFiles/watchPost";
@@ -24,10 +25,7 @@ export default () => {
     const globalVariables = useContext(AppContext);
 
 
-
     useEffect(() => {
-
-
         // const backAction = () => {
         //     Alert.alert("알림", "앱을 종료하시겠습니까?", [
         //         {
@@ -67,29 +65,28 @@ export default () => {
                 unmountOnBlur: true,
                 headerBackTitleVisible: false,
                 headerStyle: {
-                    backgroundColor: "white",
+                    backgroundColor: route.name == "RouteInfo" ? "black" : "white",
                 },
+                headerBackTitle: null,
                 headerShadowVisible: false,
                 headerTitleStyle: {
-                    color: "black",
+                    color: route.name == "RouteInfo" ? "white" : "black",
                     fontWeight: "bold",
-                    fontSize: 20
+                    fontSize: 20,
                 },
+               //headerTitle: route.name == "RouteInfo" ? globalVariables.routeName : route.name,
+                headerTitle: (name) => {
+                        //route.name == "RouteInfo" ? globalVariables.routeName : route.name
+                        if (route.name == "RouteInfo") {
+                            name = globalVariables.routeName
+                        } else {
+                            name = route.name
+                        }
+                        return(<Text style={{ color: "white", fontWeight: "bold", fontSize: 20 }}>{name}</Text>);
+                    },
                 headerTitleAlign: "center",
+                headerBackVisible: false,
                 headerLeft: () => {
-                    if (route.name == "Tab") {
-
-
-                        // const backHandler = BackHandler.addEventListener(
-                        //     "hardwareBackPress",
-                        //     backAction
-                        // );
-
-                        // return () => backHandler.remove();
-
-                    }
-
-
                     let iconName = Platform.OS === "ios" ? "ios-" : "md-";
                     if (route.name == "게시글 작성") {
                         iconName += "arrow-back";
@@ -104,7 +101,21 @@ export default () => {
                                     color={"black"} />
                             </TouchableOpacity>
                         )
-                    } else {
+                    } else  if (route.name == "RouteInfo") {
+                        iconName += "arrow-back";
+                        return (
+                            // 뒤로가기 버튼
+                            <TouchableOpacity
+                                style={{ padding: 5 }}
+                                onPress={() => navigation.goBack()}>
+                                <Icon
+                                    name={iconName}
+                                    size={25}
+                                    color={"white"} />
+                            </TouchableOpacity>
+                        )
+                    } 
+                    else {
                         iconName += "arrow-back";
                         return (
                             // 뒤로가기 버튼
@@ -132,7 +143,7 @@ export default () => {
                                    console.log(postingData[0]);
                                    switch(postingData[0]) {
                                        case 200: case 201:
-                                           navigation.goBack()
+                                           navigation.goBack();
                                            break;
                                            default:
                                                Alert.alert("알림", "에러가 발생하였습니다.");
@@ -167,6 +178,7 @@ export default () => {
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false, gestureEnabled: false }} />
             <Stack.Screen name="Tab" component={Tab} options={{ headerShown: false, gestureEnabled: false }} />
             <Stack.Screen name="ClimbingWallInfo" component={ClimbingWallInfo} options={{ headerShown: false }} />
+            <Stack.Screen name="RouteInfo" component={RouteInfo} options={{ headerShown: true }} />
             <Stack.Screen name="게시글 작성" component={Posting} options={{ headerShown: true }} />
             <Stack.Screen name="자유 게시판" component={WatchPost} options={{ headerShown: true }} />
             <Stack.Screen name="BoardSearch" component={BoardSearch} options={{ headerShown: false }} />

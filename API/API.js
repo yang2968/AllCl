@@ -23,6 +23,24 @@ export default {
             return 0;
         }
     },
+    // 댓글 많은순 게시글 리스트 조회 API
+    async getCommentsPostingList() {
+        const url = mainURL + "/community/post-list/populer/comments";
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("인기 게시물 리스트 조회 에러", error);
+            return 0;
+        }
+    },
     // 인기순 게시글 리스트 조회 API
     async getPopularPostingList() {
         const url = mainURL + "/community/post-list/populer/like";
@@ -95,6 +113,29 @@ export default {
             return 0;
         }
     },
+    // 댓글 작성 API
+    async writeComment(nickname, comment, post_index) {
+        const url = mainURL + "/community/comments";
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'POST',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "nickname": nickname,
+                    "comment": comment,
+                    "post_index": post_index
+                })
+            })
+            const responseData = await requestAuth.json();
+            return [responseData];
+        } catch (error) {
+            console.log("댓글 수정 에러", error);
+            return 0;
+        }
+    },
     // 댓글 수정 API
     async modifyComment(comment, comment_index) {
         const url = mainURL + "/community/comments";
@@ -117,19 +158,23 @@ export default {
             return 0;
         }
     },
-    // 댓글 삭제 API
-    async deleteComment(comment_index) {
-        const url = mainURL + "/community/comments?comment_index=" + comment_index;
+      // 댓글 삭제 API
+      async deleteComment(post_index, comment_index) {
+        const url = mainURL + "/community/comments";
         try {
-            const requsetAuth = await fetch(url, {
+            const requestAuth = await fetch(url, {
                 method: 'DELETE',
                 headers:
                 {
                     'Content-Type': 'application/json',
-                }
+                },
+                body: JSON.stringify({
+                    "post_index": post_index,
+                    "comment_index": comment_index,
+                })
             })
-            const responseData = await requsetAuth.json();
-            return responseData;
+            const responseData = await requestAuth.json();
+            return [responseData];
         } catch (error) {
             console.log("댓글 삭제 에러", error);
             return 0;
@@ -205,24 +250,6 @@ export default {
             return [responseData];
         } catch (error) {
             console.log("게시글 수정 에러", error);
-            return 0;
-        }
-    },
-     // 댓글 삭제 API
-     async deleteComment(post_index) {
-        const url = mainURL + "/community/post?post_index=" + post_index;
-        try {
-            const requsetAuth = await fetch(url, {
-                method: 'DELETE',
-                headers:
-                {
-                    'Content-Type': 'application/json',
-                }
-            })
-            const responseData = await requsetAuth.json();
-            return responseData;
-        } catch (error) {
-            console.log("댓글 삭제 에러", error);
             return 0;
         }
     },

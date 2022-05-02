@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
+    Alert,
     View,
     SafeAreaView,
     Text,
@@ -15,6 +16,8 @@ import {
 } from "react-native";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SimplePopupMenu from 'react-native-simple-popup-menu';
 import Color from "../../styles/Color"
 import styles from "../../styles/style";
 import API from "../../API/API";
@@ -23,6 +26,7 @@ export default ({ navigation, route }) => {
     // 게시물 인덱스 받아오기
     const data = route.params;
     // 게시물 정보
+    const [userNickname, setUserNickname] = useState("");
     const [nickName, setNickName] = useState("");
     const [header, setHeader] = useState("");
     const [body, setBody] = useState("");
@@ -31,11 +35,33 @@ export default ({ navigation, route }) => {
     const [post_date, setPostDate] = useState("");
     // 댓글 정보
     const [commentData, setCommentData] = useState([]);
-
+    // 선택한 댓글 인덱스
+    const [commentIndex, setCommentIndex] = useState(0);
+    // 좋아요 눌렀는지 유무
     const [tabLike, setTabLike] = useState(false);
+    // 댓글 입력 변수
     const [text, setText] = useState("");
+    const [placeholderText, setPlaceholderText] = useState("댓글을 입력하세요.");
+    const [writeMode, setWriteMode] = useState(0); // 0 : 댓글, 1 : 수정할 댓글, 2: 답글
+    // FlatList ref
+    var flatList = useRef();
+    // TextInput ref
+    var textInput = useRef();
+    // 안드로이드 메뉴 아이템
+    const items = [
+        { id: '수정', label: '수정' },
+        { id: '삭제', label: '삭제' },
+    ];
 
-    var testWidth = Dimensions.get("window").width;
+    useEffect(() => {
+        async function getId() {
+            const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
+            const userInfo = JSON.parse(getData);
+            setUserNickname(userInfo.nickname);
+        }
+        getId();
+    }, [])
+
     useEffect(() => {
         async function getData() {
             // 선택한 게시물 정보 조회
@@ -46,13 +72,12 @@ export default ({ navigation, route }) => {
             setBody(postData[0].body);
             setLikeCount(postData[0].like_count);
             setCommentCount(postData[0].comment_count);
-             // 선택한 게시물 댓글 정보 조회
-             if(data.comment_count != 0) {
+            // 선택한 게시물 댓글 정보 조회
+            if (data.comment_count != 0) {
                 const postCommentData = await API.watchComment(data.post_index);
-                console.log(postCommentData);
                 setCommentData(postCommentData);
-             }
-             
+            }
+
         }
         getData();
     }, [tabLike])
@@ -91,15 +116,41 @@ export default ({ navigation, route }) => {
                             color={"black"} />
 
                     </TouchableOpacity>
+                    {
+                        Platform.OS === "android" ?
+                            <SimplePopupMenu
+                                items={items}
+                                style={{ padding: 5 }}
+                                onSelect={async (item3) => {
+                                    if (item3.label == "수정") {
+                                        setPlaceholderText("수정할 댓글을 입력하세요.");
+                                        setWriteMode(1);
+                                        setCommentIndex(item.comment_index);
 
-                    <TouchableOpacity style={{ padding: 5 }}
-                        onPress={() => {
-                            {
-                                Platform.OS === "android" ?
-                                    <View>
-
-                                    </View>
-                                    :
+                                    } else if (item3.label == "삭제") {
+                                        const deleteComment = await API.deleteComment(data.post_index, item.comment_index);
+                                        console.log(deleteComment);
+                                        switch (deleteComment[0]) {
+                                            case 200: case 201:
+                                                const postCommentData = await API.watchComment(data.post_index);
+                                                setCommentData(postCommentData);
+                                                const postData = await API.watchPost(data.post_index);
+                                                setCommentCount(postData[0].comment_count);
+                                                break;
+                                            default:
+                                                Alert.alert("알림", "에러가 발생하였습니다.");
+                                                break;
+                                        }
+                                    }
+                                }}>
+                                <Icon2
+                                    name={"ellipsis-horizontal-sharp"}
+                                    size={20}
+                                    color={"black"} />
+                            </SimplePopupMenu>
+                            :
+                            <TouchableOpacity style={{ padding: 5 }}
+                                onPress={() => {
                                     ActionSheetIOS.showActionSheetWithOptions(
                                         {
                                             title: "게시판 메뉴",
@@ -109,40 +160,35 @@ export default ({ navigation, route }) => {
                                         },
                                         async (buttonIndex) => {
                                             if (buttonIndex === 0) { // 취소
-                                            } else if (buttonIndex === 1) { // 수정
-                                                const modifyComment = await API.modifyComment("댓글댓글", item.comment_index);
-                                                switch (modifyComment[0]) {
-                                                    case 200: case 201:
-                                                        const postCommentData = await API.watchComment(data.post_index);
-                                                        setCommentData(postCommentData);
-                                                        break;
-
-                                                } 
+                                            } else if (buttonIndex === 1) { // 수정   수정을 누르면 댓글입력칸이 수정할 댓글을 입력하세요로 변경 텍스트 입력 후 댓글 수정
+                                                setPlaceholderText("수정할 댓글을 입력하세요.");
+                                                setWriteMode(1);
+                                                setCommentIndex(item.comment_index);
                                             } else if (buttonIndex === 2) {  // 삭제
-                                                
-                                                const deleteComment = await API.deleteComment(item.comment_index);
-                                                console.log("result", deleteComment);
+
+                                                const deleteComment = await API.deleteComment(data.post_index, item.comment_index);
                                                 switch (deleteComment[0]) {
                                                     case 200: case 201:
                                                         const postCommentData = await API.watchComment(data.post_index);
                                                         setCommentData(postCommentData);
+                                                        const postData = await API.watchPost(data.post_index);
+                                                        setCommentCount(postData[0].comment_count);
                                                         break;
+                                                    default:
+                                                        Alert.alert("알림", "에러가 발생하였습니다.");
+                                                        break;
+                                                }
 
-                                                } 
-                                                
                                             }
                                         }
                                     )
-
-                            }
-
-
-                        }}>
-                        <Icon2
-                            name={"ellipsis-vertical"}
-                            size={15}
-                            color={"black"} />
-                    </TouchableOpacity>
+                                }}>
+                                <Icon2
+                                    name={"ellipsis-vertical"}
+                                    size={15}
+                                    color={"black"} />
+                            </TouchableOpacity>
+                    }
                 </View>
             </View>
         );
@@ -157,6 +203,9 @@ export default ({ navigation, route }) => {
                 keyExtractor={item => item.comment_index}
                 disableVirtualization={true}
                 showsVerticalScrollIndicator={false}
+                ref={ref => flatList = ref}
+                //onLayout={() => flatList.scrollToEnd({ animated: true })}
+                //onContentSizeChange={() => flatList.scrollToEnd(console.log("1"))}
                 ListHeaderComponent={
                     <View style={{}}>
                         <View style={{ width: "100%", flexDirection: "row", marginBottom: "5%", alignItems: "center" }}>
@@ -188,7 +237,6 @@ export default ({ navigation, route }) => {
                             <TouchableOpacity style={{ paddingLeft: 7, paddingRight: 7, paddingTop: 10, paddingBottom: 10, }}
                                 onPress={async () => {
                                     const setLike = await API.tabLike("귀요미준호", data.post_index);
-                                    console.log(setLike[0]);
                                     if (setLike == 200) {
                                         setLikeCount(like_count);
                                         setTabLike(false);
@@ -196,15 +244,6 @@ export default ({ navigation, route }) => {
                                         setLikeCount(like_count);
                                         setTabLike(true);
                                     }
-                                    // console.log("좋아요 누르기", tabLike);
-                                    // switch (tabLike) {
-                                    //     case true:
-                                    //         setTabLike(false);
-                                    //         break;
-                                    //         case false:
-                                    //         setTabLike(true);
-                                    //         break;
-                                    // }
                                 }}>
                                 {
                                     tabLike === true ?
@@ -237,21 +276,58 @@ export default ({ navigation, route }) => {
                         </View>
                     </View>} />
 
-            {/* <KeyboardAvoidingView style={{ width: "100%", alignItems: "center", justifyContent: "center", backgroundColor: " white" }}
+            <KeyboardAvoidingView style={{ width: "100%", alignItems: "center", justifyContent: "center", backgroundColor: " white" }}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}>
+                keyboardVerticalOffset={Platform.OS === "ios" ? 65 : 0}>
 
                 <TextInput style={{ color: "black", fontSize: 16, width: "100%", height: 50, borderWidth: 1, borderColor: "#707070", borderRadius: 17, paddingLeft: 20, marginVertical: 10, backgroundColor: "white" }}
-                    placeholder="댓글을 입력하세요."
+                    ref={ref => textInput = ref}
+                    placeholder={placeholderText}
                     placeholderTextColor="#959595"
+                    value={text}
                     onChangeText={
                         text => setText(text)
-                    } />
+                    }
+                    onSubmitEditing={async () => {
+                        switch (writeMode) {
+                            case 0: // 댓글
+                                const writeComment = await API.writeComment(userNickname, text, data.post_index);
+                                if (writeComment[0] == 201) {
+                                    const postCommentData = await API.watchComment(data.post_index);
+                                    setCommentData(postCommentData);
+                                    setText("");
+                                    const postData = await API.watchPost(data.post_index);
+                                    setCommentCount(postData[0].comment_count);
+                                } else {
+                                    Alert.alert("알림", "에러가 발생하였습니다.");
+                                }
+                                break;
+                            case 1: // 수정할 댓글
+                                const modifyComment = await API.modifyComment(text, commentIndex);
+                                switch (modifyComment[0]) {
+                                    case 200: case 201:
+                                        //
+                                        // 
+                                        const postCommentData = await API.watchComment(data.post_index);
+                                        setCommentData(postCommentData);
+                                        setText("");
+                                        setPlaceholderText("댓글을 입력하세요.");
+                                        setWriteMode(0);
+                                        const postData = await API.watchPost(data.post_index);
+                                        setCommentCount(postData[0].comment_count);
+                                        break;
+                                }
+                                break;
+                            case 2: // 답글
+                                break;
+                            default:
+                                break;
+                        }
+                        // test
 
-
-            </KeyboardAvoidingView> */}
+                    }} />
+            </KeyboardAvoidingView>
 
         </View>
-
     )
 };

@@ -17,6 +17,7 @@ import Color from "../../styles/Color";
 import styles from "../../styles/style";
 import API from "../../API/API";
 import moment from "moment";
+import SimplePopupMenu from 'react-native-simple-popup-menu';
 
 
 export default ({ navigation }) => {
@@ -63,13 +64,13 @@ export default ({ navigation }) => {
   const [data, setData] = useState([]);
   // get User nickname
   useEffect(() => {
-    async function getId () {
-        const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
-        const userInfo = JSON.parse(getData);
-        setUserNickname(userInfo.nickname);
+    async function getId() {
+      const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
+      const userInfo = JSON.parse(getData);
+      setUserNickname(userInfo.nickname);
     }
     getId();
-}, [])
+  }, [])
   // 게시물 리스트 데이터 받아오기
   useEffect(() => {
     async function getData() {
@@ -91,39 +92,46 @@ export default ({ navigation }) => {
     getData();
   }, [isFocused]);
   // 게시물 리스트 정렬
-  useEffect(() => {
-    if (sortData == 0) {
-      var newDateData = [...data];
+  // useEffect(() => {
+  //   if (sortData == 0) {
+  //     var newDateData = [...data];
 
-      newDateData.sort((a, b) => {
-        return a.post_date > b.post_date ? -1 : a.post_date > b.post_date ? 1 : 0;
-      })
-      setData(newDateData);
+  //     newDateData.sort((a, b) => {
+  //       return a.post_date > b.post_date ? -1 : a.post_date > b.post_date ? 1 : 0;
+  //     })
+  //     setData(newDateData);
 
 
-      //console.log("날짜순");
+  //     //console.log("날짜순");
 
-    } else if (sortData == 1) {
-      var newLikeData = [...data];
-      newLikeData.sort((a, b) => {
-        return a.like_count > b.like_count ? -1 : a.like_count > b.like_count ? 1 : 0;
-      })
-      setData(newLikeData);
-      //console.log("인기순");
+  //   } else if (sortData == 1) {
+  //     var newLikeData = [...data];
+  //     newLikeData.sort((a, b) => {
+  //       return a.like_count > b.like_count ? -1 : a.like_count > b.like_count ? 1 : 0;
+  //     })
+  //     setData(newLikeData);
+  //     //console.log("인기순");
 
-    } else if (sortData == 2) {
-      var newCommentData = [...data];
-      newCommentData.sort((a, b) => {
-        return a.comment_count > b.comment_count ? -1 : a.comment_count > b.comment_count ? 1 : 0;
-      })
-      setData(newCommentData);
-      //console.log("댓글순");
+  //   } else if (sortData == 2) {
+  //     var newCommentData = [...data];
+  //     newCommentData.sort((a, b) => {
+  //       return a.comment_count > b.comment_count ? -1 : a.comment_count > b.comment_count ? 1 : 0;
+  //     })
+  //     setData(newCommentData);
+  //     //console.log("댓글순");
 
-    } else {
-      setData(data);
-    }
+  //   } else {
+  //     setData(data);
+  //   }
 
-  }, [sortData]);
+  // }, [sortData]);
+
+// 안드로이드 메뉴 아이템
+  const items = [
+    { id: '글 쓰기', label: '글 쓰기' },
+    { id: '내가 쓴 글', label: '내가 쓴 글' },
+    { id: '내가 쓴 댓글', label: '내가 쓴 댓글' },
+  ];
 
   const renderItem = ({ item }) => {
     return (
@@ -168,7 +176,6 @@ export default ({ navigation }) => {
       <View style={styles.page}>
 
 
-
         {/* 헤더  */}
         <View style={styles.homeHeader}>
           <Text style={styles.homeAllClimb}>자유 게시판</Text>
@@ -184,48 +191,55 @@ export default ({ navigation }) => {
                 color={"white"} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={{ marginLeft: 20, marginRight: 5 }}
-              onPress={() => {
-                {
-                  Platform.OS === "android" ?
-
-
-                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                      <Text style={{ color: "black" }}>no data</Text>
-
-
-
-                    </View>
-
-
-
-                    :
-                    ActionSheetIOS.showActionSheetWithOptions(
-                      {
-                        title: "게시판 메뉴",
-                        options: ["취소", "글 쓰기", "내가 쓴 글", "내가 쓴 댓글"],
-                        cancelButtonIndex: 0,
-                        userInterfaceStyle: 'dark'
-                      },
-                      buttonIndex => {
-                        if (buttonIndex === 0) { // 취소
-                        } else if (buttonIndex === 1) {
-                          navigation.navigate("게시글 작성");
-                        } else if (buttonIndex === 2) {  // 내가 쓴 글
-                          navigation.navigate("내가 쓴 글", { nickname: userNickname });
-                        } else if (buttonIndex === 3) {// 내가 쓴 댓글
-                          navigation.navigate("내가 쓴 댓글", { nickname: userNickname });
+            {
+              Platform.OS === "android" ?
+                <SimplePopupMenu
+                  items={items}
+                  style={{ marginLeft: 20, marginRight: 5 }}
+                  onSelect={(item) => {
+                    if (item.label == "글 쓰기") {
+                      navigation.navigate("게시글 작성");
+                    } else if (item.label == "내가 쓴 글") {
+                      console.log("내가 쓴 글");
+                      navigation.navigate("내가 쓴 글", { nickname: userNickname });
+                    } else if (item.label == "내가 쓴 댓글") {  // 내가 쓴 글
+                      console.log("내가 쓴 댓글");
+                      navigation.navigate("내가 쓴 댓글", { nickname: userNickname });
+                    }
+                  }}>
+                 <Icon2
+                  name={"ellipsis-horizontal-sharp"}
+                  size={20}
+                  color={"black"} />
+                </SimplePopupMenu>
+                :
+                <TouchableOpacity style={{ marginLeft: 20, marginRight: 5 }}
+                onPress={() => {
+                      ActionSheetIOS.showActionSheetWithOptions(
+                        {
+                          title: "게시판 메뉴",
+                          options: ["취소", "글 쓰기", "내가 쓴 글", "내가 쓴 댓글"],
+                          cancelButtonIndex: 0,
+                          userInterfaceStyle: 'dark'
+                        },
+                        buttonIndex => {
+                          if (buttonIndex === 0) { // 취소
+                          } else if (buttonIndex === 1) {
+                            navigation.navigate("게시글 작성");
+                          } else if (buttonIndex === 2) {  // 내가 쓴 글
+                            navigation.navigate("내가 쓴 글", { nickname: userNickname });
+                          } else if (buttonIndex === 3) {// 내가 쓴 댓글
+                            navigation.navigate("내가 쓴 댓글", { nickname: userNickname });
+                          }
                         }
-                      }
-                    )
-                }
-              }}>
-              <Icon2
-                name={"ellipsis-horizontal-sharp"}
-                size={20}
-                color={"black"} />
-            </TouchableOpacity>
-
+                      )
+                }}>
+                <Icon2
+                  name={"ellipsis-horizontal-sharp"}
+                  size={20}
+                  color={"black"} />
+              </TouchableOpacity>
+            }
           </View>
         </View>
         {/*  */}
@@ -246,13 +260,19 @@ export default ({ navigation }) => {
           <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15, borderWidth: 1, borderColor: Color.likeButtonColor }}
             ref={likeButton}
             disabled={likeButtonDisable}
-            onPress={() => {
+            onPress={async () => {
               if (sortData == 1) {
+                const dateData = await API.getPostingList();
+                dateData.reverse();
+                setData(dateData);
                 dateStyle();
                 dateTextStyle();
                 setSortData(0);
 
+
               } else {
+                const commentsdata = await API.getCommentsPostingList();
+                setData(commentsdata);
                 likeStyle();
                 likeTextStyle();
                 setSortData(1);
@@ -266,12 +286,17 @@ export default ({ navigation }) => {
           <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15, borderWidth: 1, borderColor: Color.loginButtonBackground }}
             ref={commentButton}
             disabled={commentButtonDisable}
-            onPress={() => {
+            onPress={async () => {
               if (sortData == 2) {
+                const dateData = await API.getPostingList();
+                dateData.reverse();
+                setData(dateData);
                 dateStyle();
                 dateTextStyle();
                 setSortData(0);
               } else {
+                const popularData = await API.getCommentsPostingList();
+                setData(popularData);
                 commentStyle();
                 commentTextStyle();
                 setSortData(2);
