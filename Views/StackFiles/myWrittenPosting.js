@@ -23,8 +23,8 @@ export default ({ navigation, route }) => {
     async function getmyPostList() {
       const myPostiListData = await API.myPostList(data.nickname);
       //const myPostiListData = await API.myPostList("11");
-      console.log(myPostiListData);
-      setMyData(myPostiListData);
+      console.log("포스팅", myPostiListData);
+      setMyData(myPostiListData.reverse());
     }
     getmyPostList();
   }, [])

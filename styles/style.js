@@ -313,6 +313,63 @@ const styles = StyleSheet.create({
         paddingLeft: 15
     },
     //
+    // watchPost
+    //
+    watchPostView: {
+        flex: 1, backgroundColor: "white", paddingLeft: "5%", paddingRight: "5%", paddingTop: "3%"
+    },
+    watchPostHeaderView: {
+        width: "100%", flexDirection: "row", marginBottom: "5%", alignItems: "center"
+    },
+    watchPostHeaderView2: {
+        alignItems: "center", justifyContent: "center", width: 35, height: 38, backgroundColor: Color.loginBackground, borderRadius: 5, paddingVertical: 4, paddingHorizontal: 4
+    },
+    watchPostNicknameText: {
+        color: "black", fontSize: 20, fontWeight: "bold"
+    },
+    watchPostTimeText: {
+        color: "#AFAFAF", fontSize: 14
+    },
+    watchPostHeaderText: {
+        color: "black", fontSize: 20, fontWeight: "bold"
+    },
+    watchPostBodyText: {
+        color: "black", fontSize: 15, paddingTop: "5%", paddingBottom: "5%"
+    },
+    watchPostSettingView: {
+        width: "100%", flexDirection: "row", paddingBottom: "1%", borderBottomWidth: 1, borderColor: "#DBD9D9", alignItems: "center"
+    },
+    watchPostKeyBoardView: {
+        width: "100%", alignItems: "center", justifyContent: "center", backgroundColor: " white"
+    },
+    watchPostTextInput: {
+        color: "black", fontSize: 16, width: "100%", height: 50, borderWidth: 1, borderColor: "#707070", borderRadius: 17, paddingLeft: 20, marginVertical: 10, backgroundColor: "white"
+    },
+    
+
+
+    watchPostItemView: {
+        borderColor: "#DBD9D9", borderBottomWidth: 1, paddingTop: "3%", paddingBottom: "3%"
+    },
+    watchPostItemHeader: {
+        flexDirection: "row", paddingBottom: "3%", alignItems: "center"
+    },
+    watchPostItemHeader2: {
+        backgroundColor: Color.loginBackground, paddingVertical: 4, paddingHorizontal: 4, marginRight: 7, borderRadius: 5
+    },
+    watchPostItemHeaderText: {
+        color: 'black', fontSize: 15, fontWeight: "bold", textAlign: 'left'
+    },
+    watchPostItemBodyText: {
+        color: 'black', fontSize: 12, textAlign: 'left', marginVertical: "2%"
+    },
+    watchPostItemTimeText: {
+        color: 'gray', fontSize: 12, textAlign: 'left'
+    },
+    watchPostItemView2: {
+        flexDirection: "row", flex: 1, justifyContent: "flex-end"
+    },
+    //
     // myPage
     //
     myPageScrollView: {

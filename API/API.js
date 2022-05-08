@@ -6,8 +6,8 @@ export default {
     // community-controller
     //
     // 게시물 리스트 조회 API
-    async getPostingList() {
-        const url = mainURL + "/community/post-list";
+    async getPostingList(nickname) {
+        const url = mainURL + "/community/post-list?nickname=" + nickname;
         try {
             const requsetAuth = await fetch(url, {
                 method: 'GET',
@@ -24,8 +24,8 @@ export default {
         }
     },
     // 댓글 많은순 게시글 리스트 조회 API
-    async getCommentsPostingList() {
-        const url = mainURL + "/community/post-list/populer/comments";
+    async getCommentsPostingList(nickname) {
+        const url = mainURL + "/community/post-list/populer/comments?nickname=" + nickname;
         try {
             const requsetAuth = await fetch(url, {
                 method: 'GET',
@@ -42,8 +42,8 @@ export default {
         }
     },
     // 인기순 게시글 리스트 조회 API
-    async getPopularPostingList() {
-        const url = mainURL + "/community/post-list/populer/like";
+    async getPopularPostingList(nickname) {
+        const url = mainURL + "/community/post-list/populer/like?nickname=" + nickname;
         try {
             const requsetAuth = await fetch(url, {
                 method: 'GET',
@@ -158,8 +158,8 @@ export default {
             return 0;
         }
     },
-      // 댓글 삭제 API
-      async deleteComment(post_index, comment_index) {
+    // 댓글 삭제 API
+    async deleteComment(post_index, comment_index) {
         const url = mainURL + "/community/comments";
         try {
             const requestAuth = await fetch(url, {
@@ -177,6 +177,72 @@ export default {
             return [responseData];
         } catch (error) {
             console.log("댓글 삭제 에러", error);
+            return 0;
+        }
+    },
+    // 답글 조회 API
+    async watchReply(post_index) {
+        const url = mainURL + "/community/reply?post_index=" + post_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("답글 조회 에러", error);
+            return 0;
+        }
+    },
+    // 답글 삭제 API
+    async deleteCommentReply(post_index, idx) {
+        const url = mainURL + "/community/reply";
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'DELETE',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "post_index": post_index,
+                    "idx": idx,
+                })
+            })
+            const responseData = await requestAuth.json();
+            return [responseData];
+        } catch (error) {
+            console.log("답글 삭제 에러", error);
+            return 0;
+        }
+    },
+    // 댓글에 대한 답글 작성 API
+    async writeReply(nickname, post_index, comment_index, reply) {
+        const url = mainURL + "/community/reply";
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'POST',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "nickname": nickname,
+                    "post_index": post_index,
+                    "comment_index": comment_index,
+                    "reply": reply
+                })
+            })
+
+            const responseData = await requestAuth.json();
+
+            return [responseData];
+        } catch (error) {
+            console.log("게시글 좋아요 에러", error);
             return 0;
         }
     },
@@ -230,8 +296,8 @@ export default {
             return 0;
         }
     },
-     // 게시글 수정 API
-     async modifyPost(header, body, post_index) {
+    // 게시글 수정 API
+    async modifyPost(post_index, header, body) {
         const url = mainURL + "/community/post";
         try {
             const requestAuth = await fetch(url, {
@@ -250,6 +316,27 @@ export default {
             return [responseData];
         } catch (error) {
             console.log("게시글 수정 에러", error);
+            return 0;
+        }
+    },
+      // 게시글 삭제 API
+      async deletePost(post_index) {
+        const url = mainURL + "/community/post?post_index=" + post_index;
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'DELETE',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                // body: JSON.stringify({
+                //     "post_index": post_index,
+                // })
+            })
+            const responseData = await requestAuth.json();
+            return [responseData];
+        } catch (error) {
+            console.log("게시글 삭제 에러", error);
             return 0;
         }
     },
@@ -294,8 +381,8 @@ export default {
 
 
 
-     // 게시글 제목+내용 검색 API
-     async searchContent(content) {
+    // 게시글 제목+내용 검색 API
+    async searchContent(content) {
         const url = mainURL + "/community/searchPostByContents?contents=" + content;
         try {
             const requsetAuth = await fetch(url, {
@@ -312,8 +399,8 @@ export default {
             return 0;
         }
     },
-     // 게시글 작성자 검색 API
-     async searchNickname(nickname) {
+    // 게시글 작성자 검색 API
+    async searchNickname(nickname) {
         const url = mainURL + "/community/searchPostByNickname?nickname=" + nickname;
         try {
             const requsetAuth = await fetch(url, {
@@ -351,9 +438,9 @@ export default {
             return 0;
         }
     },
-       // 암장 정보 조회 API
-       async getLocationInfo(location_index) {
-        const url = mainURL + "/outdoor/location?location_index=" + location_index;
+    // 암장 정보 조회 API
+    async getLocationInfo(location_index, user_index) {
+        const url = mainURL + "/outdoor/location?location_index=" + location_index + "&user_index=" + user_index;
         try {
             const requsetAuth = await fetch(url, {
                 method: 'GET',

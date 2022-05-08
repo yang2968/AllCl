@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Platform
 } from "react-native";
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useRoute, StackActions, TabActions } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,9 +18,11 @@ import styles from "../../styles/style";
 import API from "../../API/API";
 import moment from "moment";
 import SimplePopupMenu from 'react-native-simple-popup-menu';
+import AppContext from "../../AppContext";
 
-
-export default ({ navigation }) => {
+export default ({ navigation, route }) => {
+  const globalVariables = useContext(AppContext);
+  globalVariables.setRouteName(route.name);
   // 날짜순
   const dateStyle = useCallback(() => {
     likeButton.current.setNativeProps({ backgroundColor: "white" });
@@ -62,19 +64,17 @@ export default ({ navigation }) => {
   const [userNickname, setUserNickname] = useState("");
   const [sortData, setSortData] = useState(0);
   const [data, setData] = useState([]);
-  // get User nickname
-  useEffect(() => {
-    async function getId() {
-      const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
-      const userInfo = JSON.parse(getData);
-      setUserNickname(userInfo.nickname);
-    }
-    getId();
-  }, [])
+
   // 게시물 리스트 데이터 받아오기
   useEffect(() => {
     async function getData() {
-      const postingListData = await API.getPostingList();
+      // get User nickname
+      const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
+      const userInfo = JSON.parse(getData);
+      setUserNickname(userInfo.nickname);
+      // 게시물 리스트 가져오기
+      const postingListData = await API.getPostingList(userInfo.nickname);
+      //console.log(postingListData);
       if (postingListData == 0) { // 에러 발생 시
         setData([postingListData]);
 
@@ -126,7 +126,7 @@ export default ({ navigation }) => {
 
   // }, [sortData]);
 
-// 안드로이드 메뉴 아이템
+  // 안드로이드 메뉴 아이템
   const items = [
     { id: '글 쓰기', label: '글 쓰기' },
     { id: '내가 쓴 글', label: '내가 쓴 글' },
@@ -138,7 +138,7 @@ export default ({ navigation }) => {
       <TouchableOpacity
         style={{ justifyContent: 'center', width: '100%', borderColor: "#a8a8a8", borderBottomWidth: 1, paddingLeft: "5%", paddingRight: "5%", paddingTop: "6%", paddingBottom: "6%" }}
         onPress={() => {
-          navigation.navigate("자유 게시판", { post_index: item.post_index, comment_count: item.comment_count });
+          navigation.navigate("자유 게시판", { post_index: item.post_index, comment_count: item.comment_count, isLike: item.isLike });
         }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           {/* 제목 */}
@@ -207,38 +207,40 @@ export default ({ navigation }) => {
                       navigation.navigate("내가 쓴 댓글", { nickname: userNickname });
                     }
                   }}>
-                 <Icon2
-                  name={"ellipsis-horizontal-sharp"}
-                  size={20}
-                  color={"black"} />
+                  <Icon2
+                    name={"ellipsis-horizontal-sharp"}
+                    size={20}
+                    color={"black"} />
                 </SimplePopupMenu>
                 :
                 <TouchableOpacity style={{ marginLeft: 20, marginRight: 5 }}
-                onPress={() => {
-                      ActionSheetIOS.showActionSheetWithOptions(
-                        {
-                          title: "게시판 메뉴",
-                          options: ["취소", "글 쓰기", "내가 쓴 글", "내가 쓴 댓글"],
-                          cancelButtonIndex: 0,
-                          userInterfaceStyle: 'dark'
-                        },
-                        buttonIndex => {
-                          if (buttonIndex === 0) { // 취소
-                          } else if (buttonIndex === 1) {
-                            navigation.navigate("게시글 작성");
-                          } else if (buttonIndex === 2) {  // 내가 쓴 글
-                            navigation.navigate("내가 쓴 글", { nickname: userNickname });
-                          } else if (buttonIndex === 3) {// 내가 쓴 댓글
-                            navigation.navigate("내가 쓴 댓글", { nickname: userNickname });
-                          }
+                  onPress={() => {
+                    ActionSheetIOS.showActionSheetWithOptions(
+                      {
+                        title: "게시판 메뉴",
+                        options: ["취소", "글 쓰기", "내가 쓴 글", "내가 쓴 댓글"],
+                        cancelButtonIndex: 0,
+                        userInterfaceStyle: 'dark'
+                      },
+                      buttonIndex => {
+                        if (buttonIndex === 0) { // 취소
+                        } else if (buttonIndex === 1) {
+                          globalVariables.setHeader("")
+                          globalVariables.setBody("")
+                          navigation.navigate("게시글 작성");
+                        } else if (buttonIndex === 2) {  // 내가 쓴 글
+                          navigation.navigate("내가 쓴 글", { nickname: userNickname });
+                        } else if (buttonIndex === 3) {// 내가 쓴 댓글
+                          navigation.navigate("내가 쓴 댓글", { nickname: userNickname });
                         }
-                      )
-                }}>
-                <Icon2
-                  name={"ellipsis-horizontal-sharp"}
-                  size={20}
-                  color={"black"} />
-              </TouchableOpacity>
+                      }
+                    )
+                  }}>
+                  <Icon2
+                    name={"ellipsis-horizontal-sharp"}
+                    size={20}
+                    color={"black"} />
+                </TouchableOpacity>
             }
           </View>
         </View>
@@ -262,7 +264,7 @@ export default ({ navigation }) => {
             disabled={likeButtonDisable}
             onPress={async () => {
               if (sortData == 1) {
-                const dateData = await API.getPostingList();
+                const dateData = await API.getPostingList("밥셔틀웅이");
                 dateData.reverse();
                 setData(dateData);
                 dateStyle();
@@ -271,8 +273,8 @@ export default ({ navigation }) => {
 
 
               } else {
-                const commentsdata = await API.getCommentsPostingList();
-                setData(commentsdata);
+                const popularData = await API.getPopularPostingList("밥셔틀웅이");
+                setData(popularData);
                 likeStyle();
                 likeTextStyle();
                 setSortData(1);
@@ -288,15 +290,15 @@ export default ({ navigation }) => {
             disabled={commentButtonDisable}
             onPress={async () => {
               if (sortData == 2) {
-                const dateData = await API.getPostingList();
+                const dateData = await API.getPostingList("밥셔틀웅이");
                 dateData.reverse();
                 setData(dateData);
                 dateStyle();
                 dateTextStyle();
                 setSortData(0);
               } else {
-                const popularData = await API.getCommentsPostingList();
-                setData(popularData);
+                const commentsdata = await API.getCommentsPostingList("밥셔틀웅이");
+                setData(commentsdata);
                 commentStyle();
                 commentTextStyle();
                 setSortData(2);
@@ -312,7 +314,7 @@ export default ({ navigation }) => {
         {
           data == 0 ?
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-              <Text style={{ color: "black" }}>데이터가 없습니다.</Text>
+              <Text style={{ color: "black" }}>게시물이 없습니다.</Text>
 
             </View>
             :

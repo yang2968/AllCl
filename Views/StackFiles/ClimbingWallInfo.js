@@ -59,11 +59,10 @@ export default ({ navigation, route }) => {
 
     useEffect(() => {
         async function getLocations() {
-            const locationInfo2 = await API.getLocationInfo(data.location_index);
+            const locationInfo2 = await API.getLocationInfo(data.location_index, data.location_index);
             const routeInfo2 = await API.getRouteInfo(data.location_index);
-            
-            console.log(locationInfo2);
-            console.log(routeInfo2);
+            // console.log(locationInfo2);
+            // console.log(routeInfo2);
         if(locationInfo2 != 0 && routeInfo2 != 0) {
              setLocationInfo(locationInfo2);
              setRouteInfo(routeInfo2);

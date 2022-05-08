@@ -20,8 +20,8 @@ export default ({ navigation, route }) => {
   useEffect(() => {
     async function getmyPostList() {
       const myCommentiListData = await API.myCommentList(data.nickname);
-      console.log(myCommentiListData);
-      setMyData(myCommentiListData);
+      console.log("댓글", myCommentiListData);
+      setMyData(myCommentiListData.reverse());
     }
     getmyPostList();
   }, [])

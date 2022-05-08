@@ -10,6 +10,7 @@ import {
     TextInput,
     TouchableOpacity
 } from "react-native";
+import { useRoute, StackActions, TabActions } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/dist/Ionicons';
 import AppContext from "../../AppContext";
 import styles from "../../styles/style";
@@ -19,9 +20,10 @@ import Color from "../../styles/Color";
 export default ({ navigation }) => {
 
     const globalVariables = useContext(AppContext);
+   
 
     useEffect(() => {
-
+       
     }, [])
 
     return (
@@ -34,8 +36,9 @@ export default ({ navigation }) => {
                 <TextInput style={styles.postingTitle}
                     placeholder="제목"
                     placeholderTextColor="#9D9D9D"
+                    value={globalVariables.header}
                     onChangeText={
-                        header => globalVariables.requestHeader(header)
+                        header => globalVariables.setHeader(header)
                     } />
                 </View>
                 
@@ -45,11 +48,12 @@ export default ({ navigation }) => {
                     <TextInput style={styles.postingContent}
                         placeholder="내용을 입력하세요."
                         placeholderTextColor="#9D9D9D"
+                        value={globalVariables.body}
                         multiline={true}
                         textAlignVertical={"top"}
                         autoFocus={true}
                         onChangeText={
-                            body => globalVariables.requestBody(body)
+                            body => globalVariables.setBody(body)
                         } />
                 </ScrollView>
 

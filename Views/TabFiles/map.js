@@ -97,6 +97,7 @@ export default ({ navigation }) => {
     }
     async function getLocations() {
       const locations2 = await API.getLocations();
+      //console.log(locations2);
       setLocations(locations2);
     }
     getLocations();
@@ -122,7 +123,7 @@ export default ({ navigation }) => {
           <Callout
             style={{ width: 100 }}
             onPress={async () => {
-              const locationInfo2 = await API.getLocationInfo(item.location_index);
+              const locationInfo2 = await API.getLocationInfo(item.location_index, item.location_index);
               console.log(locationInfo2);
               setLocationInfo(locationInfo2);
               setModalVisible(true);

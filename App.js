@@ -15,22 +15,22 @@ const App = () => {
 
   const [header, setHeader] = useState("");
   const [body, setBody] = useState("");
-  const [routeName, setRouteName] = useState("111");
+  const [nickname, setNickname] = useState("");
+  const [routeName, setRouteName] = useState("");
+  const [postIndex, setPostIndex] = useState(0);
 
-  const requestHeader = (header) => {
-    setHeader(header);
-  }
-  const requestBody = (body) => {
-    setBody(body);
-  }
 
   const globalVariables = {
     header: header,
     body: body,
+    nickname: nickname,
     routeName: routeName,
-    requestHeader,
-    requestBody,
-    setRouteName
+    postIndex: postIndex,
+    setHeader,
+    setBody,
+    setNickname,
+    setRouteName,
+    setPostIndex
   }
 
   useEffect(() => {
