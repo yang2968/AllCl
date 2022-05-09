@@ -22,7 +22,6 @@ import AppContext from "../../AppContext";
 
 export default ({ navigation, route }) => {
   const globalVariables = useContext(AppContext);
-  globalVariables.setRouteName(route.name);
   // 날짜순
   const dateStyle = useCallback(() => {
     likeButton.current.setNativeProps({ backgroundColor: "white" });
@@ -44,7 +43,6 @@ export default ({ navigation, route }) => {
     commentButtonText.current.setNativeProps({ style: { color: "black" } });
   }, []);
   const [likeButtonDisable, setLikeButtonDisable] = useState(true);
-
   // 댓글순
   const commentButton = useRef();
   const commentStyle = useCallback(() => {
@@ -64,9 +62,14 @@ export default ({ navigation, route }) => {
   const [userNickname, setUserNickname] = useState("");
   const [sortData, setSortData] = useState(0);
   const [data, setData] = useState([]);
+  const [noticeData, setNoticeData] = useState([]);
+  const [noticeHeader, setNoticeHeader] = useState("");
 
   // 게시물 리스트 데이터 받아오기
   useEffect(() => {
+    globalVariables.setRouteName(route.name)
+    globalVariables.setHeader("");
+    globalVariables.setBody("");
     async function getData() {
       // get User nickname
       const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
@@ -74,6 +77,13 @@ export default ({ navigation, route }) => {
       setUserNickname(userInfo.nickname);
       // 게시물 리스트 가져오기
       const postingListData = await API.getPostingList(userInfo.nickname);
+      //
+      const noticeListData = await API.getNoticeList();
+      setNoticeData(noticeListData[0]);
+      setNoticeHeader(noticeListData[0].header);
+      console.log(noticeListData);
+      //const noticeData = await API.watchNotice(1);
+     // console.log(noticeData);
       //console.log(postingListData);
       if (postingListData == 0) { // 에러 발생 시
         setData([postingListData]);
@@ -91,41 +101,6 @@ export default ({ navigation, route }) => {
     }
     getData();
   }, [isFocused]);
-  // 게시물 리스트 정렬
-  // useEffect(() => {
-  //   if (sortData == 0) {
-  //     var newDateData = [...data];
-
-  //     newDateData.sort((a, b) => {
-  //       return a.post_date > b.post_date ? -1 : a.post_date > b.post_date ? 1 : 0;
-  //     })
-  //     setData(newDateData);
-
-
-  //     //console.log("날짜순");
-
-  //   } else if (sortData == 1) {
-  //     var newLikeData = [...data];
-  //     newLikeData.sort((a, b) => {
-  //       return a.like_count > b.like_count ? -1 : a.like_count > b.like_count ? 1 : 0;
-  //     })
-  //     setData(newLikeData);
-  //     //console.log("인기순");
-
-  //   } else if (sortData == 2) {
-  //     var newCommentData = [...data];
-  //     newCommentData.sort((a, b) => {
-  //       return a.comment_count > b.comment_count ? -1 : a.comment_count > b.comment_count ? 1 : 0;
-  //     })
-  //     setData(newCommentData);
-  //     //console.log("댓글순");
-
-  //   } else {
-  //     setData(data);
-  //   }
-
-  // }, [sortData]);
-
   // 안드로이드 메뉴 아이템
   const items = [
     { id: '글 쓰기', label: '글 쓰기' },
@@ -247,15 +222,18 @@ export default ({ navigation, route }) => {
         {/*  */}
 
         {/* 공지  */}
-        <TouchableOpacity style={{ borderColor: "gray", borderWidth: 1, paddingTop: "5%", paddingBottom: "5%", paddingLeft: "3%", marginBottom: "3%", flexDirection: "row", justifyContent: "center" }}>
+        <TouchableOpacity style={{ borderColor: "gray", borderWidth: 1, paddingTop: "5%", paddingBottom: "5%", paddingLeft: "3%", marginBottom: "3%", flexDirection: "row", justifyContent: "center" }}
+        onPress={()=>{
+          console.log(noticeData);
+         navigation.navigate("공지", { notice: noticeData });
+        }}>
 
           <Text style={{ position: "absolute", left: 10, top: 18, bottom: 0, color: "black", fontSize: 16, fontWeight: "bold" }}>공지</Text>
 
-          <Text style={{ textAlign: "center", color: "black", fontSize: 15 }}>게시판 운영 관련 안내</Text>
+          <Text style={{ textAlign: "center", color: "black", fontSize: 15 }}>{noticeHeader}</Text>
 
         </TouchableOpacity>
         {/*  */}
-
 
         {/* 인기순, 댓글순  */}
         <View style={{ width: "100%", flexDirection: "row", marginBottom: "5%" }}>
@@ -270,8 +248,6 @@ export default ({ navigation, route }) => {
                 dateStyle();
                 dateTextStyle();
                 setSortData(0);
-
-
               } else {
                 const popularData = await API.getPopularPostingList("밥셔틀웅이");
                 setData(popularData);
@@ -279,7 +255,6 @@ export default ({ navigation, route }) => {
                 likeTextStyle();
                 setSortData(1);
               }
-
             }}>
             <Text style={{ color: "black", fontSize: 15, fontWeight: "bold", textAlign: "center" }}
               ref={likeButtonText}>인기순</Text>
@@ -303,14 +278,12 @@ export default ({ navigation, route }) => {
                 commentTextStyle();
                 setSortData(2);
               }
-
             }}>
             <Text style={{ color: "black", fontSize: 15, fontWeight: "bold", textAlign: "center" }}
               ref={commentButtonText}>댓글순</Text>
           </TouchableOpacity>
         </View>
         {/*  */}
-
         {
           data == 0 ?
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -324,9 +297,7 @@ export default ({ navigation, route }) => {
               keyExtractor={item => item.post_index}
               disableVirtualization={true}
               showsVerticalScrollIndicator={false} />
-
         }
-
       </View>
     </TouchableWithoutFeedback>
   )

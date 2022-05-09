@@ -13,12 +13,11 @@ import ClimbingWallInfo from "../Views/StackFiles/ClimbingWallInfo";
 import RouteInfo from "../Views/StackFiles/RouteInfo";
 import Login from "../Views/StackFiles/login";
 import Posting from "../Views/StackFiles/posting";
+import WatchNotice from "../Views/StackFiles/watchNotice";
 import WatchPost from "../Views/StackFiles/watchPost";
 import BoardSearch from "../Views/StackFiles/boardSearch";
 import MyWrittenPosting from "../Views/StackFiles/myWrittenPosting";
 import MyWriitenComent from "../Views/StackFiles/myWrittenComent";
-
-
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +31,10 @@ export default () => {
     ];
     const items2 = [
         { id: '신고하기', label: '신고하기' },
+    ];
+    const items3 = [
+        { id: '게시글 수정', label: '게시글 수정' },
+        { id: '게시글 삭제', label: '게시글 삭제' },
     ];
 
 
@@ -91,71 +94,68 @@ export default () => {
                 headerBackVisible: false,
                 headerLeft: () => {
                     let iconName = Platform.OS === "ios" ? "ios-" : "md-";
-                    if (route.name == "게시글 작성") {
-                        iconName += "arrow-back";
-                        return (
-                            // 뒤로가기 버튼
-                            <TouchableOpacity
-                                style={{ padding: 5 }}
-                                onPress={() => navigation.goBack()}>
-                                <Icon
-                                    name={iconName}
-                                    size={25}
-                                    color={"black"} />
-                            </TouchableOpacity>
-                        )
-                    } else if (route.name == "RouteInfo") {
-                        iconName += "arrow-back";
-                        return (
-                            // 뒤로가기 버튼
-                            <TouchableOpacity
-                                style={{ padding: 5 }}
-                                onPress={() => navigation.goBack()}>
-                                <Icon
-                                    name={iconName}
-                                    size={25}
-                                    color={"white"} />
-                            </TouchableOpacity>
-                        )
-                    }
-                    else {
-                        iconName += "arrow-back";
-                        return (
-                            // 뒤로가기 버튼
-                            <TouchableOpacity
-                                style={{}}
-                                onPress={() => navigation.goBack()}>
-                                <Icon
-                                    name={iconName}
-                                    size={25}
-                                    color={"black"} />
-                            </TouchableOpacity>
-                        )
-                    }
+                    iconName += "arrow-back";
+                    // 뒤로가기 버튼
+                    return(
+                        <TouchableOpacity
+                    style={{}}
+                    onPress={() => {
+                        navigation.goBack();
+                    }}>
+                    <Icon
+                        name={iconName}
+                        size={25}
+                        color={"black"} />
+                </TouchableOpacity>
+                    )
+                    // if (route.name == "게시글 작성") {
+                    //     
+                    //     return (
+                            
+                    //     )
+
+                    // } else if (route.name == "RouteInfo") {
+                    //     iconName += "arrow-back";
+                    //     return (
+                    //         // 뒤로가기 버튼
+                    //         <TouchableOpacity
+                    //             style={{ padding: 5 }}
+                    //             onPress={() => navigation.goBack()}>
+                    //             <Icon
+                    //                 name={iconName}
+                    //                 size={25}
+                    //                 color={"white"} />
+                    //         </TouchableOpacity>
+                    //     )
+                    // } else {
+                    //     iconName += "arrow-back";
+                    //     return (
+                    //         // 뒤로가기 버튼
+                    //         <TouchableOpacity
+                    //             style={{}}
+                    //             onPress={() => navigation.goBack()}>
+                    //             <Icon
+                    //                 name={iconName}
+                    //                 size={25}
+                    //                 color={"black"} />
+                    //         </TouchableOpacity>
+                    //     )
+                    // }
                 },
                 headerRight: () => {
-                    // var test = async () => {
-                    //     const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
-                    //     console.log("asddd", getData);
-                    //     const userInfo = JSON.parse(getData);
-                    //     // test3 =  userInfo.nickname;
-                    // }
-                    // test();
-
                     let iconName = Platform.OS === "ios" ? "ios-" : "md-";
                     if (route.name == "게시글 작성") {
                         return (
                             <TouchableOpacity
                                 style={{ backgroundColor: Color.loginBackground, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15 }}
                                 onPress={async () => {
-                                    if (globalVariables.routeName == "게시판") { // 게사굴울 작성허눈 굥유
-                                        // 게시글 작성
+                                    if (globalVariables.routeName == "게시판") { // 게시글울 작성허눈 굥유
                                         var test = Math.random();
                                         const postingData = await API.posting("밥셔틀웅이", globalVariables.header, globalVariables.body, String(test));
-                                        console.log(postingData[0]);
                                         switch (postingData[0]) {
                                             case 200: case 201:
                                                 navigation.goBack();
+                                                globalVariables.setRouteName("");
                                                 break;
                                             default:
                                                 Alert.alert("알림", "에러가 발생하였습니다.");
@@ -166,65 +166,62 @@ export default () => {
                                         switch (modifyPostData[0]) {
                                             case 200: case 201:
                                                 navigation.navigate("게시판");
+                                                globalVariables.setRouteName("");
                                                 break;
                                             default:
                                                 Alert.alert("알림", "에러가 발생하였습니다.");
                                                 break;
                                         }
                                     }
-                                    globalVariables.setRouteName("");
                                 }}>
                                 <Text style={{ color: "white", fontWeight: "bold" }}>완료</Text>
                             </TouchableOpacity>
                         )
-                    } else if (route.name == "ClimbingWallInfo") {
-
                     } else if (route.name == "자유 게시판") {
                         iconName = "ellipsis-horizontal-sharp";
                         if (globalVariables.nickname == "밥셔틀웅이") {
                             return (
-                                <TouchableOpacity
-                                    style={{ padding: 5 }}
-                                    onPress={() => {
-                                        console.log(route.name);
-                                        {
-                                            Platform.OS === "android" ?
-                                                <SimplePopupMenu
-                                                    items={items}
-                                                    style={{ padding: 5 }}
-                                                    onSelect={async (item3) => {
-                                                        if (item3.label == "수정") {
-                                                            navigation.navigate("게시글 작성");
-                                                        } else if (item3.label == "삭제") {
-                                                            Alert.alert("알림", "게시물을 삭제하시겠습니까?", [
-                                                                {
-                                                                    text: "확인",
-                                                                    onPress: async () => {
-                                                                        const deletePostData = await API.deletePost(globalVariables.postIndex);
-                                                                        switch (deletePostData[0]) {
-                                                                            case 200: case 201:
-                                                                                navigation.goBack();
-                                                                                break;
-                                                                            default:
-                                                                                Alert.alert("알림", "에러가 발생하였습니다.");
-                                                                                break;
-                                                                        }
-                                                                    }
-                                                                },
-                                                                {
-                                                                    text: "취소",
-                                                                    style: 'cancel',
-                                                                    //onPress: () => BackHandler.exitApp() 
+                                (
+                                    Platform.OS === "android" ?
+                                        <SimplePopupMenu
+                                            items={items3}
+                                            style={{ padding: 5 }}
+                                            onSelect={async (item) => {
+
+                                                if (item.label == "게시글 수정") {
+                                                    navigation.navigate("게시글 작성");
+                                                } else if (item.label == "게시글 삭제") {
+                                                    Alert.alert("알림", "게시물을 삭제하시겠습니까?", [
+                                                        {
+                                                            text: "확인",
+                                                            onPress: async () => {
+                                                                const deletePostData = await API.deletePost(globalVariables.postIndex);
+                                                                switch (deletePostData[0]) {
+                                                                    case 200: case 201:
+                                                                        navigation.goBack();
+                                                                        break;
+                                                                    default:
+                                                                        Alert.alert("알림", "에러가 발생하였습니다.");
+                                                                        break;
                                                                 }
-                                                            ])
+                                                            }
+                                                        },
+                                                        {
+                                                            text: "취소",
+                                                            style: 'cancel',
                                                         }
-                                                    }}>
-                                                    <Icon
-                                                        name={"ellipsis-horizontal-sharp"}
-                                                        size={20}
-                                                        color={"black"} />
-                                                </SimplePopupMenu>
-                                                :
+                                                    ])
+                                                }
+                                            }}>
+                                            <Icon
+                                                name={"ellipsis-horizontal-sharp"}
+                                                size={20}
+                                                color={"black"} />
+                                        </SimplePopupMenu>
+                                        :
+                                        <TouchableOpacity
+                                            style={{ padding: 5 }}
+                                            onPress={() => {
                                                 ActionSheetIOS.showActionSheetWithOptions(
                                                     {
                                                         title: "게시판 메뉴",
@@ -255,41 +252,41 @@ export default () => {
                                                                 {
                                                                     text: "취소",
                                                                     style: 'cancel',
-                                                                    //onPress: () => BackHandler.exitApp() 
                                                                 }
                                                             ])
                                                         }
                                                     }
                                                 )
-                                        }
-                                    }}>
-                                    <Icon
-                                        name={iconName}
-                                        size={20}
-                                        color={"black"} />
-                                </TouchableOpacity>
+                                            }}>
+                                            <Icon
+                                                name={iconName}
+                                                size={20}
+                                                color={"black"} />
+                                        </TouchableOpacity>
+                                )
                             )
                         } else {
                             return (
-                                <TouchableOpacity
-                                    style={{ padding: 5 }}
-                                    onPress={() => {
-                                        {
-                                            Platform.OS === "android" ?
-                                                <SimplePopupMenu
-                                                    items={items2}
-                                                    style={{ padding: 5 }}
-                                                    onSelect={async (item3) => {
-                                                        if (item3.label == "신고하기") {
-                                                            console.log("신고하기");
-                                                        }
-                                                    }}>
-                                                    <Icon
-                                                        name={"ellipsis-horizontal-sharp"}
-                                                        size={20}
-                                                        color={"black"} />
-                                                </SimplePopupMenu>
-                                                :
+                                (
+                                    Platform.OS === "android" ?
+                                        <SimplePopupMenu
+                                            items={items2}
+                                            style={{ padding: 5 }}
+                                            onSelect={async (item3) => {
+                                                if (item3.label == "신고하기") {
+                                                    console.log("신고하기");
+                                                }
+                                            }}>
+                                            <Icon
+                                                name={"ellipsis-horizontal-sharp"}
+                                                size={20}
+                                                color={"black"} />
+                                        </SimplePopupMenu>
+                                        :
+                                        <TouchableOpacity
+                                            style={{ padding: 5 }}
+                                            onPress={() => {
+
                                                 ActionSheetIOS.showActionSheetWithOptions(
                                                     {
                                                         title: "게시판 메뉴",
@@ -304,13 +301,14 @@ export default () => {
                                                         }
                                                     }
                                                 )
-                                        }
-                                    }}>
-                                    <Icon
-                                        name={iconName}
-                                        size={20}
-                                        color={"black"} />
-                                </TouchableOpacity>
+                                            }}>
+                                            <Icon
+                                                name={iconName}
+                                                size={20}
+                                                color={"black"} />
+                                        </TouchableOpacity>
+                                )
+
                             )
                         }
 
@@ -325,6 +323,7 @@ export default () => {
             <Stack.Screen name="RouteInfo" component={RouteInfo} options={{ headerShown: true }} />
             <Stack.Screen name="게시글 작성" component={Posting} options={{ headerShown: true }} />
             <Stack.Screen name="자유 게시판" component={WatchPost} options={{ headerShown: true }} />
+            <Stack.Screen name="공지" component={WatchNotice} options={{ headerShown: true }} />
             <Stack.Screen name="BoardSearch" component={BoardSearch} options={{ headerShown: false }} />
             <Stack.Screen name="내가 쓴 글" component={MyWrittenPosting} options={{ headerShown: true }} />
             <Stack.Screen name="내가 쓴 댓글" component={MyWriitenComent} options={{ headerShown: true }} />

@@ -123,8 +123,8 @@ export default ({ navigation }) => {
           <Callout
             style={{ width: 100 }}
             onPress={async () => {
-              const locationInfo2 = await API.getLocationInfo(item.location_index, item.location_index);
-              console.log(locationInfo2);
+              console.log(item.location_index);
+              const locationInfo2 = await API.getLocationInfo(item.location_index, 1);
               setLocationInfo(locationInfo2);
               setModalVisible(true);
             }}>

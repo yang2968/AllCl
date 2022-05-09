@@ -59,7 +59,7 @@ export default {
             return 0;
         }
     },
-    // 공자시항 리스트 조회 API
+    // 공지사항 리스트 조회 API
     async getNoticeList() {
         const url = mainURL + "/community/notice-list";
         try {
@@ -74,6 +74,24 @@ export default {
             return responseData;
         } catch (error) {
             console.log("공지사항 리스트 조회 에러", error);
+            return 0;
+        }
+    },
+    // 공지사항 조회 API
+    async watchNotice(notice_index) {
+        const url = mainURL + "/community/post?post_index=" + notice_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("공지사항 조회 에러", error);
             return 0;
         }
     },
@@ -319,8 +337,8 @@ export default {
             return 0;
         }
     },
-      // 게시글 삭제 API
-      async deletePost(post_index) {
+    // 게시글 삭제 API
+    async deletePost(post_index) {
         const url = mainURL + "/community/post?post_index=" + post_index;
         try {
             const requestAuth = await fetch(url, {
@@ -329,9 +347,6 @@ export default {
                 {
                     'Content-Type': 'application/json',
                 },
-                // body: JSON.stringify({
-                //     "post_index": post_index,
-                // })
             })
             const responseData = await requestAuth.json();
             return [responseData];
@@ -487,6 +502,78 @@ export default {
             return responseData;
         } catch (error) {
             console.log("루트 정보 조회 API 에러", error);
+            return 0;
+        }
+    },
+
+
+     // 암장에 대한 평점 작성 API
+     async createScore(user_index, location_index, score) {
+        const url = mainURL + "/outdoor/score";
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'POST',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "user_index": user_index,
+                    "location_index": location_index,
+                    "score": score,
+                })
+            })
+
+            const responseData = await requestAuth.json();
+
+            return [responseData];
+        } catch (error) {
+            console.log("암장에 대한 평점 작성 에러", error);
+            return 0;
+        }
+    },
+    // 암장에 대한 평점 수정 API
+    async modifyScore(user_index, location_index, score) {
+        const url = mainURL + "/outdoor/score";
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'PUT',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "user_index": user_index,
+                    "location_index": location_index,
+                    "score": score,
+                })
+            })
+            const responseData = await requestAuth.json();
+            return [responseData];
+        } catch (error) {
+            console.log("암장에 대한 평점 수정 에러", error);
+            return 0;
+        }
+    },
+      // 암장에 대한 평점 삭제 API
+      async deleteScore(user_index, location_index) {
+        const url = mainURL + "/outdoor/score";
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'DELETE',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "user_index": user_index,
+                    "location_index": location_index,
+                })
+            })
+            const responseData = await requestAuth.json();
+            return [responseData];
+        } catch (error) {
+            console.log("암장에 대한 평점 삭제 에러", error);
             return 0;
         }
     },

@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/Ionicons';
-import StarRating from 'react-native-star-rating';
+import StarRating from 'react-native-star-rating-widget';
 import styles from "../../styles/style";
 import Color from "../../styles/Color";
 import API from "../../API/API";
@@ -30,17 +30,18 @@ export default ({ navigation, route }) => {
     const data = route.params;
     const [locationInfo, setLocationInfo] = useState([
         {
-          name: "",
-          address_province: "",
-          address_city: "",
-          address_detail: "",
-          description: "",
-          score: 0,
-          image_path: "",
+            name: "",
+            address_province: "",
+            address_city: "",
+            address_detail: "",
+            description: "",
+            score: 0,
+            userScore: 0,
+            image_path: "",
         }
-      ]);
-      //
-      const [routeInfo, setRouteInfo] = useState([
+    ]);
+    //
+    const [routeInfo, setRouteInfo] = useState([
         {
             location_index: "",
             route_index: 0,
@@ -50,7 +51,7 @@ export default ({ navigation, route }) => {
             like_count: "",
             image_path: "",
         }
-      ]);
+    ]);
     // 장치 목록 모달 표시 여부 변수
     const [modalVisible, setModalVisible] = useState(false);
     const [starCount, setStarCount] = useState(locationInfo[0].score);
@@ -60,47 +61,24 @@ export default ({ navigation, route }) => {
     useEffect(() => {
         async function getLocations() {
             const locationInfo2 = await API.getLocationInfo(data.location_index, data.location_index);
+            console.log(locationInfo2);
             const routeInfo2 = await API.getRouteInfo(data.location_index);
-            // console.log(locationInfo2);
             // console.log(routeInfo2);
-        if(locationInfo2 != 0 && routeInfo2 != 0) {
-             setLocationInfo(locationInfo2);
-             setRouteInfo(routeInfo2);
-             setStarCount(Number(locationInfo2[0].score));
-        } else {
-            Alert.alert("알림", "정보를 불러오지 못했습니다.");
+            if (locationInfo2 != 0 && routeInfo2 != 0) {
+                setLocationInfo(locationInfo2);
+                setRouteInfo(routeInfo2);
+                if(locationInfo2[0].userScore == undefined) {
+                    setStarCount(0);
+                } else {
+                    setStarCount(Number(locationInfo2[0].userScore));
+                }
+            } else {
+                Alert.alert("알림", "정보를 불러오지 못했습니다.");
+            }
         }
-          }
-          getLocations();
-       
-    }, [])
+        getLocations();
 
-    var testData = [
-        {
-            index: 0,
-            title: '쉬운길',
-            level: "5.9",
-            like: 10,
-        },
-        {
-            index: 1,
-            title: '무지개',
-            level: "5.10b",
-            like: 11,
-        },
-        {
-            index: 2,
-            title: '갈라진 세상',
-            level: "5.8",
-            like: 8,
-        },
-        {
-            index: 3,
-            title: '바위를 좋아하는',
-            level: "5.12a",
-            like: 3,
-        },
-    ];
+    }, [])
     // Route
     const renderItem = ({ item }) => {
         return (
@@ -145,7 +123,7 @@ export default ({ navigation, route }) => {
 
     return (
         <View style={styles.RCWView}>
-            
+
             <FlatList
                 data={routeInfo}
                 renderItem={renderItem}
@@ -184,7 +162,7 @@ export default ({ navigation, route }) => {
                                         size={20}
                                         color={"#F0CF54"} />
 
-                                    <Text style={{ color: "#F0CF54", fontSize: 20, fontWeight: "bold", marginLeft: 10 }}>{starCount}</Text>
+                                    <Text style={{ color: "#F0CF54", fontSize: 20, fontWeight: "bold", marginLeft: 10 }}>{locationInfo[0].score}</Text>
                                 </TouchableOpacity>
 
 
@@ -279,25 +257,45 @@ export default ({ navigation, route }) => {
                         <Text style={{ color: "white", fontSize: 20, fontWeight: "bold", marginBottom: 20 }}>별점 주기</Text>
 
                         <StarRating
-                            disabled={false}
-                            activeOpacity={0.2}
-                            rating={starCount}
-                            halfStarEnabled={true}
-                            iconSet={'FontAwesome'}
-                            emptyStar={'star'}
-                            fullStar={'star'}
-                            halfStar={'star-half-full'}
-                            starSize={30}
-                            fullStarColor={"#F0CF54"}
-                            halfStarColor={"#F0CF54"}
-                            emptyStarColor={"#CCCCCC"}
+                            style={{ alignSelf: "center" }}
+                            color={"#F0CF54"}
                             maxStars={5}
-                            
-                            selectedStar={(rating) => setStarCount(rating)}
-                            starStyle={{ marginHorizontal: 10 }} />
+                            starSize={35}
+                            starStyle={{ marginHorizontal: 10, }}
+                            emptyColor={"#CCCCCC"}
+                            rating={starCount}
+                            onChange={(rating) => setStarCount(rating)} />
 
                         <TouchableOpacity style={{ backgroundColor: Color.loginButtonBackground, alignItems: "center", justifyContent: "center", marginTop: 20, width: "65%", padding: "2.5%", borderRadius: 12 }}
-                            onPress={() => {
+                            onPress={async () => {
+                                if (Number(locationInfo[0].userScore) == undefined) { // 유저스코어를 알 수 없는 경우 분기
+                                    // createScore
+                                    console.log("createScore");
+                                    const createScoreRes = await API.createScore(1,locationInfo[0].location_index, starCount);
+                                    console.log(modifyScoreRes);
+                                    switch (createScoreRes[0]) {
+                                        case 200: case 201:
+                                            const locationInfo2 = await API.getLocationInfo(locationInfo[0].location_index, 1);
+                                            setLocationInfo(locationInfo2);
+                                            break;
+                                        default:
+                                            Alert.alert("알림", "에러가 발생하였습니다.");
+                                            break;
+                                    }
+                                } else { // modifyScore
+                                    console.log("modifyScore");
+                                    const modifyScoreRes = await API.modifyScore(1,locationInfo[0].location_index, starCount);
+                                    console.log(modifyScoreRes);
+                                    switch (modifyScoreRes[0]) {
+                                        case 200: case 201:
+                                            const locationInfo2 = await API.getLocationInfo(locationInfo[0].location_index, 1);
+                                            setLocationInfo(locationInfo2);
+                                            break;
+                                        default:
+                                            Alert.alert("알림", "에러가 발생하였습니다.");
+                                            break;
+                                    }
+                                }
                                 setModalVisible(false);
                             }}>
                             <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>완료</Text>

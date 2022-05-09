@@ -16,12 +16,8 @@ import AppContext from "../../AppContext";
 import styles from "../../styles/style";
 import Color from "../../styles/Color";
 
-
 export default ({ navigation }) => {
-
     const globalVariables = useContext(AppContext);
-   
-
     useEffect(() => {
        
     }, [])
@@ -42,7 +38,6 @@ export default ({ navigation }) => {
                     } />
                 </View>
                 
-
                 <ScrollView style={styles.postingScrollContents}
                 showsVerticalScrollIndicator={false}>
                     <TextInput style={styles.postingContent}

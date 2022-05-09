@@ -17,7 +17,6 @@ import {
 import { useRoute, StackActions, TabActions } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/Ionicons';
-import Icon3 from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SimplePopupMenu from 'react-native-simple-popup-menu';
 import AppContext from "../../AppContext";
@@ -28,7 +27,6 @@ import API from "../../API/API";
 export default ({ navigation, route }) => {
     const routeName = useRoute();
     const globalVariables = useContext(AppContext);
-    globalVariables.setRouteName(routeName.name);
     // 게시물 인덱스 받아오기
     const data = route.params;
     // 게시물 정보
@@ -65,6 +63,7 @@ export default ({ navigation, route }) => {
     ];
     // 사용자 닉네임 가져오기
     useEffect(() => {
+        globalVariables.setRouteName(routeName.name);
         async function getId() {
             const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
             const userInfo = JSON.parse(getData);
@@ -79,7 +78,7 @@ export default ({ navigation, route }) => {
             
             // 선택한 게시물 정보 조회
             const postData = await API.watchPost(data.post_index);
-            console.log(postData);
+            //console.log(postData);
             globalVariables.setNickname(postData[0].nickname);
             setNickName(postData[0].nickname);
             setHeader(postData[0].header);
@@ -149,12 +148,11 @@ export default ({ navigation, route }) => {
                             <View style={styles.watchPostItemView2}>
                                 <TouchableOpacity style={{ padding: 5, marginRight: 5 }}
                                     onPress={async () => {
-                                        console.log(data.post_index);
-                                        console.log(nickName);
-                                        console.log(item.comment_index);
-                                    
+                                        // console.log(data.post_index);
+                                        // console.log(nickName);
+                                        // console.log(item.comment_index);              
                                         const writeReply = await API.writeReply(nickName, data.post_index, item.comment_index, "답글입니다!");
-                                        console.log("답글 생성", writeReply);
+                                        // console.log("답글 생성", writeReply);
                                     }}>
                                     <Icon
                                         name={"comment-o"}
