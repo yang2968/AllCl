@@ -43,15 +43,15 @@ export default ({ navigation }) => {
       index: 0,
       latitude: 35.9442388,
       longitude: 128.6260576,
-      title: '연경 도약대',
-      content: '대구광역시 북구 연경동819',
+      name: '연경 도약대',
+      description: '대구광역시 북구 연경동819',
     },
     {
       index: 1,
       latitude: 37.0977217,
       longitude: 128.0032446,
-      title: '천등산',
-      content: '전라북도 연주군',
+      name: '천등산',
+      description: '전라북도 연주군',
     },
   ]);
 
@@ -97,7 +97,7 @@ export default ({ navigation }) => {
     }
     async function getLocations() {
       const locations2 = await API.getLocations();
-      //console.log(locations2);
+      console.log(locations2);
       setLocations(locations2);
     }
     getLocations();
@@ -115,7 +115,9 @@ export default ({ navigation }) => {
   const setMarkers = () => {
     return (
       locations.map((item, location_index) => (
-        <Marker
+        (
+          item.name != "string" ?
+          <Marker
           coordinate={{ latitude: Number(item.latitude), longitude: Number(item.longitude) }}
           key={location_index}
           title={item.name}
@@ -132,7 +134,10 @@ export default ({ navigation }) => {
             {/* <Text style={{ textAlign: 'center', color: "black", fontSize: 12 }}>{item.name}</Text> */}
           </Callout>
         </Marker>
-
+          :
+          <View/>
+        )
+      
       ))
     )
   };

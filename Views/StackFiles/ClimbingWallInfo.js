@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
     StatusBar,
     Alert,
@@ -28,6 +28,43 @@ import Route from "../../images/route.jpeg";
 
 export default ({ navigation, route }) => {
     const data = route.params;
+        // 날짜순
+  const dateStyle = useCallback(() => {
+    likeButton.current.setNativeProps({ backgroundColor: "white" });
+    commentButton.current.setNativeProps({ backgroundColor: "white" });
+  }, []);
+  const dateTextStyle = useCallback(() => {
+    likeButtonText.current.setNativeProps({ style: { color: Color.likeButtonColor } });
+    commentButtonText.current.setNativeProps({ style: { color: Color.loginButtonBackground } });
+  }, []);
+  // 인기순
+  const likeButton = useRef();
+  const likeStyle = useCallback(() => {
+    likeButton.current.setNativeProps({ backgroundColor: Color.likeButtonColor });
+    commentButton.current.setNativeProps({ backgroundColor: "white" });
+  }, []);
+  const likeButtonText = useRef();
+  const likeTextStyle = useCallback(() => {
+    likeButtonText.current.setNativeProps({ style: { color: "white" } });
+    commentButtonText.current.setNativeProps({ style: { color: Color.loginButtonBackground } });
+  }, []);
+  const [likeButtonDisable, setLikeButtonDisable] = useState(true);
+  // 댓글순
+  const commentButton = useRef();
+  const commentStyle = useCallback(() => {
+    commentButton.current.setNativeProps({ backgroundColor: Color.loginButtonBackground });
+    likeButton.current.setNativeProps({ backgroundColor: "white" });
+  }, []);
+
+  const commentButtonText = useRef();
+  const commentTextStyle = useCallback(() => {
+    commentButtonText.current.setNativeProps({ style: { color: "white" } });
+    likeButtonText.current.setNativeProps({ style: { color: Color.likeButtonColor } });
+  }, []);
+  const [commentButtonDisable, setCommentButtonDisable] = useState(true);
+
+  const [sortData, setSortData] = useState(0);
+
     const [locationInfo, setLocationInfo] = useState([
         {
             name: "",
@@ -67,6 +104,8 @@ export default ({ navigation, route }) => {
             if (locationInfo2 != 0 && routeInfo2 != 0) {
                 setLocationInfo(locationInfo2);
                 setRouteInfo(routeInfo2);
+                setLikeButtonDisable(false);
+                setCommentButtonDisable(false);
                 if(locationInfo2[0].userScore == undefined) {
                     setStarCount(0);
                 } else {
@@ -80,15 +119,16 @@ export default ({ navigation, route }) => {
 
     }, [])
     // Route
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item, index }) => {
+        console.log(index);
         return (
             <TouchableOpacity
                 style={{ flexDirection: "row", alignSelf: "center", justifyContent: 'space-between', width: '90%', borderColor: "#a8a8a8", borderBottomWidth: 1, paddingTop: "6%", paddingBottom: "6%" }}
                 onPress={() => {
-                    navigation.navigate("RouteInfo", { location_name: locationInfo[0].name, route_name: item.route_name, location_index: item.location_index, route_index: item.route_index, difficulty: item.difficulty, like_count: item.like_count, image_path: item.image_path });
+                    navigation.navigate("RouteInfo", { location_name: locationInfo[0].name, route_name: item.route_name, location_index: item.location_index, route_index: item.route_index, difficulty: item.difficulty, like_count: item.like_count, image_path: item.image_path, index: index });
                 }}>
 
-                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{item.route_index + ". " + item.route_name}</Text>
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{(index+1) + ". " + item.route_name}</Text>
 
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
 
@@ -200,33 +240,63 @@ export default ({ navigation, route }) => {
 
 
                             <View style={{ width: "100%", flexDirection: "row", marginBottom: "5%", alignItems: "center" }}>
-                                <TouchableOpacity style={{ backgroundColor: Color.loginBackground, justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15 }}
+                                {/* <TouchableOpacity style={{ backgroundColor: Color.loginBackground, justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15 }}
 
                                     onPress={() => {
 
                                     }}>
                                     <Text style={{ color: "white", fontSize: 15, fontWeight: "bold", textAlign: "center" }}
                                     >완등순</Text>
+                                </TouchableOpacity> */}
+
+
+                                <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingVertical: 7, borderRadius: 15 }}
+                                 ref={commentButton}
+                                 disabled={commentButtonDisable}
+                                    onPress={async () => {
+                                        console.log(sortData);
+                                        if (sortData == 2) {
+                                            const dateData = await API.getRouteInfo(data.location_index);
+                                            //dateData.reverse();
+                                            setRouteInfo(dateData);
+                                            dateStyle();
+                                            dateTextStyle();
+                                            setSortData(0);
+                                          } else {
+                                            const commentsdata = await API.getDifficultyRouteInfo(data.location_index);
+                                            setRouteInfo(commentsdata);
+                                            commentStyle();
+                                            commentTextStyle();
+                                            setSortData(2);
+                                          }
+                                    }}>
+                                    <Text style={{ color: Color.loginButtonBackground, fontSize: 13, fontWeight: "bold", textAlign: "center" }}
+                                      ref={commentButtonText}>난이도순</Text>
                                 </TouchableOpacity>
 
-
-                                <TouchableOpacity style={{ backgroundColor: Color.loginButtonBackground, justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingVertical: 7, borderRadius: 15 }}
-
-                                    onPress={() => {
+                                <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15 }}
+                                  ref={likeButton}
+                                  disabled={likeButtonDisable}
+                                    onPress={async () => {
+                                        console.log(sortData);
+                                        if (sortData == 1) {
+                                            const dateData = await API.getRouteInfo(data.location_index);
+                                            //dateData.reverse();
+                                            setRouteInfo(dateData);
+                                            dateStyle();
+                                            dateTextStyle();
+                                            setSortData(0);
+                                          } else {
+                                            const popularData = await API.getPopularRouteInfo(data.location_index);
+                                            setRouteInfo(popularData);
+                                            likeStyle();
+                                            likeTextStyle();
+                                            setSortData(1);
+                                          }
 
                                     }}>
-                                    <Text style={{ color: "white", fontSize: 13, fontWeight: "bold", textAlign: "center" }}
-                                    >난이도순</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity style={{ backgroundColor: "#B33938", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15 }}
-
-                                    onPress={() => {
-
-
-                                    }}>
-                                    <Text style={{ color: "white", fontSize: 15, fontWeight: "bold", textAlign: "center" }}
-                                    >인기순</Text>
+                                    <Text style={{ color: Color.likeButtonColor, fontSize: 15, fontWeight: "bold", textAlign: "center" }}
+                                     ref={likeButtonText}>인기순</Text>
                                 </TouchableOpacity>
                             </View>
 

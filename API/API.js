@@ -505,6 +505,60 @@ export default {
             return 0;
         }
     },
+    // 난이도순 루트 조회 API
+    async getDifficultyRouteInfo(location_index) {
+        const url = mainURL + "/outdoor/route/difficulty?location_index=" + location_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("난이도순 루트 조회 API 에러", error);
+            return 0;
+        }
+    },
+    // 인기순 루트 조회 API
+    async getPopularRouteInfo(location_index) {
+        const url = mainURL + "/outdoor/route/populer?location_index=" + location_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("인기순 루트 조회 API 에러", error);
+            return 0;
+        }
+    },
+    // 루트에 대한 댓글 조회 API
+    async getRouteComments(route_index) {
+        const url = mainURL + "/outdoor/route/comments?route_index=" + route_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("루트에 대한 댓글 조회 API 에러", error);
+            return 0;
+        }
+    },
 
 
      // 암장에 대한 평점 작성 API

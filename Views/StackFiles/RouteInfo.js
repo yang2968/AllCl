@@ -20,56 +20,34 @@ import AppContext from "../../AppContext";
 export default ({ navigation, route }) => {
     const globalVariables = useContext(AppContext);
     const data = route.params;
+    console.log(data);
+  // 게시판 페이지가 포커싱될 떄마다 서버에 요청
     // console.log(globalVariables);
     // console.log(data);
 
     const [routeComments, setRouteComments] = useState([
         {
-            post_index: 2,
-            comment_index: 0,
-            comment: "Test Comment",
-            nickname: "젠장재원",
-            is_modified: 1,
-            record_time: "2022-04-28 18:22:31",
-        },
-        {
-            post_index: 2,
-            comment_index: 1,
-            comment: "Test Comment",
-            nickname: "젠장재원",
-            is_modified: 1,
-            record_time: "2022-04-28 18:22:31",
-        },
-        {
-            post_index: 2,
-            comment_index: 2,
-            comment: "Test Comment",
-            nickname: "젠장재원",
-            is_modified: 1,
-            record_time: "2022-04-28 18:22:31",
-        },
-        {
-            post_index: 2,
-            comment_index: 3,
-            comment: "Test Comment",
-            nickname: "젠장재원",
-            is_modified: 1,
-            record_time: "2022-04-28 18:22:31",
-        },
-        {
-            post_index: 2,
-            comment_index: 4,
-            comment: "Test Comment",
-            nickname: "젠장재원",
-            is_modified: 1,
-            record_time: "2022-04-28 18:22:31",
-        },
+            "idx": 1,
+            "nickname": "귀요미준호",
+            "comment": "넘모 쉬웡~",
+            "record_time": "2022-05-16 21:31:26"
+          },
     ]);
     var imageHeight = Dimensions.get("window").height;
     //[{"comment": "댓글댓글", "comment_index": 3, "is_modified": 1, "nickname": "젠장재원", "post_index": 2, "record_time": "2022-04-28 18:22:31"}]
 
     useEffect(() => {
         globalVariables.setRouteName(data.location_name);
+        async function getRouteComments() {
+            const commentsData = await API.getRouteComments(data.route_index);
+            console.log(commentsData);
+            if (commentsData != 0) {
+                setRouteComments(commentsData);
+            } else {
+                setRouteComments(0);
+            }
+        }
+        getRouteComments();
     }, []);
 
     const renderItem = ({ item }) => {
@@ -113,7 +91,7 @@ export default ({ navigation, route }) => {
                 <FlatList
                     data={routeComments}
                     renderItem={renderItem}
-                    keyExtractor={item => item.comment_index}
+                    keyExtractor={item => item.idx}
                     disableVirtualization={true}
                     showsVerticalScrollIndicator={false}
                     ListHeaderComponent={
@@ -121,7 +99,7 @@ export default ({ navigation, route }) => {
 
                             <View style={{ flexDirection: "row", alignSelf: "center", justifyContent: 'space-between', width: '90%', paddingTop: "2%", paddingBottom: "5%" }}>
 
-                                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{data.route_index + ". " + data.route_name}</Text>
+                                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{(data.index+1) + ". " + data.route_name}</Text>
 
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
 

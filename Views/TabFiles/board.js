@@ -79,12 +79,17 @@ export default ({ navigation, route }) => {
       const postingListData = await API.getPostingList(userInfo.nickname);
       //
       const noticeListData = await API.getNoticeList();
-      setNoticeData(noticeListData[0]);
-      setNoticeHeader(noticeListData[0].header);
-      console.log(noticeListData);
+
       //const noticeData = await API.watchNotice(1);
      // console.log(noticeData);
       //console.log(postingListData);
+      if(noticeListData == 0) {
+        setNoticeHeader("공지사항이 없습니다.");
+      } else {
+        setNoticeData(noticeListData[0]);
+        setNoticeHeader(noticeListData[0].header);
+      }
+
       if (postingListData == 0) { // 에러 발생 시
         setData([postingListData]);
 
