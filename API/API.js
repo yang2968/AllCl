@@ -3,6 +3,64 @@ const mainURL = "http://13.209.75.70:8080";
 
 export default {
     //
+    // home
+    //
+    // 유저가 완등한 전체 루트 조회 API
+    async getUserClearAllRoute(user_index) {
+        const url = mainURL + "/outdoor/route/clear-all?user_index=" + user_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("유저가 완등한 전체 루트 조회 에러", error);
+            return 0;
+        }
+    },
+        // 해당 유저가 완등한 루트 개수 API
+        async getUserClearRouteCount(user_index) {
+            const url = mainURL + "/outdoor/route/count?user_index=" + user_index;
+            try {
+                const requsetAuth = await fetch(url, {
+                    method: 'GET',
+                    headers:
+                    {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                const responseData = await requsetAuth.json();
+                return responseData;
+            } catch (error) {
+                console.log("해당 유저가 완등한 루트 개수 에러", error);
+                return 0;
+            }
+        },
+        // 해당 유저가 완등한 암벽장 별 루트 개수 API
+        async getUserClearRouteInCliming(user_index) {
+            const url = mainURL + "/outdoor/route/countGroupByLocation?user_index=" + user_index;
+            try {
+                const requsetAuth = await fetch(url, {
+                    method: 'GET',
+                    headers:
+                    {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                const responseData = await requsetAuth.json();
+                return responseData;
+            } catch (error) {
+                console.log("해당 유저가 완등한 암벽장 별 루트 개수 에러", error);
+                return 0;
+            }
+        },
+
+    //
     // community-controller
     //
     // 게시물 리스트 조회 API
@@ -96,8 +154,8 @@ export default {
         }
     },
     // 게시글 조회 API
-    async watchPost(post_index) {
-        const url = mainURL + "/community/post?post_index=" + post_index;
+    async watchPost(post_index, nickname) {
+        const url = mainURL + "/community/post?post_index=" + post_index + "&nickname=" + nickname;
         try {
             const requsetAuth = await fetch(url, {
                 method: 'GET',
@@ -288,6 +346,51 @@ export default {
             return 0;
         }
     },
+   // 게시글 이미지 조회 API
+   async getPostImage(post_index) {
+    const url = mainURL + "/community/postImage?post_index=" + post_index;
+    try {
+        const requsetAuth = await fetch(url, {
+            method: 'GET',
+            headers:
+            {
+                'Content-Type': 'application/json',
+            }
+        })
+        const responseData = await requsetAuth.json();
+        return responseData;
+    } catch (error) {
+        console.log("게시글 이미지 조회 에러", error);
+        return 0;
+    }
+},
+ // 게시글 이미지 업로드 API
+ async uploadImage() {
+    const url = mainURL + "/community/postImage";
+    try {
+        const requestAuth = await fetch(url, {
+            method: 'POST',
+            headers:
+            {
+                'Content-Type': 'multipart/form-data',
+            },
+            body: JSON.stringify({
+                // "nickname": nickname,
+                // "header": header,
+                // "body": body,
+                // "image_path": image_path,
+            })
+        })
+
+        const responseData = await requestAuth.json();
+
+        return [responseData];
+    } catch (error) {
+        console.log("게시글 이미지 업로드 에러", error);
+        return 0;
+    }
+},
+
     // 게시글 작성 API
     async posting(nickname, header, body, image_path) {
         const url = mainURL + "/community/post";
@@ -488,8 +591,8 @@ export default {
         }
     },
     // 루트 조회 API
-    async getRouteInfo(location_index) {
-        const url = mainURL + "/outdoor/route?location_index=" + location_index;
+    async getRouteInfo(location_index, user_index) {
+        const url = mainURL + "/outdoor/route?location_index=" + location_index + "&user_index=" + user_index;
         try {
             const requsetAuth = await fetch(url, {
                 method: 'GET',

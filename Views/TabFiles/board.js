@@ -77,6 +77,7 @@ export default ({ navigation, route }) => {
       setUserNickname(userInfo.nickname);
       // 게시물 리스트 가져오기
       const postingListData = await API.getPostingList(userInfo.nickname);
+      //console.log(postingListData);
       //
       const noticeListData = await API.getNoticeList();
 
@@ -118,14 +119,28 @@ export default ({ navigation, route }) => {
       <TouchableOpacity
         style={{ justifyContent: 'center', width: '100%', borderColor: "#a8a8a8", borderBottomWidth: 1, paddingLeft: "5%", paddingRight: "5%", paddingTop: "6%", paddingBottom: "6%" }}
         onPress={() => {
-          navigation.navigate("자유 게시판", { post_index: item.post_index, comment_count: item.comment_count, isLike: item.isLike });
+          navigation.navigate("자유 게시판", { post_index: item.post_index, comment_count: item.comment_count, like_count: item.like_count, isLike: item.isLike });
         }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-around" }}>
           {/* 제목 */}
           <Text style={{ color: 'black', fontSize: 18, fontWeight: "bold", textAlign: 'left', width: "75%", marginBottom: 10 }}
             numberOfLines={1}
             ellipsizeMode="tail">{item.header}</Text>
           <View style={{ flexDirection: "row", }}>
+
+            {
+              item.isImage != 0 ?
+              <>
+              <Icon2
+                  name={"image-outline"}
+                  size={15}
+                  color={"black"} /><Text style={{ color: "black", fontSize: 10, marginLeft: 5, marginRight: 10 }}>{item.isImage}</Text>
+                  </>
+            :
+            <></>
+            }
+          
+
             <Icon
               name={"heart"}
               size={15}

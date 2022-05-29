@@ -81,10 +81,6 @@ export default ({ navigation }) => {
                     </View>
                 </View>
                 {/*  */}
-
-
-
-
             </View>
         </TouchableWithoutFeedback>
     )

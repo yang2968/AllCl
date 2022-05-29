@@ -34,25 +34,19 @@ export default ({ navigation }) => {
   const [region, setRegion] = useState({
     latitude: 36.4971639,
     longitude: 127.5931635,
-    latitudeDelta: 4.0,
-    longitudeDelta: 4.0,
+    latitudeDelta: 3.0,
+    longitudeDelta: 3.0,
   });
   // 마커
   const [locations, setLocations] = useState([
-    {
-      index: 0,
-      latitude: 35.9442388,
-      longitude: 128.6260576,
-      name: '연경 도약대',
-      description: '대구광역시 북구 연경동819',
-    },
-    {
-      index: 1,
-      latitude: 37.0977217,
-      longitude: 128.0032446,
-      name: '천등산',
-      description: '전라북도 연주군',
-    },
+    // {
+    //   index: 0,
+    //   latitude: 35.9442388,
+    //   longitude: 128.6260576,
+    //   name: 'test',
+    //   description: '대구광역시 북구 연경동819',
+    // },
+  
   ]);
 
   const [locationInfo, setLocationInfo] = useState([
@@ -68,7 +62,6 @@ export default ({ navigation }) => {
   ]);
 
   const [imageStatus, setImageStatus] = useState(false);
-
 
   useEffect(() => {
     async function getPermission() {
@@ -100,8 +93,8 @@ export default ({ navigation }) => {
       console.log(locations2);
       setLocations(locations2);
     }
-    getLocations();
     getPermission();
+    getLocations();
   }, []);
 
   useEffect(() => {
@@ -113,33 +106,35 @@ export default ({ navigation }) => {
   }, [locationInfo])
 
   const setMarkers = () => {
-    return (
-      locations.map((item, location_index) => (
-        (
-          item.name != "string" ?
-          <Marker
-          coordinate={{ latitude: Number(item.latitude), longitude: Number(item.longitude) }}
-          key={location_index}
-          title={item.name}
-          description={item.name}>
-          <Callout
-            style={{ width: 100 }}
-            onPress={async () => {
-              console.log(item.location_index);
-              const locationInfo2 = await API.getLocationInfo(item.location_index, 1);
-              setLocationInfo(locationInfo2);
-              setModalVisible(true);
-            }}>
-            <Text style={styles.mapMarkerText}>{item.name}</Text>
-            {/* <Text style={{ textAlign: 'center', color: "black", fontSize: 12 }}>{item.name}</Text> */}
-          </Callout>
-        </Marker>
-          :
-          <View/>
-        )
-      
-      ))
-    )
+    if (locations != 0) {
+      return (
+        locations.map((item, location_index) => (
+          (
+            item.name != "string" ?
+              <Marker
+                coordinate={{ latitude: Number(item.latitude), longitude: Number(item.longitude) }}
+                key={location_index}
+                title={item.name}
+                description={item.name}>
+                <Callout
+                  style={{ width: 100 }}
+                  onPress={async () => {
+                    console.log(item.location_index);
+                    const locationInfo2 = await API.getLocationInfo(item.location_index, 1);
+                    setLocationInfo(locationInfo2);
+                    setModalVisible(true);
+                  }}>
+                  <Text style={styles.mapMarkerText}>{item.name}</Text>
+                  {/* <Text style={{ textAlign: 'center', color: "black", fontSize: 12 }}>{item.name}</Text> */}
+                </Callout>
+              </Marker>
+              :
+              <></>
+          )
+
+        ))
+      )
+    }
   };
 
   // 지도 페이지에 오면 현재 위치 받아 지도에 표시 검색 창에 현재 위치 출력 
@@ -154,7 +149,7 @@ export default ({ navigation }) => {
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           // showsMyLocationButton={true}
           showsUserLocation={true}
-          style={{ flex: 1, alignItems: "center" }}
+          style={{ flex: 1, alignItems: "center", position: "absolute", left:0, right:0, top:0, bottom: 0 }}
           region={region}
           onMapReady={() => setRegion(region)}
           onRegionChangeComplete={(region) => {

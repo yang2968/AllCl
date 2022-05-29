@@ -7,8 +7,11 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Keyboard,
+  Image,
   ImageBackground,
 } from "react-native";
+import { useIsFocused, useRoute, StackActions, TabActions } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import styles from "../../styles/style";
 import API from "../../API/API";
@@ -17,14 +20,76 @@ import Climb2 from "../../images/climb2.jpeg";
 import Color from "../../styles/Color";
 
 export default ({ navigation }) => {
-
-  const [data, setData] = useState(testData);
-
-  const [summary, setSummary] = useState(1);
+  const isFocused = useIsFocused();
+  const [data, setData] = useState([]);
+  const [postData, setPostData] = useState([]);
+  const [userNickname, setUserNickname] = useState("");
+  const [summary, setSummary] = useState(0);
 
   useEffect(() => {
+    async function getData() {
+      // get User nickname
+      const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
+      const userInfo = JSON.parse(getData);
+      setUserNickname(userInfo.nickname);
 
-  }, [])
+
+
+       // 클리어한 루트 수 가져오기
+       const clearRouteCount = await API.getUserClearRouteCount(1);
+       console.log("!11111", clearRouteCount);
+       if(clearRouteCount == 0) {
+         setSummary(clearRouteCount);
+
+       } else {
+        setSummary(clearRouteCount);
+       }
+
+
+
+      // 게시물 리스트 가져오기
+      const postingListData = await API.getPostingList(userInfo.nickname);
+
+      if (postingListData == 0) { // 에러 발생 시
+        setPostData(postingListData);
+
+      } else {
+        // 날짜순 정렬
+        postingListData.sort((a, b) => {
+          return a.post_date > b.post_date ? -1 : a.post_date > b.post_date ? 1 : 0;
+        })
+        var postingListData2 = postingListData.slice(0,4);
+        setPostData(postingListData2);
+      }
+
+    }
+    getData();
+  }, [isFocused])
+
+  const popularData = () => {
+    if (postData != 0) {
+      return (
+        postData.map((item) => (
+          <TouchableOpacity style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "space-between", marginBottom: "5%" }}
+          onPress={()=>{
+            console.log(item);
+            navigation.navigate("자유 게시판", { post_index: item.post_index, comment_count: item.comment_count, like_count: item.like_count, isLike: item.isLike });
+          }}>
+            <Text style={{ color: "black", fontWeight: "bold" }}>{item.header}</Text>
+            <Text style={{ color: "black", fontWeight: "bold" }}>{item.body}</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Icon
+                name={"heart"}
+                size={15}
+                color={"#B33938"} />
+              <Text style={{ marginLeft: 7 }}>{item.like_count}</Text>
+            </View>
+          </TouchableOpacity>
+        ))
+      )
+       
+    }
+  };
 
   const testData = [
     {
@@ -39,30 +104,30 @@ export default ({ navigation }) => {
       content: '전라북도 연주군',
       image: Climb2
     },
-    {
-      index: 2,
-      title: '연경 도약대',
-      content: '대구광역시 북구 연경동819',
-      image: Climb
-    },
-    {
-      index: 3,
-      title: '천등산',
-      content: '전라북도 연주군',
-      image: Climb2
-    },
-    {
-      index: 4,
-      title: '연경 도약대',
-      content: '대구광역시 북구 연경동819',
-      image: Climb
-    },
-    {
-      index: 5,
-      title: '천등산',
-      content: '전라북도 연주군',
-      image: Climb2
-    },
+    // {
+    //   index: 2,
+    //   title: '연경 도약대',
+    //   content: '대구광역시 북구 연경동819',
+    //   image: Climb
+    // },
+    // {
+    //   index: 3,
+    //   title: '천등산',
+    //   content: '전라북도 연주군',
+    //   image: Climb2
+    // },
+    // {
+    //   index: 4,
+    //   title: '연경 도약대',
+    //   content: '대구광역시 북구 연경동819',
+    //   image: Climb
+    // },
+    // {
+    //   index: 5,
+    //   title: '천등산',
+    //   content: '전라북도 연주군',
+    //   image: Climb2
+    // },
   ];
 
   const renderItem = ({ item }) => {
@@ -70,7 +135,8 @@ export default ({ navigation }) => {
       <TouchableOpacity
         style={{}}
         onPress={() => {
-          navigation.navigate("ClimbingWallInfo");
+          navigation.navigate("ClimbingWallInfo", { location_index: item.index+1 });
+          //  navigation.navigate("ClimbingWallInfo", { location_index: locationInfo[0].location_index });
         }}>
 
         <ImageBackground
@@ -126,17 +192,15 @@ export default ({ navigation }) => {
         </View>
         {/*  */}
 
-
-
-
         {/* 인기 게시판  */}
         <View style={styles.homeContentMargin}>
           <Text style={styles.homeContentTitle}>인기 게시판</Text>
         </View>
 
         <View style={styles.homeBoard}>
+          {popularData()}
 
-          <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          {/* <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <Text style={{ color: "black", fontWeight: "bold" }}>클라이밍이란?</Text>
             <Text style={{ color: "black", fontWeight: "bold" }}>산을 타고 넘고 올라가자</Text>
             <View style={{ flexDirection: "row" }}>
@@ -182,7 +246,7 @@ export default ({ navigation }) => {
                 color={"#B33938"} />
               <Text style={{ marginLeft: 7 }}>20</Text>
             </View>
-          </View>
+          </View> */}
 
         </View>
         {/*  */}
@@ -264,12 +328,6 @@ export default ({ navigation }) => {
               </View>
             </TouchableOpacity>
         }
-
-
-
-
-
-
       </View>
     </ScrollView>
   )

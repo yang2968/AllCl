@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     homeBoard: {
         width: "100%",
         backgroundColor: "#F1F1F1",
-        paddingVertical: "5%",
+        paddingTop: "5%",
         paddingHorizontal: "5%",
         borderRadius: 25,
     },
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
         width: "100%", flexDirection: "row", paddingBottom: "1%", borderBottomWidth: 1, borderColor: "#DBD9D9", alignItems: "center"
     },
     watchPostKeyBoardView: {
-        width: "100%", alignItems: "center", justifyContent: "center", backgroundColor: " white"
+        width: "100%", alignItems: "center", justifyContent: "center", backgroundColor: " white", color: "black"
     },
     watchPostTextInput: {
         color: "black", fontSize: 16, width: "100%", height: 50, borderWidth: 1, borderColor: "#707070", borderRadius: 17, paddingLeft: 20, marginVertical: 10, backgroundColor: "white"

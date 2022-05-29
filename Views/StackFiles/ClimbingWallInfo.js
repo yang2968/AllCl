@@ -97,9 +97,10 @@ export default ({ navigation, route }) => {
 
     useEffect(() => {
         async function getLocations() {
-            const locationInfo2 = await API.getLocationInfo(data.location_index, data.location_index);
-            console.log(locationInfo2);
-            const routeInfo2 = await API.getRouteInfo(data.location_index);
+            const locationInfo2 = await API.getLocationInfo(data.location_index, 1);
+            console.log("11", locationInfo2);
+            const routeInfo2 = await API.getRouteInfo(data.location_index, 1);
+            console.log("11", routeInfo2);
             // console.log(routeInfo2);
             if (locationInfo2 != 0 && routeInfo2 != 0) {
                 setLocationInfo(locationInfo2);
@@ -127,6 +128,18 @@ export default ({ navigation, route }) => {
                 onPress={() => {
                     navigation.navigate("RouteInfo", { location_name: locationInfo[0].name, route_name: item.route_name, location_index: item.location_index, route_index: item.route_index, difficulty: item.difficulty, like_count: item.like_count, image_path: item.image_path, index: index });
                 }}>
+
+                    {/* {
+                        () => {
+                            if(index == 0) {
+                                return(
+                                    <View>
+                                    </View>
+                                )
+                            }
+                        }
+                       
+                    } */}
 
                 <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{(index+1) + ". " + item.route_name}</Text>
 
