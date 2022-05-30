@@ -23,42 +23,42 @@ export default {
             return 0;
         }
     },
-        // 해당 유저가 완등한 루트 개수 API
-        async getUserClearRouteCount(user_index) {
-            const url = mainURL + "/outdoor/route/count?user_index=" + user_index;
-            try {
-                const requsetAuth = await fetch(url, {
-                    method: 'GET',
-                    headers:
-                    {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                const responseData = await requsetAuth.json();
-                return responseData;
-            } catch (error) {
-                console.log("해당 유저가 완등한 루트 개수 에러", error);
-                return 0;
-            }
-        },
-        // 해당 유저가 완등한 암벽장 별 루트 개수 API
-        async getUserClearRouteInCliming(user_index) {
-            const url = mainURL + "/outdoor/route/countGroupByLocation?user_index=" + user_index;
-            try {
-                const requsetAuth = await fetch(url, {
-                    method: 'GET',
-                    headers:
-                    {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                const responseData = await requsetAuth.json();
-                return responseData;
-            } catch (error) {
-                console.log("해당 유저가 완등한 암벽장 별 루트 개수 에러", error);
-                return 0;
-            }
-        },
+    // 해당 유저가 완등한 루트 개수 API
+    async getUserClearRouteCount(user_index) {
+        const url = mainURL + "/outdoor/route/count?user_index=" + user_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("해당 유저가 완등한 루트 개수 에러", error);
+            return 0;
+        }
+    },
+    // 해당 유저가 완등한 암벽장 별 루트 개수 API
+    async getUserClearRouteInCliming(user_index) {
+        const url = mainURL + "/outdoor/route/countGroupByLocation?user_index=" + user_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("해당 유저가 완등한 암벽장 별 루트 개수 에러", error);
+            return 0;
+        }
+    },
 
     //
     // community-controller
@@ -346,50 +346,70 @@ export default {
             return 0;
         }
     },
-   // 게시글 이미지 조회 API
-   async getPostImage(post_index) {
-    const url = mainURL + "/community/postImage?post_index=" + post_index;
-    try {
-        const requsetAuth = await fetch(url, {
-            method: 'GET',
-            headers:
-            {
-                'Content-Type': 'application/json',
-            }
-        })
-        const responseData = await requsetAuth.json();
-        return responseData;
-    } catch (error) {
-        console.log("게시글 이미지 조회 에러", error);
-        return 0;
-    }
-},
- // 게시글 이미지 업로드 API
- async uploadImage() {
-    const url = mainURL + "/community/postImage";
-    try {
-        const requestAuth = await fetch(url, {
-            method: 'POST',
-            headers:
-            {
-                'Content-Type': 'multipart/form-data',
-            },
-            body: JSON.stringify({
-                // "nickname": nickname,
-                // "header": header,
-                // "body": body,
-                // "image_path": image_path,
+    // 게시글 이미지 조회 API
+    async getPostImage(post_index) {
+        const url = mainURL + "/community/postImage?post_index=" + post_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
             })
-        })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("게시글 이미지 조회 에러", error);
+            return 0;
+        }
+    },
+    // 게시글 이미지 업로드 API
+    async uploadImage(files) {
+        const url = mainURL + "/community/postImage";
+        const formData = new FormData();
+        if (files.length != 0) {
+            // formData.append("file", {
+            //     uri: files[0].uri,
+            //     name: files[0].fileName,
+            //     type: files[0].type
+            // });
 
-        const responseData = await requestAuth.json();
 
-        return [responseData];
-    } catch (error) {
-        console.log("게시글 이미지 업로드 에러", error);
-        return 0;
-    }
-},
+            // for(var key in files) {
+            //     // formData.append(key, files[key]);
+            //     formData.append("file", {
+            //         uri: files[key].uri,
+            //         name: files[key].fileName,
+            //         type: files[key].type
+            //     });
+            // }
+            console.log(formData);
+
+
+
+            try {
+                const requestAuth = await fetch(url, {
+                    method: 'POST',
+                    headers:
+                    {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    body: formData
+                })
+
+                const responseData = await requestAuth.json();
+
+
+                return [responseData];
+            } catch (error) {
+                console.log("게시글 이미지 업로드 에러", error);
+                return 0;
+            }
+        } else {
+            console.log("이미지 확인 필요");
+        }
+    },
 
     // 게시글 작성 API
     async posting(nickname, header, body, image_path) {
@@ -405,7 +425,7 @@ export default {
                     "nickname": nickname,
                     "header": header,
                     "body": body,
-                    "image_path": image_path,
+                    // "image_path": image_path,
                 })
             })
 
@@ -663,100 +683,100 @@ export default {
         }
     },
     // 루트 완등 체크 API
-async routeClear(route_index, user_index) {
-    const url = mainURL + "/outdoor/clear";
-    try {
-        const requestAuth = await fetch(url, {
-            method: 'POST',
-            headers:
-            {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "route_index": route_index,
-                "user_index": user_index,
+    async routeClear(route_index, user_index) {
+        const url = mainURL + "/outdoor/clear";
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'POST',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "route_index": route_index,
+                    "user_index": user_index,
+                })
             })
-        })
 
-        const responseData = await requestAuth.json();
+            const responseData = await requestAuth.json();
 
-        return [responseData];
-    } catch (error) {
-        console.log("루트 완등 체크 에러", error);
-        return 0;
-    }
-},
-// 루트 좋아요 API
-async routeLike(nickname, route_index) {
-    const url = mainURL + "/outdoor/like";
-    try {
-        const requestAuth = await fetch(url, {
-            method: 'POST',
-            headers:
-            {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "nickname": nickname,
-                "route_index": route_index,
+            return [responseData];
+        } catch (error) {
+            console.log("루트 완등 체크 에러", error);
+            return 0;
+        }
+    },
+    // 루트 좋아요 API
+    async routeLike(nickname, route_index) {
+        const url = mainURL + "/outdoor/like";
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'POST',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "nickname": nickname,
+                    "route_index": route_index,
+                })
             })
-        })
 
-        const responseData = await requestAuth.json();
+            const responseData = await requestAuth.json();
 
-        return [responseData];
-    } catch (error) {
-        console.log("루트 좋아요 에러", error);
-        return 0;
-    }
-},
-// 루트에 대한 댓글 작성 API
-async writeRouteComment(route_index, nickname, comment) {
-    const url = mainURL + "/outdoor/comments";
-    try {
-        const requestAuth = await fetch(url, {
-            method: 'POST',
-            headers:
-            {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "route_index": route_index,
-                "nickname": nickname,
-                "comment": comment,
+            return [responseData];
+        } catch (error) {
+            console.log("루트 좋아요 에러", error);
+            return 0;
+        }
+    },
+    // 루트에 대한 댓글 작성 API
+    async writeRouteComment(route_index, nickname, comment) {
+        const url = mainURL + "/outdoor/comments";
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'POST',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "route_index": route_index,
+                    "nickname": nickname,
+                    "comment": comment,
+                })
             })
-        })
 
-        const responseData = await requestAuth.json();
+            const responseData = await requestAuth.json();
 
-        return [responseData];
-    } catch (error) {
-        console.log("루트에 대한 댓글 작성 에러", error);
-        return 0;
-    }
-},
-// 루트에 대한 댓글 삭제 API
-async deleteRouteComment(idx) {
-    const url = mainURL + "/outdoor/comments?idx=" + idx;
-    try {
-        const requestAuth = await fetch(url, {
-            method: 'DELETE',
-            headers:
-            {
-                'Content-Type': 'application/json',
-            },
-        })
+            return [responseData];
+        } catch (error) {
+            console.log("루트에 대한 댓글 작성 에러", error);
+            return 0;
+        }
+    },
+    // 루트에 대한 댓글 삭제 API
+    async deleteRouteComment(idx) {
+        const url = mainURL + "/outdoor/comments?idx=" + idx;
+        try {
+            const requestAuth = await fetch(url, {
+                method: 'DELETE',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                },
+            })
 
-        const responseData = await requestAuth.json();
+            const responseData = await requestAuth.json();
 
-        return [responseData];
-    } catch (error) {
-        console.log("루트에 대한 댓글 삭제 에러", error);
-        return 0;
-    }
-},
-     // 암장에 대한 평점 작성 API
-     async createScore(user_index, location_index, score) {
+            return [responseData];
+        } catch (error) {
+            console.log("루트에 대한 댓글 삭제 에러", error);
+            return 0;
+        }
+    },
+    // 암장에 대한 평점 작성 API
+    async createScore(user_index, location_index, score) {
         const url = mainURL + "/outdoor/score";
         try {
             const requestAuth = await fetch(url, {
@@ -803,8 +823,8 @@ async deleteRouteComment(idx) {
             return 0;
         }
     },
-      // 암장에 대한 평점 삭제 API
-      async deleteScore(user_index, location_index) {
+    // 암장에 대한 평점 삭제 API
+    async deleteScore(user_index, location_index) {
         const url = mainURL + "/outdoor/score";
         try {
             const requestAuth = await fetch(url, {

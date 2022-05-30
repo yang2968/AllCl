@@ -312,6 +312,9 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         paddingLeft: 15
     },
+    postingKeyBoardView: {
+        width: "100%", alignItems: "flex-start", justifyContent: "center", backgroundColor: " white", color: "black"
+    },
     //
     // watchPost
     //
