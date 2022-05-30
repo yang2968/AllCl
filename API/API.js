@@ -318,7 +318,7 @@ export default {
 
             return [responseData];
         } catch (error) {
-            console.log("게시글 좋아요 에러", error);
+            console.log("댓글에 대한 답글 작성 에러", error);
             return 0;
         }
     },
@@ -662,8 +662,99 @@ export default {
             return 0;
         }
     },
+    // 루트 완등 체크 API
+async routeClear(route_index, user_index) {
+    const url = mainURL + "/outdoor/clear";
+    try {
+        const requestAuth = await fetch(url, {
+            method: 'POST',
+            headers:
+            {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "route_index": route_index,
+                "user_index": user_index,
+            })
+        })
 
+        const responseData = await requestAuth.json();
 
+        return [responseData];
+    } catch (error) {
+        console.log("루트 완등 체크 에러", error);
+        return 0;
+    }
+},
+// 루트 좋아요 API
+async routeLike(nickname, route_index) {
+    const url = mainURL + "/outdoor/like";
+    try {
+        const requestAuth = await fetch(url, {
+            method: 'POST',
+            headers:
+            {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "nickname": nickname,
+                "route_index": route_index,
+            })
+        })
+
+        const responseData = await requestAuth.json();
+
+        return [responseData];
+    } catch (error) {
+        console.log("루트 좋아요 에러", error);
+        return 0;
+    }
+},
+// 루트에 대한 댓글 작성 API
+async writeRouteComment(route_index, nickname, comment) {
+    const url = mainURL + "/outdoor/comments";
+    try {
+        const requestAuth = await fetch(url, {
+            method: 'POST',
+            headers:
+            {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "route_index": route_index,
+                "nickname": nickname,
+                "comment": comment,
+            })
+        })
+
+        const responseData = await requestAuth.json();
+
+        return [responseData];
+    } catch (error) {
+        console.log("루트에 대한 댓글 작성 에러", error);
+        return 0;
+    }
+},
+// 루트에 대한 댓글 삭제 API
+async deleteRouteComment(idx) {
+    const url = mainURL + "/outdoor/comments?idx=" + idx;
+    try {
+        const requestAuth = await fetch(url, {
+            method: 'DELETE',
+            headers:
+            {
+                'Content-Type': 'application/json',
+            },
+        })
+
+        const responseData = await requestAuth.json();
+
+        return [responseData];
+    } catch (error) {
+        console.log("루트에 대한 댓글 삭제 에러", error);
+        return 0;
+    }
+},
      // 암장에 대한 평점 작성 API
      async createScore(user_index, location_index, score) {
         const url = mainURL + "/outdoor/score";

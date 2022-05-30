@@ -59,6 +59,7 @@ export default ({ navigation }) => {
                         onPress={() => {
                             AsyncStorage.setItem('userInfo', JSON.stringify({
                                 'nickname': "밥셔틀웅이",
+                                'userIndex': 3,
                             }));
                             navigation.navigate("Tab");
                             
@@ -69,13 +70,15 @@ export default ({ navigation }) => {
                     <View style={styles.loginETCButtonView}>
                     <TouchableOpacity
                         style={styles.loginETCButton}
-                        onPress={() => { navigation.navigate("Tab") }}>
+                        // onPress={() => { navigation.navigate("Tab") }}
+                        >
                         <Text style={styles.loginETCButtonText}>아이디/비밀번호 찾기</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={styles.loginETCButton}
-                        onPress={() => { navigation.navigate("Tab") }}>
+                        // onPress={() => { navigation.navigate("Tab") }}
+                        >
                         <Text style={styles.loginETCButtonText}>회원가입</Text>
                     </TouchableOpacity>
                     </View>

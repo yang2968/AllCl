@@ -16,6 +16,8 @@ import {
     FlatList,
     Modal
 } from "react-native";
+import { useIsFocused, useRoute, StackActions, TabActions } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/Ionicons';
 import StarRating from 'react-native-star-rating-widget';
@@ -28,42 +30,44 @@ import Route from "../../images/route.jpeg";
 
 export default ({ navigation, route }) => {
     const data = route.params;
-        // 날짜순
-  const dateStyle = useCallback(() => {
-    likeButton.current.setNativeProps({ backgroundColor: "white" });
-    commentButton.current.setNativeProps({ backgroundColor: "white" });
-  }, []);
-  const dateTextStyle = useCallback(() => {
-    likeButtonText.current.setNativeProps({ style: { color: Color.likeButtonColor } });
-    commentButtonText.current.setNativeProps({ style: { color: Color.loginButtonBackground } });
-  }, []);
-  // 인기순
-  const likeButton = useRef();
-  const likeStyle = useCallback(() => {
-    likeButton.current.setNativeProps({ backgroundColor: Color.likeButtonColor });
-    commentButton.current.setNativeProps({ backgroundColor: "white" });
-  }, []);
-  const likeButtonText = useRef();
-  const likeTextStyle = useCallback(() => {
-    likeButtonText.current.setNativeProps({ style: { color: "white" } });
-    commentButtonText.current.setNativeProps({ style: { color: Color.loginButtonBackground } });
-  }, []);
-  const [likeButtonDisable, setLikeButtonDisable] = useState(true);
-  // 댓글순
-  const commentButton = useRef();
-  const commentStyle = useCallback(() => {
-    commentButton.current.setNativeProps({ backgroundColor: Color.loginButtonBackground });
-    likeButton.current.setNativeProps({ backgroundColor: "white" });
-  }, []);
+    // 날짜순
+    const dateStyle = useCallback(() => {
+        likeButton.current.setNativeProps({ backgroundColor: "white" });
+        commentButton.current.setNativeProps({ backgroundColor: "white" });
+    }, []);
+    const dateTextStyle = useCallback(() => {
+        likeButtonText.current.setNativeProps({ style: { color: Color.likeButtonColor } });
+        commentButtonText.current.setNativeProps({ style: { color: Color.loginButtonBackground } });
+    }, []);
+    // 인기순
+    const likeButton = useRef();
+    const likeStyle = useCallback(() => {
+        likeButton.current.setNativeProps({ backgroundColor: Color.likeButtonColor });
+        commentButton.current.setNativeProps({ backgroundColor: "white" });
+    }, []);
+    const likeButtonText = useRef();
+    const likeTextStyle = useCallback(() => {
+        likeButtonText.current.setNativeProps({ style: { color: "white" } });
+        commentButtonText.current.setNativeProps({ style: { color: Color.loginButtonBackground } });
+    }, []);
+    const [likeButtonDisable, setLikeButtonDisable] = useState(true);
+    // 댓글순
+    const commentButton = useRef();
+    const commentStyle = useCallback(() => {
+        commentButton.current.setNativeProps({ backgroundColor: Color.loginButtonBackground });
+        likeButton.current.setNativeProps({ backgroundColor: "white" });
+    }, []);
 
-  const commentButtonText = useRef();
-  const commentTextStyle = useCallback(() => {
-    commentButtonText.current.setNativeProps({ style: { color: "white" } });
-    likeButtonText.current.setNativeProps({ style: { color: Color.likeButtonColor } });
-  }, []);
-  const [commentButtonDisable, setCommentButtonDisable] = useState(true);
+    const commentButtonText = useRef();
+    const commentTextStyle = useCallback(() => {
+        commentButtonText.current.setNativeProps({ style: { color: "white" } });
+        likeButtonText.current.setNativeProps({ style: { color: Color.likeButtonColor } });
+    }, []);
+    const [commentButtonDisable, setCommentButtonDisable] = useState(true);
 
-  const [sortData, setSortData] = useState(0);
+    const [userIndex, setUserIndex] = useState(1);
+
+    const [sortData, setSortData] = useState(0);
 
     const [locationInfo, setLocationInfo] = useState([
         {
@@ -92,22 +96,24 @@ export default ({ navigation, route }) => {
     // 장치 목록 모달 표시 여부 변수
     const [modalVisible, setModalVisible] = useState(false);
     const [starCount, setStarCount] = useState(locationInfo[0].score);
-
+    const isFocused = useIsFocused();
     var imageHeight = Dimensions.get("window").height;
 
     useEffect(() => {
         async function getLocations() {
-            const locationInfo2 = await API.getLocationInfo(data.location_index, 1);
-            console.log("11", locationInfo2);
-            const routeInfo2 = await API.getRouteInfo(data.location_index, 1);
-            console.log("11", routeInfo2);
-            // console.log(routeInfo2);
+            const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
+            const userInfo = JSON.parse(getData);
+            setUserIndex(userInfo.userIndex);
+
+            const locationInfo2 = await API.getLocationInfo(data.location_index, userInfo.userIndex);
+            const routeInfo2 = await API.getRouteInfo(data.location_index, userInfo.userIndex);
+
             if (locationInfo2 != 0 && routeInfo2 != 0) {
                 setLocationInfo(locationInfo2);
                 setRouteInfo(routeInfo2);
                 setLikeButtonDisable(false);
                 setCommentButtonDisable(false);
-                if(locationInfo2[0].userScore == undefined) {
+                if (locationInfo2[0].userScore == undefined) {
                     setStarCount(0);
                 } else {
                     setStarCount(Number(locationInfo2[0].userScore));
@@ -118,47 +124,45 @@ export default ({ navigation, route }) => {
         }
         getLocations();
 
-    }, [])
+    }, [isFocused])
     // Route
     const renderItem = ({ item, index }) => {
-        console.log(index);
         return (
             <TouchableOpacity
                 style={{ flexDirection: "row", alignSelf: "center", justifyContent: 'space-between', width: '90%', borderColor: "#a8a8a8", borderBottomWidth: 1, paddingTop: "6%", paddingBottom: "6%" }}
                 onPress={() => {
-                    navigation.navigate("RouteInfo", { location_name: locationInfo[0].name, route_name: item.route_name, location_index: item.location_index, route_index: item.route_index, difficulty: item.difficulty, like_count: item.like_count, image_path: item.image_path, index: index });
+                    navigation.navigate("RouteInfo", { location_name: locationInfo[0].name, route_name: item.route_name, location_index: item.location_index, route_index: item.route_index, difficulty: item.difficulty, like_count: item.like_count, image_path: item.image_path, index: index, isLike: item.isLike, isClear: item.isClear });
                 }}>
-
-                    {/* {
-                        () => {
-                            if(index == 0) {
-                                return(
-                                    <View>
-                                    </View>
-                                )
-                            }
-                        }
-                       
-                    } */}
-
-                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{(index+1) + ". " + item.route_name}</Text>
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{(index + 1) + ". " + item.route_name}</Text>
 
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
-
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between', marginRight: 10 }}>
-                        <Icon
-                            name={"check"}
-                            size={19}
-                            color={"#96B684"} />
-
+                        {
+                            item.isClear != 0 ?
+                                <Icon
+                                    name={"check"}
+                                    size={19}
+                                    color={"#96B684"} />
+                                :
+                                <Icon
+                                    name={"check"}
+                                    size={19}
+                                    color={"#B73D3A"} />
+                        }
                         <Text style={{ color: "white", fontWeight: "bold", fontSize: 15, marginLeft: 5, marginRight: 10 }}>{item.difficulty}</Text>
                     </View>
-
-                    <Icon
-                        name={"heart"}
-                        size={15}
-                        color={"#B33938"} />
-
+                    {
+                        item.isLike != 0 ?
+                            <Icon
+                                name={"heart"}
+                                size={15}
+                                color={"#B33938"} />
+                            :
+                            <Icon
+                                name={"heart-o"}
+                                size={15}
+                                color={"#B33938"} />
+                    }
                     <Text style={{ color: "white", fontWeight: "bold", fontSize: 15, marginLeft: 5, marginRight: 10 }}>{item.like_count}</Text>
 
                     <View style={{ marginLeft: 10, transform: [{ rotateZ: "180deg" }] }}>
@@ -253,21 +257,11 @@ export default ({ navigation, route }) => {
 
 
                             <View style={{ width: "100%", flexDirection: "row", marginBottom: "5%", alignItems: "center" }}>
-                                {/* <TouchableOpacity style={{ backgroundColor: Color.loginBackground, justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15 }}
-
-                                    onPress={() => {
-
-                                    }}>
-                                    <Text style={{ color: "white", fontSize: 15, fontWeight: "bold", textAlign: "center" }}
-                                    >완등순</Text>
-                                </TouchableOpacity> */}
-
 
                                 <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingVertical: 7, borderRadius: 15 }}
-                                 ref={commentButton}
-                                 disabled={commentButtonDisable}
+                                    ref={commentButton}
+                                    disabled={commentButtonDisable}
                                     onPress={async () => {
-                                        console.log(sortData);
                                         if (sortData == 2) {
                                             const dateData = await API.getRouteInfo(data.location_index);
                                             //dateData.reverse();
@@ -275,23 +269,22 @@ export default ({ navigation, route }) => {
                                             dateStyle();
                                             dateTextStyle();
                                             setSortData(0);
-                                          } else {
+                                        } else {
                                             const commentsdata = await API.getDifficultyRouteInfo(data.location_index);
                                             setRouteInfo(commentsdata);
                                             commentStyle();
                                             commentTextStyle();
                                             setSortData(2);
-                                          }
+                                        }
                                     }}>
                                     <Text style={{ color: Color.loginButtonBackground, fontSize: 13, fontWeight: "bold", textAlign: "center" }}
-                                      ref={commentButtonText}>난이도순</Text>
+                                        ref={commentButtonText}>난이도순</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15 }}
-                                  ref={likeButton}
-                                  disabled={likeButtonDisable}
+                                    ref={likeButton}
+                                    disabled={likeButtonDisable}
                                     onPress={async () => {
-                                        console.log(sortData);
                                         if (sortData == 1) {
                                             const dateData = await API.getRouteInfo(data.location_index);
                                             //dateData.reverse();
@@ -299,17 +292,17 @@ export default ({ navigation, route }) => {
                                             dateStyle();
                                             dateTextStyle();
                                             setSortData(0);
-                                          } else {
+                                        } else {
                                             const popularData = await API.getPopularRouteInfo(data.location_index);
                                             setRouteInfo(popularData);
                                             likeStyle();
                                             likeTextStyle();
                                             setSortData(1);
-                                          }
+                                        }
 
                                     }}>
                                     <Text style={{ color: Color.likeButtonColor, fontSize: 15, fontWeight: "bold", textAlign: "center" }}
-                                     ref={likeButtonText}>인기순</Text>
+                                        ref={likeButtonText}>인기순</Text>
                                 </TouchableOpacity>
                             </View>
 
@@ -354,11 +347,10 @@ export default ({ navigation, route }) => {
                                 if (Number(locationInfo[0].userScore) == undefined) { // 유저스코어를 알 수 없는 경우 분기
                                     // createScore
                                     console.log("createScore");
-                                    const createScoreRes = await API.createScore(1,locationInfo[0].location_index, starCount);
-                                    console.log(modifyScoreRes);
+                                    const createScoreRes = await API.createScore(userIndex, locationInfo[0].location_index, starCount);
                                     switch (createScoreRes[0]) {
                                         case 200: case 201:
-                                            const locationInfo2 = await API.getLocationInfo(locationInfo[0].location_index, 1);
+                                            const locationInfo2 = await API.getLocationInfo(locationInfo[0].location_index, userIndex);
                                             setLocationInfo(locationInfo2);
                                             break;
                                         default:
@@ -367,11 +359,10 @@ export default ({ navigation, route }) => {
                                     }
                                 } else { // modifyScore
                                     console.log("modifyScore");
-                                    const modifyScoreRes = await API.modifyScore(1,locationInfo[0].location_index, starCount);
-                                    console.log(modifyScoreRes);
+                                    const modifyScoreRes = await API.modifyScore(userIndex, locationInfo[0].location_index, starCount);
                                     switch (modifyScoreRes[0]) {
                                         case 200: case 201:
-                                            const locationInfo2 = await API.getLocationInfo(locationInfo[0].location_index, 1);
+                                            const locationInfo2 = await API.getLocationInfo(locationInfo[0].location_index, userIndex);
                                             setLocationInfo(locationInfo2);
                                             break;
                                         default:

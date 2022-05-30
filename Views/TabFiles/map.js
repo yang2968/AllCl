@@ -153,6 +153,7 @@ export default ({ navigation }) => {
           region={region}
           onMapReady={() => setRegion(region)}
           onRegionChangeComplete={(region) => {
+            // console.log(region);
             setRegion(region);
           }}
         >

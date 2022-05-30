@@ -17,13 +17,13 @@ import styles from "../../styles/style";
 import API from "../../API/API";
 import Climb from "../../images/climb.jpeg";
 import Climb2 from "../../images/climb2.jpeg";
-import Color from "../../styles/Color";
 
 export default ({ navigation }) => {
   const isFocused = useIsFocused();
   const [data, setData] = useState([]);
   const [postData, setPostData] = useState([]);
   const [userNickname, setUserNickname] = useState("");
+  const [userIndex, setUserIndex] = useState(3);
   const [summary, setSummary] = useState(0);
 
   useEffect(() => {
@@ -32,12 +32,13 @@ export default ({ navigation }) => {
       const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
       const userInfo = JSON.parse(getData);
       setUserNickname(userInfo.nickname);
+      setUserIndex(userInfo.userIndex);
 
 
 
        // 클리어한 루트 수 가져오기
-       const clearRouteCount = await API.getUserClearRouteCount(1);
-       console.log("!11111", clearRouteCount);
+       const clearRouteCount = await API.getUserClearRouteCount(userInfo.userIndex);
+     
        if(clearRouteCount == 0) {
          setSummary(clearRouteCount);
 
@@ -59,6 +60,7 @@ export default ({ navigation }) => {
           return a.post_date > b.post_date ? -1 : a.post_date > b.post_date ? 1 : 0;
         })
         var postingListData2 = postingListData.slice(0,4);
+        console.log(postingListData2);
         setPostData(postingListData2);
       }
 
@@ -72,7 +74,6 @@ export default ({ navigation }) => {
         postData.map((item) => (
           <TouchableOpacity style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "space-between", marginBottom: "5%" }}
           onPress={()=>{
-            console.log(item);
             navigation.navigate("자유 게시판", { post_index: item.post_index, comment_count: item.comment_count, like_count: item.like_count, isLike: item.isLike });
           }}>
             <Text style={{ color: "black", fontWeight: "bold" }}>{item.header}</Text>
@@ -93,13 +94,13 @@ export default ({ navigation }) => {
 
   const testData = [
     {
-      index: 0,
+      index: "0",
       title: '연경 도약대',
       content: '대구광역시 북구 연경동819',
       image: Climb
     },
     {
-      index: 1,
+      index: "1",
       title: '천등산',
       content: '전라북도 연주군',
       image: Climb2
