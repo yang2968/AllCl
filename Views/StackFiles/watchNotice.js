@@ -24,10 +24,10 @@ export default ({ navigation, route }) => {
 
   return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-          <View>
+          <View style={styles.watchNoticeSettingView}>
                         <View style={styles.watchPostHeaderView}>
 
-                            <View style={{ justifyContent: "center", marginLeft: 15 }}>
+                            <View style={{ justifyContent: "center" }}>
                                 {/* <Text style={styles.watchPostNicknameText}>{nickName}</Text> */}
                                 <Text style={styles.watchPostTimeText}>{data.notice.post_date}</Text>
                             </View>

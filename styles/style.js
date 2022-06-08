@@ -316,6 +316,13 @@ const styles = StyleSheet.create({
         width: "100%", alignItems: "flex-start", justifyContent: "center", backgroundColor: " white", color: "black"
     },
     //
+    // watchNotice
+    //
+    watchNoticeSettingView: {
+
+        borderBottomWidth: 1, borderColor: "#DBD9D9", padding: "5%"
+    },
+    //
     // watchPost
     //
     watchPostView: {

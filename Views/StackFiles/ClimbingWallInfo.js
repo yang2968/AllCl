@@ -260,17 +260,20 @@ export default ({ navigation, route }) => {
 
                                 <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingVertical: 7, borderRadius: 15 }}
                                     ref={commentButton}
-                                    disabled={commentButtonDisable}
+                                    //disabled={commentButtonDisable}
                                     onPress={async () => {
+                                        console.log(data, userIndex);
                                         if (sortData == 2) {
-                                            const dateData = await API.getRouteInfo(data.location_index);
+                                            const dateData = await API.getRouteInfo(Number(data.location_index), userIndex);
+                                            console.log(dateData);
                                             //dateData.reverse();
                                             setRouteInfo(dateData);
                                             dateStyle();
                                             dateTextStyle();
                                             setSortData(0);
                                         } else {
-                                            const commentsdata = await API.getDifficultyRouteInfo(data.location_index);
+                                            const commentsdata = await API.getDifficultyRouteInfo(Number(data.location_index), userIndex);
+                                            console.log(commentsdata);
                                             setRouteInfo(commentsdata);
                                             commentStyle();
                                             commentTextStyle();
@@ -283,17 +286,20 @@ export default ({ navigation, route }) => {
 
                                 <TouchableOpacity style={{ backgroundColor: "white", justifyContent: "center", marginRight: 10, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15 }}
                                     ref={likeButton}
-                                    disabled={likeButtonDisable}
+                                    //disabled={likeButtonDisable}
                                     onPress={async () => {
+                                        console.log(data, userIndex);
                                         if (sortData == 1) {
-                                            const dateData = await API.getRouteInfo(data.location_index);
+                                            const dateData = await API.getRouteInfo(Number(data.location_index), userIndex);
+                                            console.log(dateData);
                                             //dateData.reverse();
                                             setRouteInfo(dateData);
                                             dateStyle();
                                             dateTextStyle();
                                             setSortData(0);
                                         } else {
-                                            const popularData = await API.getPopularRouteInfo(data.location_index);
+                                            const popularData = await API.getPopularRouteInfo(Number(data.location_index), userIndex);
+                                            console.log(popularData);
                                             setRouteInfo(popularData);
                                             likeStyle();
                                             likeTextStyle();

@@ -9,6 +9,8 @@ import {
   TextInput,
   TouchableOpacity
 } from "react-native";
+import { useIsFocused, useRoute, StackActions, TabActions } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Icon2 from 'react-native-vector-icons/dist/Ionicons';
@@ -17,13 +19,87 @@ import Color from "../../styles/Color";
 import API from "../../API/API";
 
 export default ({ navigation }) => {
-
+  const isFocused = useIsFocused();
+  const [userIndex, setUserIndex] = useState(3);
+  const [summary, setSummary] = useState(0);
+  const [userAvg, setUserAvg] = useState(0);
+  const [clearRouteByClimbing, setClearRouteByClimbing] = useState([]);
   const [EmailCheck, setEmailCheck] = useState(false);
   const [SNSCheck, setSNSCheck] = useState(false);
 
   useEffect(() => {
+    async function getData() {
+      // get User nickname
+      const getData = await AsyncStorage.getItem('userInfo', (err, result) => { });
+      const userInfo = JSON.parse(getData);
+      setUserIndex(userInfo.userIndex);
 
-  }, [])
+      // 클리어한 루트 수 가져오기
+      const clearRouteCount = await API.getUserClearRouteCount(userInfo.userIndex);
+
+      if (clearRouteCount == 0) {
+        setSummary(clearRouteCount);
+
+      } else {
+        setSummary(clearRouteCount);
+        // 클리어한 루트 난이도 평균 가져오기
+        const clearRouteAvg = await API.getUserClearRouteInAvg(userInfo.userIndex);
+        if (clearRouteAvg == 0) {
+          console.log("평균", "에러");
+          setUserAvg(0);
+        } else if (clearRouteAvg == "") {
+          console.log("평균", "완등루트 없음");
+          setUserAvg(0);
+        } else {
+          
+          setUserAvg(clearRouteAvg);
+        }
+
+         // 클리어한 암벽장별 루트 개수 가져오기
+         const clearRoutebyClimbing = await API.getUserClearRouteInClimbing(userInfo.userIndex);
+         if(clearRoutebyClimbing == 0) {
+           setClearRouteByClimbing(0);
+         } else {
+           setClearRouteByClimbing(clearRoutebyClimbing);
+         }
+      
+      }
+
+    }
+    getData();
+  }, [isFocused])
+
+  const clearRouteByClimbingView = (item) => {
+
+    if (item.length != 0) {
+      var item2 = item.slice(0, 3);
+      var percentArray = [];
+      for (var i = 0; i < item2.length; i++) {
+        percentArray.push({ percent: Math.floor(item2[i].clearCount * 100 / item2[i].routeCount) })
+      }
+      return (
+        item2.map((item3, index) =>
+        (
+          <View style={{ flexDirection: "row", marginBottom: 20, alignItems: "center", justifyContent: "flex-end" }}>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "left" }}>{item3.name}</Text>
+            </View>
+            <View style={{ backgroundColor: "#BBBBBB", height: 5, flexDirection: "row", flex: 1 }}>
+              <View style={{ backgroundColor: "white", width: String(percentArray[index].percent + "%") }}></View>
+            </View>
+            <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "center", marginLeft: 5, marginRight: 10 }}>{item3.clearCount + "/" + item3.routeCount}</Text>
+          </View>
+        ))
+      )
+
+    } else {
+      return (
+        <Text style={{ color: "white", fontSize: 15, fontWeight: "bold", textAlign: "center" }}>
+          {"루트 정보가 없습니다."}
+        </Text>
+      )
+    }
+  };
 
   return (
     <ScrollView
@@ -52,71 +128,64 @@ export default ({ navigation }) => {
 
         {/* 유저의 목록 버튼 */}
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-evenly", marginBottom: "5%" }}>
-          <TouchableOpacity style={{ borderWidth: 2, borderColor: Color.loginBackground, paddingVertical: 3, paddingHorizontal: 6 }}>
+          <TouchableOpacity style={{ borderWidth: 2, borderColor: Color.loginBackground, paddingVertical: 3, paddingHorizontal: 6 }}
+          onPress={()=>{
+            navigation.navigate("완등 중인 암벽장 목록");
+          }}>
             <Text style={{ color: "black", fontSize: 15 }}>암벽장 목록</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ borderWidth: 2, borderColor: Color.loginBackground, paddingVertical: 3, paddingHorizontal: 6 }}>
+          <TouchableOpacity style={{ borderWidth: 2, borderColor: Color.loginBackground, paddingVertical: 3, paddingHorizontal: 6 }}
+           onPress={()=>{
+             navigation.navigate("완등한 루트 목록");
+          }}>
             <Text style={{ color: "black", fontSize: 15 }}>Clear 목록</Text>
           </TouchableOpacity>
 
         </View>
 
         {/* 유저 요약 정보 */}
-        <TouchableOpacity style={styles.homeBoard3}
-          onPress={() => {
-
-          }}>
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <Text style={{ color: "white", fontWeight: "bold", fontSize: 17, marginBottom: 20 }}>평균 Clear 난이도</Text>
-
-            <View style={{ borderColor: "white", borderWidth: 3, borderRadius: 120 / 2, width: 120, height: 120, marginBottom: 20, alignItems: "center", justifyContent: "center" }}>
-              <Text style={{ color: "white", fontWeight: "bold", fontSize: 17 }}>약 5.9b</Text>
+        {
+          summary === 0 ?
+            // 요약 정보 X
+            <View style={styles.homeBoard2}
+              onPress={() => {
+                
+              }}>
+              <Icon
+                name={"plus"}
+                size={50}
+                color={"white"} />
+              <Text style={{ color: "white", fontSize: 15, fontWeight: "bold", textAlign: "center" }}>
+                {"요약할 정보가 없습니다." + "\n" + "Clear루트를 설정해주세요!"}
+              </Text>
             </View>
+            :
+            // 요약 정보 O
+            <View style={styles.homeBoard3}
+              onPress={() => {
+                console.log(clearRouteByClimbing);
+              }}>
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 17, marginBottom: 20 }}>평균 Clear 난이도</Text>
 
-            <Text style={{ color: "white", fontWeight: "bold", fontSize: 15, textAlign: "center" }}>{"총 Clear 루트" + "\n" + "50"}</Text>
-
-          </View>
-
-          <View style={{ flex: 1, height: "100%", }}>
-            <Text style={{ color: "white", fontWeight: "bold", fontSize: 17, textAlign: "left" }}>{"암벽장별 Clear"}</Text>
-
-            <View style={{ flex: 1, width: "100%", justifyContent: "center", marginBottom: 20, marginRight: 5 }}>
-
-
-              <View style={{ flexDirection: "row", marginBottom: 20, alignItems: "center", justifyContent: "flex-end" }}>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "left" }}>연경도약대</Text>
+                <View style={{ borderColor: "white", borderWidth: 3, borderRadius: 120 / 2, width: 120, height: 120, marginBottom: 20, alignItems: "center", justifyContent: "center" }}>
+                  <Text style={{ color: "white", fontWeight: "bold", fontSize: 17 }}>{"약 " + userAvg}</Text>
                 </View>
-                <View style={{ backgroundColor: "#BBBBBB", width: 60, height: 5, flexDirection: "row", flex: 1 }}>
-                  <View style={{ backgroundColor: "white", width: 33 }}></View>
-                </View>
-                <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "center", marginLeft: 5, marginRight: 10 }}>25/50</Text>
+
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15, textAlign: "center" }}>{"총 Clear 루트" + "\n" + summary}</Text>
+
               </View>
 
-              <View style={{ flexDirection: "row", marginBottom: 20, alignItems: "center", justifyContent: "flex-end" }}>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "left" }}>천등산</Text>
-                </View>
-                <View style={{ backgroundColor: "#BBBBBB", width: 60, height: 5, flexDirection: "row", flex: 1 }}>
-                  <View style={{ backgroundColor: "white", width: 22 }}></View>
-                </View>
-                <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "center", marginLeft: 5, marginRight: 10 }}>10/30</Text>
-              </View>
+              <View style={{ flex: 1, height: "100%", }}>
+                <Text style={{ color: "white", fontWeight: "bold", fontSize: 17, textAlign: "left", marginBottom: 20 }}>{"암벽장별 Clear"}</Text>
 
-              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "left" }}>대구가톨릭대</Text>
+                <View style={{ flex: 1, width: "100%", justifyContent: "flex-start", marginBottom: 20, marginRight: 5 }}>
+                  {clearRouteByClimbingView(clearRouteByClimbing)}
                 </View>
-                <View style={{ backgroundColor: "#BBBBBB", width: 60, height: 5, flexDirection: "row", flex: 1 }}>
-                  <View style={{ backgroundColor: "white", width: 45 }}></View>
-                </View>
-                <Text style={{ color: "white", fontWeight: "bold", fontSize: 10, textAlign: "center", marginLeft: 5, marginRight: 10 }}>15/20</Text>
               </View>
-
             </View>
-          </View>
-        </TouchableOpacity>
+        }
 
         <View style={{ margin: "5%" }}></View>
 

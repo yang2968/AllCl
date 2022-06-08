@@ -1,10 +1,47 @@
 
 const mainURL = "http://13.209.75.70:8080";
+//const testURL = "http://116.90.217.224:8080";
 
 export default {
     //
     // home
     //
+       // 완등한 루트 조회 API
+       async getUserClearRoute(location_index, user_index) {
+        const url = mainURL + "/outdoor/route/clear?location_index=" + location_index + "&user_index=" + user_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("완등한 루트 조회 API 에러", error);
+            return 0;
+        }
+    },
+    // 완등한 문제가 있는 암장 리스트 조회 API
+    async getUserClearClimbing(user_index) {
+        const url = mainURL + "/outdoor/location-list/clear?user_index=" + user_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.json();
+            return responseData;
+        } catch (error) {
+            console.log("완등한 문제가 있는 암장 리스트 조회 에러", error);
+            return 0;
+        }
+    },
     // 유저가 완등한 전체 루트 조회 API
     async getUserClearAllRoute(user_index) {
         const url = mainURL + "/outdoor/route/clear-all?user_index=" + user_index;
@@ -42,7 +79,7 @@ export default {
         }
     },
     // 해당 유저가 완등한 암벽장 별 루트 개수 API
-    async getUserClearRouteInCliming(user_index) {
+    async getUserClearRouteInClimbing(user_index) {
         const url = mainURL + "/outdoor/route/countGroupByLocation?user_index=" + user_index;
         try {
             const requsetAuth = await fetch(url, {
@@ -56,6 +93,24 @@ export default {
             return responseData;
         } catch (error) {
             console.log("해당 유저가 완등한 암벽장 별 루트 개수 에러", error);
+            return 0;
+        }
+    },
+    // 완등한 루트 난이도 평균 API
+    async getUserClearRouteInAvg(user_index) {
+        const url = mainURL + "/outdoor/route/diffAVG?user_index=" + user_index;
+        try {
+            const requsetAuth = await fetch(url, {
+                method: 'GET',
+                headers:
+                {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const responseData = await requsetAuth.text();
+            return responseData;
+        } catch (error) {
+            console.log("완등한 루트 난이도 평균 에러", error);
             return 0;
         }
     },
@@ -369,39 +424,28 @@ export default {
         const url = mainURL + "/community/postImage";
         const formData = new FormData();
         if (files.length != 0) {
-            // formData.append("file", {
-            //     uri: files[0].uri,
-            //     name: files[0].fileName,
-            //     type: files[0].type
-            // });
-
-
-            // for(var key in files) {
-            //     // formData.append(key, files[key]);
-            //     formData.append("file", {
-            //         uri: files[key].uri,
-            //         name: files[key].fileName,
-            //         type: files[key].type
-            //     });
-            // }
+            for(var key in files) {
+                formData.append("files", {
+                    uri: files[key].uri,
+                    name: files[key].fileName,
+                    type: files[key].type
+                });
+            }
+            console.log(formData._parts);
             console.log(formData);
-
-
-
             try {
-                const requestAuth = await fetch(url, {
+                const res = await fetch(url, {
                     method: 'POST',
-                    headers:
-                    {
+                    body: formData,
+                    headers: {
                         'Content-Type': 'multipart/form-data',
                     },
-                    body: formData
-                })
+                });
 
-                const responseData = await requestAuth.json();
+                const responseJson = await res.json();
+                console.log(responseJson);
 
-
-                return [responseData];
+                return [responseJson];
             } catch (error) {
                 console.log("게시글 이미지 업로드 에러", error);
                 return 0;
@@ -412,7 +456,7 @@ export default {
     },
 
     // 게시글 작성 API
-    async posting(nickname, header, body, image_path) {
+    async posting(nickname, header, body, isImage) {
         const url = mainURL + "/community/post";
         try {
             const requestAuth = await fetch(url, {
@@ -425,6 +469,7 @@ export default {
                     "nickname": nickname,
                     "header": header,
                     "body": body,
+                    "isImage": isImage,
                     // "image_path": image_path,
                 })
             })
@@ -629,8 +674,8 @@ export default {
         }
     },
     // 난이도순 루트 조회 API
-    async getDifficultyRouteInfo(location_index) {
-        const url = mainURL + "/outdoor/route/difficulty?location_index=" + location_index;
+    async getDifficultyRouteInfo(location_index, user_index) {
+        const url = mainURL + "/outdoor/route/difficulty?location_index=" + location_index + "&user_index=" + user_index;
         try {
             const requsetAuth = await fetch(url, {
                 method: 'GET',
@@ -647,8 +692,8 @@ export default {
         }
     },
     // 인기순 루트 조회 API
-    async getPopularRouteInfo(location_index) {
-        const url = mainURL + "/outdoor/route/populer?location_index=" + location_index;
+    async getPopularRouteInfo(location_index, user_index) {
+        const url = mainURL + "/outdoor/route/populer?location_index=" + location_index + "&user_index=" + user_index;
         try {
             const requsetAuth = await fetch(url, {
                 method: 'GET',

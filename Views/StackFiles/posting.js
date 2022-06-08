@@ -28,6 +28,7 @@ export default ({ navigation }) => {
         { id: '카메라', label: '카메라' },
         { id: '앨범', label: '앨범' },
     ];
+    const mainURL = "http://13.209.75.70:8080";
 
     const requestCameraPermission = async () => {
         try {
@@ -54,6 +55,7 @@ export default ({ navigation }) => {
       };
 
     const [img, setImageSource] = useState([]);
+    const [imgState, setImgState] = useState(0);
 
     const options = {
         mediaType: 'photo',
@@ -68,15 +70,37 @@ export default ({ navigation }) => {
         selectionLimit: 10
     };
 
-    var test = [1, 2, 3, 4,];
-
     // 댓글
     const renderItem = ({ item, index }) => {
         return (
-            <ImageBackground style={{ width: 100, height: 100, backgroundColor: "black" }}
+            <ImageBackground style={{ width: 100, height: 100, backgroundColor: "white" }}
                 imageStyle={{ borderRadius: 10 }}
                 resizeMode="cover"
                 source={{ uri: item.uri }}>
+
+                <TouchableOpacity style={{ alignItems: "flex-end" }}
+                    onPress={() => {
+                        var changedImage = [...img];
+                        changedImage.splice(index, 1);
+                        setImageSource(changedImage);
+                        globalVariables.setImageFiles(changedImage);
+                    }}>
+                    <Icon
+                        name={"close"}
+                        size={25}
+                        color={"black"} />
+                </TouchableOpacity>
+            </ImageBackground>
+        );
+    };
+
+    const renderItem2 = ({ item, index }) => {
+        console.log("111");
+        return (
+            <ImageBackground style={{ width: 100, height: 100, backgroundColor: "white" }}
+                imageStyle={{ borderRadius: 10 }}
+                resizeMode="cover"
+                source={{ uri: mainURL + item.path }}>
 
                 <TouchableOpacity style={{ alignItems: "flex-end" }}
                     onPress={() => {
@@ -103,6 +127,13 @@ export default ({ navigation }) => {
             }
         }
         getPermission();
+
+        console.log(globalVariables.imageFiles);
+        console.log(globalVariables.imageFiles.length);
+        if(globalVariables.imageFiles.length != 0) { // 파일
+            //setImgState(1);
+            //setImageSource(globalVariables.imageFiles);
+        }
     }, [])
 
     return (
@@ -137,13 +168,23 @@ export default ({ navigation }) => {
 
                 {
                     img.length != 0 ?
-                        <FlatList
-                            data={img}
-                            renderItem={renderItem}
-                            keyExtractor={item => item.fileName}
-                            disableVirtualization={false}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false} />
+                        (imgState == 0 ?
+                            <FlatList
+                                data={img}
+                                renderItem={renderItem}
+                                keyExtractor={item => item.fileName}
+                                disableVirtualization={false}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false} />
+                            :
+                            <FlatList
+                                data={img}
+                                renderItem={renderItem2}
+                                keyExtractor={item => item.image_index}
+                                disableVirtualization={false}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false} />
+                        )
                         :
                         <></>
                 }
@@ -171,6 +212,19 @@ export default ({ navigation }) => {
                                         } else {
                                             setImageSource(image.assets);
                                             globalVariables.setImageFiles(image.assets);
+
+                                            const formData = new FormData();
+                                            if (image.assets.length != 0) {
+                                                for(var key in image.assets) {
+                                                    formData.append(key, {
+                                                        uri: image.assets[key].uri,
+                                                        name: image.assets[key].fileName,
+                                                        type: image.assets[key].type
+                                                    });
+                                                }
+                                                // console.log(formData._parts);
+                                            }
+
                                         }  
                                     })
                                 }
@@ -196,7 +250,7 @@ export default ({ navigation }) => {
                                         } else if (buttonIndex === 1) {
                                             // 카메라
                                             const result = await launchCamera(options, (image) => {
-                                                console.log("test ", image);
+                                                console.log(image);
                                                 if (image.didCancel) { // 앨범에서 사진을 고르지않고 취소한 경우
                                                 } else {
                                                     setImageSource(image.assets);
@@ -206,11 +260,13 @@ export default ({ navigation }) => {
                                         } else if (buttonIndex === 2) {
                                             // 앨범
                                             const result = await launchImageLibrary(options2, (image) => {
-                                                console.log("test ", image);
+                                                console.log(image);
                                                 if (image.didCancel) { // 앨범에서 사진을 고르지않고 취소한 경우
                                                 } else {
                                                     setImageSource(image.assets);
                                                     globalVariables.setImageFiles(image.assets);
+
+                                                  
                                                     
                                                 }  
                                             })

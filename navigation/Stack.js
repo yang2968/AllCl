@@ -18,6 +18,8 @@ import WatchPost from "../Views/StackFiles/watchPost";
 import BoardSearch from "../Views/StackFiles/boardSearch";
 import MyWrittenPosting from "../Views/StackFiles/myWrittenPosting";
 import MyWriitenComent from "../Views/StackFiles/myWrittenComent";
+import ClearRoute from "../Views/StackFiles/clearRoute";
+import UserClimbingList from "../Views/StackFiles/userClimbingList";
 
 const Stack = createNativeStackNavigator();
 
@@ -149,12 +151,20 @@ export default () => {
                             <TouchableOpacity
                                 style={{ backgroundColor: Color.loginBackground, paddingLeft: 10, paddingRight: 10, paddingTop: 5, paddingBottom: 5, borderRadius: 15 }}
                                 onPress={async () => {
-                                    if (globalVariables.routeName == "게시판") { // 게시글울 작성허눈 굥유
-                                        const postingData = await API.posting("밥셔틀웅이", globalVariables.header, globalVariables.body);
+                                    if (globalVariables.routeName == "게시판") { // 게시글울 작성하는 경우
+                                        var postingData;
+                                        if(globalVariables.imageFiles.length != 0) {
+                                            postingData = await API.posting("밥셔틀웅이", globalVariables.header, globalVariables.body, 1);
+                                        } else {
+                                            postingData = await API.posting("밥셔틀웅이", globalVariables.header, globalVariables.body, 0);
+                                        }
                                         switch (postingData[0]) {
                                             case 200: case 201:
-                                                const uploadImage = await API.uploadImage(globalVariables.imageFiles);
-                                                console.log("이미지 업로드", uploadImage);
+                                                if(globalVariables.imageFiles.length != 0) {
+                                                    const uploadImage = await API.uploadImage(globalVariables.imageFiles);
+                                                    console.log("이미지 업로드", uploadImage);
+                                                }
+                                                //globalVariables.setImageFiles([]);
                                                 navigation.goBack();
                                                 globalVariables.setRouteName("");
                                                 break;
@@ -328,6 +338,8 @@ export default () => {
             <Stack.Screen name="BoardSearch" component={BoardSearch} options={{ headerShown: false }} />
             <Stack.Screen name="내가 쓴 글" component={MyWrittenPosting} options={{ headerShown: true }} />
             <Stack.Screen name="내가 쓴 댓글" component={MyWriitenComent} options={{ headerShown: true }} />
+            <Stack.Screen name="완등 중인 암벽장 목록" component={UserClimbingList} options={{ headerShown: true }} />
+            <Stack.Screen name="완등한 루트 목록" component={ClearRoute} options={{ headerShown: true }} />
 
         </Stack.Navigator>
     )

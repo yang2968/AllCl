@@ -61,7 +61,7 @@ export default ({ navigation }) => {
     }
   ]);
 
-  const [imageStatus, setImageStatus] = useState(false);
+  const [imageStatus, setImageStatus] = useState(true);
 
   useEffect(() => {
     async function getPermission() {
@@ -100,7 +100,7 @@ export default ({ navigation }) => {
   useEffect(() => {
     async function getImageStatus() {
       var imageStatus = await API.checkImageURL(mainURL + locationInfo[0].image_path);
-      setImageStatus(imageStatus);
+      //setImageStatus(imageStatus);
     }
     getImageStatus();
   }, [locationInfo])
@@ -238,31 +238,56 @@ export default ({ navigation }) => {
               <View style={styles.mapModalView2}>
                 {
                   imageStatus == true ?
+                    // <ImageBackground
+                    //   imageStyle={{ borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
+                    //   style={styles.mapModalImageView}
+                    //   source={{ uri: mainURL + locationInfo[0].image_path }}
+                    //   resizeMode="cover">
+
+                    //   <View style={styles.mapModalInfo}>
+                    //     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    //       <Text style={styles.RCWTitleText}>{locationInfo[0].name}</Text>
+
+                    //       <View style={styles.mapModalStarView}>
+                    //         <Icon
+                    //           name={"star"}
+                    //           size={20}
+                    //           color={"#F0CF54"} />
+
+                    //         <Text style={styles.mapModalStarText}>{locationInfo[0].score}</Text>
+                    //       </View>
+                    //     </View>
+                    //     <Text style={styles.RCWTitleText2}>{locationInfo[0].address_province + " " + locationInfo[0].address_city + " " + locationInfo[0].address_detail}</Text>
+                    //     <Text style={styles.RCWContentText}>Information</Text>
+                    //     <Text style={styles.RCWContentText2}>{locationInfo[0].description}</Text>
+                    //   </View>
+
+                    // </ImageBackground>
                     <ImageBackground
-                      imageStyle={{ borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
-                      style={styles.mapModalImageView}
-                      source={{ uri: mainURL + locationInfo[0].image_path }}
-                      resizeMode="cover">
+                    imageStyle={{ borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
+                    style={styles.mapModalImageView}
+                    source={Climb}
+                    resizeMode="cover">
 
-                      <View style={styles.mapModalInfo}>
-                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                          <Text style={styles.RCWTitleText}>{locationInfo[0].name}</Text>
+                    <View style={styles.mapModalInfo}>
+                      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <Text style={styles.RCWTitleText}>{locationInfo[0].name}</Text>
 
-                          <View style={styles.mapModalStarView}>
-                            <Icon
-                              name={"star"}
-                              size={20}
-                              color={"#F0CF54"} />
+                        <View style={styles.mapModalStarView}>
+                          <Icon
+                            name={"star"}
+                            size={20}
+                            color={"#F0CF54"} />
 
-                            <Text style={styles.mapModalStarText}>{locationInfo[0].score}</Text>
-                          </View>
+                          <Text style={styles.mapModalStarText}>{locationInfo[0].score}</Text>
                         </View>
-                        <Text style={styles.RCWTitleText2}>{locationInfo[0].address_province + " " + locationInfo[0].address_city + " " + locationInfo[0].address_detail}</Text>
-                        <Text style={styles.RCWContentText}>Information</Text>
-                        <Text style={styles.RCWContentText2}>{locationInfo[0].description}</Text>
                       </View>
+                      <Text style={styles.RCWTitleText2}>{locationInfo[0].address_province + " " + locationInfo[0].address_city + " " + locationInfo[0].address_detail}</Text>
+                      <Text style={styles.RCWContentText}>Information</Text>
+                      <Text style={styles.RCWContentText2}>{locationInfo[0].description}</Text>
+                    </View>
 
-                    </ImageBackground>
+                  </ImageBackground>
                     :
                     <View style={styles.mapModalImageView}>
                       <View style={{ width: "100%", height: "55%", alignItems: "center", justifyContent: "center" }}>
@@ -301,7 +326,6 @@ export default ({ navigation }) => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-
 
       </SafeAreaView >
     </TouchableWithoutFeedback>

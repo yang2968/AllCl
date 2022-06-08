@@ -5,6 +5,8 @@ import {
     View,
     SafeAreaView,
     Text,
+    Image,
+    ImageBackground,
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
     Keyboard,
@@ -22,6 +24,7 @@ import styles from "../../styles/style";
 import Color from "../../styles/Color";
 import API from "../../API/API";
 import AppContext from "../../AppContext";
+import ROUTE from "../../images/route.jpeg";
 
 export default ({ navigation, route }) => {
     const globalVariables = useContext(AppContext);
@@ -29,7 +32,7 @@ export default ({ navigation, route }) => {
     //console.log(data);
   // 게시판 페이지가 포커싱될 떄마다 서버에 요청
     // console.log(globalVariables);
-    // console.log(data);
+    console.log(data);
 
    // 안드로이드 메뉴 아이템
    const items = [
@@ -74,6 +77,7 @@ export default ({ navigation, route }) => {
         //console.log("루트 정보", selectedRoute);
         return selectedRoute;
     }
+    var imageWidth = Dimensions.get("window").width;
     var imageHeight = Dimensions.get("window").height;
     //[{"comment": "댓글댓글", "comment_index": 3, "is_modified": 1, "nickname": "젠장재원", "post_index": 2, "record_time": "2022-04-28 18:22:31"}]
 
@@ -84,13 +88,15 @@ export default ({ navigation, route }) => {
             const userInfo = JSON.parse(getData);
             setUserNickname(userInfo.nickname);
             setUserIndex(userInfo.userIndex);
+
+
             setUserRouteClear(data.isClear);
             setUserRouteLike(data.isLike);
             const routeData = await getRouteData();
             setRouteInfo(routeData);
 
             const commentsData = await API.getRouteComments(data.route_index);
-            console.log(commentsData);
+            //console.log(commentsData);
            
             if (commentsData != 0) {
                 setRouteComments(commentsData);
@@ -257,13 +263,12 @@ export default ({ navigation, route }) => {
 
                             <View style={{ flexDirection: "row", alignSelf: "center", justifyContent: 'space-between', width: '90%', paddingTop: "2%", paddingBottom: "5%" }}>
 
-                                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{(data.index+1) + ". " + routeInfo[0].route_name}</Text>
+                                <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>{(routeInfo[0].route_index) + ". " + routeInfo[0].route_name}</Text>
 
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between' }}>
 
                                     <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", justifyContent: 'space-between', marginRight: 10 }}
                                     onPress={async ()=>{
-                                        console.log("1");
                                         const getClear = await API.routeClear(routeInfo[0].route_index, userIndex);
                                         switch (getClear[0]) {
                                             case 201:
@@ -324,9 +329,14 @@ export default ({ navigation, route }) => {
                             </View>
 
 
-                           <View style={{ backgroundColor: "white", width: "90%", height: imageHeight/2.4, alignItems: "center", justifyContent: "center", borderRadius: 25, marginHorizontal: "5%" }}>
+                           {/* <View style={{ backgroundColor: "white", width: "90%", height: imageHeight/2.4, alignItems: "center", justifyContent: "center", borderRadius: 25, marginHorizontal: "5%" }}>
                                <Text style={{ color: "black", fontWeight: "bold", fontSize: 20 }}>루트 사진</Text>
-                           </View>
+                           </View> */}
+                           
+                           <ImageBackground
+                             imageStyle={{ borderRadius: 30 }}
+                             resizeMode="contain"
+                           style={{ width: imageWidth, height: imageHeight/2.4, backgroundColor: "white" }} source={ROUTE} />
                         </View>
                     } />
 

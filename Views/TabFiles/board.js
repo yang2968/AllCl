@@ -244,7 +244,6 @@ export default ({ navigation, route }) => {
         {/* 공지  */}
         <TouchableOpacity style={{ borderColor: "gray", borderWidth: 1, paddingTop: "5%", paddingBottom: "5%", paddingLeft: "3%", marginBottom: "3%", flexDirection: "row", justifyContent: "center" }}
         onPress={()=>{
-          console.log(noticeData);
          navigation.navigate("공지", { notice: noticeData });
         }}>
 

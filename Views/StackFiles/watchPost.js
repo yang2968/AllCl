@@ -24,6 +24,7 @@ import Icon3 from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import Icon4 from 'react-native-vector-icons/dist/Fontisto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SimplePopupMenu from 'react-native-simple-popup-menu';
+import ImageResizer from 'react-native-image-resizer';
 import AppContext from "../../AppContext";
 import Color from "../../styles/Color"
 import styles from "../../styles/style";
@@ -88,7 +89,7 @@ export default ({ navigation, route }) => {
         const imageWidth = dimensions.width;
         const imageHeight = Math.round(dimensions.height);
         setImageWidth(imageWidth);
-        setImageHeight(imageHeight / 2);
+        setImageHeight(imageHeight);
         setRatio(imageWidth / 541);
     }, [])
     // 게시물 정보 조회
@@ -98,7 +99,7 @@ export default ({ navigation, route }) => {
             const userInfo = JSON.parse(getData);
             // 선택한 게시물 정보 조회
             const postData = await API.watchPost(data.post_index, userInfo.nickname);
-            console.log("게시물 정보", postData[0]);
+            //console.log("게시물 정보", postData[0]);
             globalVariables.setNickname(userInfo.nickname);
             globalVariables.setRouteName(routeName.name);
             globalVariables.setPostIndex(data.post_index);
@@ -118,6 +119,7 @@ export default ({ navigation, route }) => {
             if (postData[0].isImage != 0) {
                 const postImageData = await API.getPostImage(data.post_index);
                 setPostImage(postImageData);
+                globalVariables.setImageFiles(postImageData);
                 console.log(postImageData);
             }
 
@@ -147,28 +149,20 @@ export default ({ navigation, route }) => {
 
     const getImageSize = (showImage) => {
         Image.getSize(showImage, (width, height) => {
-           // console.log("123123 : : ", width, height);
+           console.log("123123 : : ", width, height);
+           if(width == height) {
+
+           }
         })
     }
 
-
-
-
-    // useEffect(() => {
-    //     async function test() {
-    //         console.log("test");
-    //     }
-    //     test();
-    // }, [showImage])
-
-
     const renderImage = ({ item }) => {
         // console.log(item);
-        getImageSize(mainURL + item.path)
+        //getImageSize(mainURL + item.path)
         return (
             <TouchableOpacity onPress={() => {
                 setShowImage(mainURL + item.path)
-                // getImageSize(showImage)
+                //getImageSize(showImage)
                 setImageModalVisible(true);
             }}>
                 <Image style={{ width: 250, height: 250, backgroundColor: "white" }}
@@ -595,18 +589,6 @@ export default ({ navigation, route }) => {
                                 {
                                     setLike(tabLike)
                                 }
-                                {/* {
-                                    tabLike == 1 ?
-                                        <Icon
-                                            name={"heart"}
-                                            size={20}
-                                            color={"#B33938"} />
-                                        :
-                                        <Icon
-                                            name={"heart-o"}
-                                            size={20}
-                                            color={"#B33938"} />
-                                } */}
 
                             </TouchableOpacity>
 
@@ -706,10 +688,10 @@ export default ({ navigation, route }) => {
                                 imageUrls={[{
                                     url: showImage,
                                     width: imageWidth,
-                                    height: 362 * ratio,
+                                    height: imageHeight,
                                 }]}
 
-                                style={{ width: imageWidth, resizeMode: "cover" }}
+                                style={{ width: imageWidth, resizeMode: "contain", transform: [{scale: 1}] }}
                                 backgroundColor='rgba(0,0,0,0.0)'
                                 // 이미지 개수 표시
                                 renderIndicator={() => null}

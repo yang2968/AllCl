@@ -20,6 +20,7 @@ const App = () => {
   const [routeName, setRouteName] = useState("");
   const [postIndex, setPostIndex] = useState(0);
   const [imageFiles, setImageFiles] = useState([]);
+  const [imageCount, setImageCount] = useState(0);
 
 
   const globalVariables = {
@@ -29,12 +30,14 @@ const App = () => {
     routeName: routeName,
     postIndex: postIndex,
     imageFiles: imageFiles,
+    imageCount: imageCount,
     setHeader,
     setBody,
     setNickname,
     setRouteName,
     setPostIndex,
-    setImageFiles
+    setImageFiles,
+    setImageCount
   }
 
   useEffect(() => {
